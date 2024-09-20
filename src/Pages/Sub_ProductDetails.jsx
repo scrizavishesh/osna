@@ -1,0 +1,143 @@
+import React from 'react';
+import { Grid, Typography, Button, Box, Card, CardMedia, CardContent } from '@mui/material';
+import YouTube from 'react-youtube';
+import Header from '../Layouts/Header';
+import Navbar from '../Layouts/Navbar';
+import { Container } from '@mui/system';
+import Footer from '../Layouts/Footer';
+import { Link } from 'react-router-dom';
+
+const Sub_ProductDetails = () => {
+    return (
+        <>
+            <Grid sx={{ bgcolor: '#0462B6' }}>
+                <Header />
+            </Grid>
+            <Navbar />
+            <Container maxWidth="lg">
+                <Box sx={{ padding: '2rem' }}>
+                    {/* First Container: Category details */}
+                    <Grid container spacing={2} sx={{ marginBottom: '4rem' }}>
+                        <Grid item xs={12} md={6}>
+                            <Typography variant="h3" color="primary">
+                                Vision Sensors
+                            </Typography>
+                            <Typography variant="h5" sx={{ marginTop: '1rem' }}>
+                                For Factory Automation
+                            </Typography>
+                            <Typography variant="body1" sx={{ marginTop: '1rem' }}>
+                                Perfectly in tune: A combination of sophisticated hardware and easily configurable software.
+                                Scalability: Select your VISOR® to suit your own requirements.
+                            </Typography>
+                            <Button
+                            component={Link}
+                            to="/products_Detail"
+                             variant="contained" color="warning" sx={{ marginTop: '2rem' }}>
+                                VISOR® Product Overview
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Card sx={{ boxShadow: 'none', border: 'none' }}>
+                                <CardMedia
+                                    component="img"
+                                    image="./sub_main.png" // Replace with product image
+                                    alt="Product Image"
+                                    sx={{ height: 250, objectFit: 'contain' }}
+                                />
+                            </Card>
+                        </Grid>
+                    </Grid>
+
+                    {/* Second Container: Description and YouTube Video */}
+                    <Grid container spacing={2} sx={{ marginBottom: '4rem' }}>
+                        <Grid item xs={12} md={6}>
+                            <Typography variant="h5" color="primary">
+                                HARDWARE + SOFTWARE = VISOR®
+                            </Typography>
+                            <Typography variant="body1" sx={{ marginTop: '1rem' }}>
+                                With our portfolio of vision sensors, we cover a wide spectrum of industrial image processing. A high-performance
+                                smart camera fitted in a compact and lightweight housing forms the heart of our VISOR® vision sensors.
+                            </Typography>
+                            <Typography variant="body1" sx={{ marginTop: '1rem' }}>
+                                The hardware is optimized by the VISOR® software, which enables the set-up of applications in a few simple steps and
+                                the adjustment of process parameters.
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <YouTube videoId="R1L7ftv2qhw" opts={{ height: '250', width: '100%' }} />
+                        </Grid>
+                    </Grid>
+
+                    {/* Third Container: Related Product Details */}
+                    <Typography variant="h5" color="primary" align="center" sx={{ marginBottom: '2rem' }}>
+                        The VISOR® Vision Sensor Family Offers the Right Product for Every Application
+                    </Typography>
+
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={4}>
+                            <Card>
+                                <CardContent>
+                                    <CardMedia
+                                        component="img"
+                                        image="./sub_main.png" // Replace with product image
+                                        alt="Product Image"
+                                        sx={{ height: "100%", objectFit: 'contain' }}
+                                    />
+                                    <Typography variant="h6">VISOR® Code Reader</Typography>
+                                    <Typography variant="body2">
+                                        The compact code reader with its integrated object detection reads up to 20 barcodes, 2D data matrix codes, and
+                                        OCR.
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <Card>
+                                <CardContent>
+                                    <CardMedia
+                                        component="img"
+                                        image="./sub_main.png" // Replace with product image
+                                        alt="Product Image"
+                                        sx={{ height: "100%", objectFit: 'contain' }}
+                                    />
+                                    <Typography variant="h6">VISOR® Object (AI)</Typography>
+                                    <Typography variant="body2">
+                                        Classification of objects made easy with artificial intelligence.
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <Card>
+                                <CardContent>
+                                    <CardMedia
+                                        component="img"
+                                        image="./sub_main.png" // Replace with product image
+                                        alt="Product Image"
+                                        sx={{ height: "100%", objectFit: 'contain' }}
+                                    />
+                                    <Typography variant="h6">VISOR® Robotic</Typography>
+                                    <Typography variant="body2">
+                                        An eye on everything – the expert for robotics applications with simple connection to robotics systems of leading
+                                        manufacturers.
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    </Grid>
+
+                    <Box textAlign="center" sx={{ marginTop: '2rem' }}>
+                        <Button variant="outlined" color="primary">
+                            Show All
+                        </Button>
+                    </Box>
+                </Box>
+            </Container>
+            <Footer />
+        </>
+
+    );
+};
+
+export default Sub_ProductDetails;
+
