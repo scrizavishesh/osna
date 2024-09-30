@@ -1,31 +1,61 @@
+import { useState, useEffect } from 'react';
 import { Grid, Container, Typography, RadioGroup, FormControlLabel, Radio, Card, Box, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import React from 'react'
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Footer from '../Layouts/Footer';
-import Header from '../Layouts/Header'
-import Navbar from '../Layouts/Navbar'
+import Header from '../Layouts/Header';
+import Navbar from '../Layouts/Navbar';
+import { GetCategorySubcategory } from '../Utils/Apis';
+import { toast } from 'react-hot-toast';
 
 const Product = () => {
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedSubCategory, setSelectedSubCategory] = useState(null);
+    const [selectedType, setSelectedType] = useState(null);
+    const [response, setResponse] = useState(null); // Initial state set to `null` instead of `undefined`
 
-    const categories = [
-        'Vision Sensors',
-        'VISOR® Code Reader',
-        'Optical Sensors',
-        'Ultrasonic Sensors',
-        'Inductive Sensors',
-        'Accessories',
-        'Distance Sensors',
-        'Color & Contrast Sensors',
-        'Photoelectric Sensors',
-        'GPS & Navigation',
-        'Wearable Technology'
-    ];
+    useEffect(() => {
+        getEmployess();
+    }, []);
 
-    const products = new Array(12).fill({
-        title: 'Product Name',
-        image: "./first_main.svg",
-        description: 'Product Description'
-    });
+    const getEmployess = async () => {
+        try {
+            const response = await GetCategorySubcategory();
+            console.log(response, "get category");
+            if (response?.status === 200) {
+                toast.success("Got categories successfully");
+                setResponse(response?.data); // Save the data from the response
+            } else {
+                toast.error("Failed to fetch categories");
+            }
+        } catch (err) {
+            toast.error(err?.message);
+        }
+    };
+
+    // Handle category selection
+    const handleCategoryChange = (event) => {
+        const categoryId = event.target.value;
+        setSelectedCategory(response?.data?.find((cat) => cat.parent.id === parseInt(categoryId)));
+        setSelectedSubCategory(null);  // Reset subcategory
+        setSelectedType(null);         // Reset type
+    };
+
+    // Handle subcategory selection
+    const handleSubCategoryChange = (event) => {
+        const subcategoryId = event.target.value;
+        setSelectedSubCategory(
+            selectedCategory.subcategories.find((sub) => sub.id === parseInt(subcategoryId))
+        );
+        setSelectedType(null);         // Reset type
+    };
+
+    // Handle type selection
+    const handleTypeChange = (event) => {
+        setSelectedType(
+            selectedSubCategory.types.find((type) => type.id === parseInt(event.target.value))
+        );
+    };
 
     return (
         <>
@@ -35,7 +65,6 @@ const Product = () => {
             <Navbar />
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 <Grid container spacing={4}>
-
                     {/* Left Section (Category + Advertisement) */}
                     <Grid item xs={12} md={3}>
                         {/* Category Section */}
@@ -43,21 +72,88 @@ const Product = () => {
                             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                                 CATEGORY
                             </Typography>
-                            <RadioGroup
-                                name="category"
-                                defaultValue="Vision Sensors"
-                            >
-                                {categories.map((category, index) => (
-                                    <FormControlLabel
-                                        key={index}
-                                        value={category}
-                                        control={<Radio />}
-                                        label={category}
-                                    />
-                                ))}
-                            </RadioGroup>
-                        </Grid>
 
+                            {/* If no category is selected, show categories list */}
+                            {!selectedCategory && response?.data ? (
+                                <RadioGroup name="category" onChange={handleCategoryChange}>
+                                    {response.data.map((category) => (
+                                        <FormControlLabel
+                                            key={category.parent.id}
+                                            value={category.parent.id}
+                                            control={<Radio />}
+                                            label={category.parent.name}
+                                        />
+                                    ))}
+                                </RadioGroup>
+                            ) : selectedCategory ? (
+                                <Typography variant="subtitle1" sx={{ mb: 2 }}>
+                                    Selected Category: {selectedCategory.parent.name}
+                                    <Button onClick={() => setSelectedCategory(null)} sx={{ ml: 2 }}>
+                                        Change Category
+                                    </Button>
+                                </Typography>
+                            ) : (
+                                <Typography variant="body1">Loading categories...</Typography>
+                            )}
+
+                            {/* Subcategory Section */}
+                            {selectedCategory && selectedCategory.subcategories?.length > 0 && !selectedSubCategory && (
+                                <>
+                                    <Typography variant="h6" sx={{ mb: 2, mt: 4, fontWeight: 600 }}>
+                                        SUBCATEGORY
+                                    </Typography>
+                                    <RadioGroup name="subcategory" onChange={handleSubCategoryChange}>
+                                        {selectedCategory.subcategories.map((subCategory) => (
+                                            <FormControlLabel
+                                                key={subCategory.id}
+                                                value={subCategory.id}
+                                                control={<Radio />}
+                                                label={subCategory.subcategory_name}
+                                            />
+                                        ))}
+                                    </RadioGroup>
+                                </>
+                            )}
+
+                            {/* Show selected subcategory */}
+                            {selectedSubCategory && (
+                                <Typography variant="subtitle1" sx={{ mb: 2 }}>
+                                    Selected Subcategory: {selectedSubCategory.subcategory_name}
+                                    <Button onClick={() => setSelectedSubCategory(null)} sx={{ ml: 2 }}>
+                                        Change Subcategory
+                                    </Button>
+                                </Typography>
+                            )}
+
+                            {/* Type Section */}
+                            {selectedSubCategory && selectedSubCategory.types?.length > 0 && !selectedType && (
+                                <>
+                                    <Typography variant="h6" sx={{ mb: 2, mt: 4, fontWeight: 600 }}>
+                                        TYPE
+                                    </Typography>
+                                    <RadioGroup name="type" onChange={handleTypeChange}>
+                                        {selectedSubCategory.types.map((type) => (
+                                            <FormControlLabel
+                                                key={type.id}
+                                                value={type.id}
+                                                control={<Radio />}
+                                                label={type.type_name}
+                                            />
+                                        ))}
+                                    </RadioGroup>
+                                </>
+                            )}
+
+                            {/* Show selected type */}
+                            {selectedType && (
+                                <Typography variant="subtitle1" sx={{ mb: 2 }}>
+                                    Selected Type: {selectedType.type_name}
+                                    <Button onClick={() => setSelectedType(null)} sx={{ ml: 2 }}>
+                                        Change Type
+                                    </Button>
+                                </Typography>
+                            )}
+                        </Grid>
                         {/* Advertisement Section */}
                         <Grid item xs={12} sx={{ mt: 2 }}>
                             <Card sx={{ p: 2, textAlign: 'center' }}>
@@ -70,8 +166,8 @@ const Product = () => {
                                         fontWeight: 600,
                                         lineHeight: '32px',
                                         textAlign: 'center',
-                                        color: "#191C1F",
-                                        mb: 1
+                                        color: '#191C1F',
+                                        mb: 1,
                                     }}
                                 >
                                     Optical Sensors for Factory Automation
@@ -82,8 +178,8 @@ const Product = () => {
                                         fontWeight: 400,
                                         lineHeight: '20px',
                                         textAlign: 'center',
-                                        color: "#5f6c72",
-                                        mb: 2
+                                        color: '#5f6c72',
+                                        mb: 2,
                                     }}
                                 >
                                     The sensors of the F 10 series, available as LED and laser versions, form one of the most comprehensive series on the market in sub-miniature housings.
@@ -103,10 +199,7 @@ const Product = () => {
                             </Typography>
                             <FormControl sx={{ minWidth: 120 }}>
                                 <InputLabel>Sort by</InputLabel>
-                                <Select
-                                    defaultValue="Most Popular"
-                                    label="Sort by"
-                                >
+                                <Select defaultValue="Most Popular" label="Sort by">
                                     <MenuItem value="Most Popular">Most Popular</MenuItem>
                                     <MenuItem value="Price">Price</MenuItem>
                                     <MenuItem value="Latest">Latest</MenuItem>
@@ -115,35 +208,54 @@ const Product = () => {
                         </Box>
 
                         <Grid container spacing={2} mb={4}>
-                            {products.map((product, index) => (
-                                <Grid item xs={12} sm={6} md={4} key={index}>
-                                    <Card sx={{ p: 2, textAlign: 'center' }}>
-                                        <Box sx={{ mb: 2 }}>
-                                            <img src={product.image} alt={product.title} style={{ width: '100%', objectFit: 'cover' }} />
-                                        </Box>
-                                        <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                                            {product.title}
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ mb: 2 }}>
-                                            {product.description}
-                                        </Typography>
-                                        <Button
-                                            to="/sub_products"
-                                            component={Link}
-                                            variant="contained"
-                                            sx={{ backgroundColor: '#FA8232', color: '#FFF' }}>
-                                            View All
-                                        </Button>
-                                    </Card>
-                                </Grid>
-                            ))}
+                            {/* Display products under the selected type if present */}
+                            {selectedType && selectedType.products.length > 0 ? (
+                                selectedType.products.map((product) => (
+                                    <Grid item xs={12} sm={6} md={4} key={product.id}>
+                                        <Card sx={{ p: 2 }}>
+                                            <Typography>{product.product_name}</Typography>
+                                            <img
+                                                src='./Product_Main_Image.png'
+                                                alt={product.product_name}
+                                                style={{ width: '100%', objectFit: 'cover' }}
+                                            />
+                                        </Card>
+                                    </Grid>
+                                ))
+                            ) : selectedSubCategory && selectedSubCategory.products.data.length > 0 ? (
+                                selectedSubCategory?.products?.data.map((product) => (
+                                    <Grid item xs={12} sm={6} md={4} key={product.id}>
+                                        <Card sx={{ p: 2, textAlign: 'center' }}>
+                                            <Box sx={{ mb: 2 }}>
+                                                <img src="./Product_Main_Image.png" alt={product.title} style={{ width: '100%', objectFit: 'cover' }} />
+                                            </Box>
+                                            <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                                                {product.product_name}
+                                            </Typography>
+                                            <Typography variant="body2" sx={{ mb: 2 }}>
+                                                {product.short_description}
+                                            </Typography>
+                                            <Button
+                                                to={`/sub_products/${product.id}`}
+                                                component={Link}
+                                                variant="contained"
+                                                sx={{ backgroundColor: '#FA8232', color: '#FFF' }}
+                                            >
+                                                View All
+                                            </Button>
+                                        </Card>
+                                    </Grid>
+                                ))
+                            ) : (
+                                <Typography variant="body1">No products available for this selection.</Typography>
+                            )}
                         </Grid>
                     </Grid>
                 </Grid>
             </Container>
             <Footer />
         </>
-    )
-}
+    );
+};
 
 export default Product;

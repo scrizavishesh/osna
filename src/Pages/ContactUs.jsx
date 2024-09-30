@@ -1,11 +1,41 @@
 import React from 'react';
-import { Container, Grid, Box, TextField, Button, MenuItem, Typography, Paper, Card } from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { Container, Grid, Box, TextField, Button, MenuItem, Typography, Paper, Card, Select } from '@mui/material';
 import { Phone, Email, LocationOn } from '@mui/icons-material';
 import Footer from '../Layouts/Footer';
 import Header from '../Layouts/Header';
 import Navbar from '../Layouts/Navbar';
+import { handleContact } from '../Utils/Apis';
+import { toast } from 'react-hot-toast';
 
 const ContactUs = () => {
+    const { register, handleSubmit, reset, formState: { errors }, } = useForm();
+
+
+    const onSubmit = async (data) => {
+        if (!data.request_type || !data.name || !data.email || !data.phone || !data.message) {
+            toast.error("All fields are required");
+            return;
+        }
+        const formData = new FormData();
+        formData.append('request_type', data.request_type);
+        formData.append('name', data.name);
+        formData.append('email', data.email);
+        formData.append('phone', data.phone);
+        formData.append('message', data.message);
+        try {
+            const response = await handleContact(formData);
+            console.log(response, "contact")
+            if (response.status === 201) {
+                toast.success("Contact Information Save Successfully!");
+                reset();
+            } else {
+                toast.error("Error adding user");
+            }
+        } catch (error) {
+            toast.error("Something went wrong");
+        }
+    };
 
     return (
         <>
@@ -143,42 +173,60 @@ const ContactUs = () => {
                                 >
                                     Request Form
                                 </Typography>
-                                <form>
+                                <form onSubmit={handleSubmit(onSubmit)}>
                                     <Grid container spacing={2}>
                                         <Grid item xs={12}>
-                                            <TextField
-                                                select
-                                                label="Type of Request"
+                                            <Select
+                                                
+                                                // label="Type of Request"
                                                 fullWidth
                                                 variant="outlined"
+                                                displayEmpty
+                                                defaultValue=''
+                                                {...register('request_type', { required: 'Request type is required' })}
+                                                error={!!errors.request_type}
+                                                helperText={errors.request_type?.message}
                                             >
+                                                <MenuItem value="" disabled>----- Select -----</MenuItem>
                                                 <MenuItem value="General Inquiry">General Inquiry</MenuItem>
                                                 <MenuItem value="Support">Support</MenuItem>
                                                 <MenuItem value="Sales">Sales</MenuItem>
-                                            </TextField>
+                                            </Select>
                                         </Grid>
-                                        <Grid item xs={12} >
+                                        <Grid item xs={12}>
                                             <TextField
                                                 label="Enter Full Name"
                                                 fullWidth
                                                 variant="outlined"
-                                            // sx={{ width: '80%' }} 
+                                                {...register('name', { required: 'Name is required' })}
+                                                error={!!errors.name}
+                                                helperText={errors.name?.message}
                                             />
                                         </Grid>
-                                        <Grid item xs={12} >
+                                        <Grid item xs={12}>
                                             <TextField
                                                 label="Email"
                                                 fullWidth
                                                 variant="outlined"
-                                            // sx={{ width: '80%' }}  
+                                                {...register('email', {
+                                                    required: 'Email is required',
+                                                    pattern: {
+                                                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                                        message: 'Invalid email address',
+                                                    },
+                                                })}
+                                                error={!!errors.email}
+                                                helperText={errors.email?.message}
                                             />
                                         </Grid>
-                                        <Grid item xs={12} >
+                                        <Grid item xs={12}>
                                             <TextField
                                                 label="Contact Number"
                                                 fullWidth
                                                 variant="outlined"
-                                            // sx={{ width: '80%' }} 
+                                                {...register('phone', { required: 'Phone number is required' })}
+                                                error={!!errors.phone}
+                                                helperText={errors.phone?.message}
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
@@ -188,6 +236,9 @@ const ContactUs = () => {
                                                 variant="outlined"
                                                 multiline
                                                 rows={4}
+                                                {...register('message', { required: 'Message is required' })}
+                                                error={!!errors.message}
+                                                helperText={errors.message?.message}
                                             />
                                         </Grid>
                                         <Grid item xs={12}>
@@ -200,8 +251,9 @@ const ContactUs = () => {
                                                     fontSize: '14px',
                                                     backgroundColor: '#FA8232',
                                                     color: '#FFFFFF',
-                                                    border: '1px solid #DBDBDB80' 
+                                                    border: '1px solid #DBDBDB80'
                                                 }}
+                                                type="submit"
                                             >
                                                 Send Message
                                             </Button>
@@ -215,7 +267,6 @@ const ContactUs = () => {
             </Container>
             <Footer />
         </>
-
     );
 };
 

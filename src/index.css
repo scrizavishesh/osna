@@ -9,3 +9,22 @@ body {
 .css-5iifl-MuiPaper-root-MuiAppBar-root {
   background-color: #fff !important;
 }
+
+
+/* Slick carousel styles */
+.slick-prev:before, .slick-next:before {
+  color: black;
+}
+
+.slick-slide img {
+  display: inline-block;
+}
+
+.slick-dots li button:before {
+  color: #000; /* Change dot color */
+}
+
+.slick-dots li.slick-active button:before {
+  opacity: 1;
+  color: #000;
+}

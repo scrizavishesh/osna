@@ -1,3 +1,4 @@
+import React, {useState, useEffect} from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid'; // Use Grid from MUI for responsive layouts
@@ -14,26 +15,46 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import Footer from '../Layouts/Footer';
 import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, TextField } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import ChatBot from '../Layouts/ChatBot';
+import Modal from '../Layouts/Modal';
+import Carousel from '../SubPages/Carousel';
+import CompanyCarousel from '../SubPages/CompanyCarousel';
+import { GetBanner, GetProduct } from '../Utils/Apis';
+import { toast } from 'react-hot-toast';
 
 
 const MyComponent = () => {
     const cards = new Array(10).fill(null);
+    const token = localStorage.getItem('osna_token');
 
-    const [open, setOpen] = useState(true);
+    const [cardDetails, setcardDetails] = useState([]);
 
-    const handleClose = () => {
-        setOpen(false);
+    useEffect(() => {
+        getProduct();
+    }, []);
+
+    const getProduct = async () => {
+        try {
+            const response = await GetProduct();
+            console.log(response, "get product");
+            if (response?.status === 200) {
+                toast.success("Got Product successfully");
+                setcardDetails(response?.data); // Save the data from the response
+            } else {
+                toast.error("Failed to fetch categories");
+            }
+        } catch (err) {
+            toast.error(err?.message);
+        }
     };
-
     return (
         <>
             <Grid sx={{ bgcolor: '#0462B6' }}>
                 <Header />
             </Grid>
             <Navbar />
+
+            <Carousel />
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                 <Box sx={{ padding: '20px' }}>
@@ -121,7 +142,7 @@ const MyComponent = () => {
                                     padding: '16px',
                                     position: 'relative',
                                     flexGrow: 1,
-                                    p:4
+                                    p: 4
                                 }}
                             >
                                 <Box
@@ -249,9 +270,6 @@ const MyComponent = () => {
                     </Grid>
                 </Box>
             </Container>
-
-
-
 
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 <Grid
@@ -463,6 +481,7 @@ const MyComponent = () => {
                     </Grid>
                 </Grid>
             </Container>
+             {/* Product  */}
 
             <Grid sx={{ background: "#FAFAFA", py: 2 }}>
                 <Container maxWidth="lg">
@@ -484,7 +503,7 @@ const MyComponent = () => {
                         </Grid>
 
                         {/* Cards */}
-                        {cards.map((_, index) => (
+                        {cardDetails.map((_, index) => (
                             <Grid
                                 item
                                 xs={12} sm={6} md={4} lg={2.4} mb={4}  // Responsive card sizes
@@ -575,58 +594,19 @@ const MyComponent = () => {
                 </Grid>
             </Grid>
 
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <CompanyCarousel />
+            </Container>
             <Footer />
 
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography></Typography>
-                    <IconButton onClick={handleClose}>
-                        <CloseIcon />
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent>
-                    <Typography
-                        sx={{
-                            fontSize: '20px',
-                            fontWeight: 600,
-                            lineHeight: '28px',
-                            textAlign: 'center',
-                            color: "#191c1f",
-                            mb: 3
-                        }}
-                    >
-                        Profile Details
-                    </Typography>
-                    <Typography
-                        sx={{
-                            fontSize: '14px',
-                            fontWeight: 400,
-                            lineHeight: '20px',
-                            textAlign: 'center',
-                            color: "#5f6c72",
-                            mb: 3
-                        }}
-                    >
-                        Lorem Ipsum is simply dummy text of the printing and
-                        <br />
+            {
+                !token && (
+                    <Modal />
+                )
+            }
 
-                    </Typography>
-                    <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        <TextField label="Full Name" variant="outlined" fullWidth />
-                        <TextField label="Email Id" variant="outlined" fullWidth />
-                        <TextField label="Phone Number" variant="outlined" fullWidth />
-                    </Box>
-                </DialogContent>
-                <DialogActions sx={{ justifyContent: 'center', pb: 3 }}>
-                    <Button
-                        variant="contained"
-                        color="warning"
-                        sx={{ width: '100%', maxWidth: '200px', fontWeight: 'bold' }}
-                    >
-                        SUBMIT →
-                    </Button>
-                </DialogActions>
-            </Dialog>
+
+            <ChatBot />
 
         </>
     );
