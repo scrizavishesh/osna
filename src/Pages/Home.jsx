@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid'; // Use Grid from MUI for responsive layouts
@@ -28,6 +28,7 @@ const MyComponent = () => {
     const token = localStorage.getItem('osna_token');
 
     const [cardDetails, setcardDetails] = useState([]);
+    const baseUrl = 'https://dc.damio.in/'
 
     useEffect(() => {
         getProduct();
@@ -39,7 +40,7 @@ const MyComponent = () => {
             console.log(response, "get product");
             if (response?.status === 200) {
                 toast.success("Got Product successfully");
-                setcardDetails(response?.data); // Save the data from the response
+                setcardDetails(response?.data?.data);
             } else {
                 toast.error("Failed to fetch categories");
             }
@@ -481,7 +482,7 @@ const MyComponent = () => {
                     </Grid>
                 </Grid>
             </Container>
-             {/* Product  */}
+            {/* Product  */}
 
             <Grid sx={{ background: "#FAFAFA", py: 2 }}>
                 <Container maxWidth="lg">
@@ -503,7 +504,7 @@ const MyComponent = () => {
                         </Grid>
 
                         {/* Cards */}
-                        {cardDetails.map((_, index) => (
+                        {cardDetails.map((item, index) => (
                             <Grid
                                 item
                                 xs={12} sm={6} md={4} lg={2.4} mb={4}  // Responsive card sizes
@@ -541,7 +542,10 @@ const MyComponent = () => {
                                             mb: 2,
                                         }}
                                     >
-                                        Our Products
+                                        {item?.product_name}
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ mb: 2 }}>
+                                        {item.short_description}
                                     </Typography>
                                     <Button
                                         variant="contained"

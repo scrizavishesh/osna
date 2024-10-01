@@ -1,54 +1,46 @@
-import React, { useState } from "react";
-import { Grid, Box, Button, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Pagination, Paper } from "@mui/material";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Grid, Box, Button, Typography, Container } from "@mui/material";
 import Header from "../Layouts/Header";
 import Navbar from "../Layouts/Navbar";
-import { Container } from "@mui/system";
 import Footer from "../Layouts/Footer";
 import YouTube from "react-youtube";
+import { getSingleProduct } from '../Utils/Apis';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const ProductDetail = () => {
+
+    const baseUrl = 'https://dc.damio.in/';
+
     // State for main image
-    const [mainImage, setMainImage] = useState("./Product_Main_Image.png");
+    const [mainImage, setMainImage] = useState([]);
+    const [product, setProduct] = useState({});
+    const [productDescription, setProductDescription] = useState('');
 
-    const productImages = [
-        "./image_1.png",
-        "./image_2.png",
-        "./image_3.png",
-        "./image_4.png",
-        "./image_5.png",
-    ];
+    const { id } = useParams();
 
-    const matchingProducts = [
-        {
-            name: "FT 10-RL-60-PNSL-K4",
-            sensor: "Distance sensor with triangulation",
-            minDistance: 10,
-            maxDistance: 70,
-            lightSource: "Laser, red (Class 1)",
-        },
-        {
-            name: "FT 10-RL-60-PNSL-K4",
-            sensor: "Distance sensor with triangulation",
-            minDistance: 10,
-            maxDistance: 70,
-            lightSource: "Laser, red (Class 1)",
-        },
-        {
-            name: "FT 10-RL-60-PNSL-K4",
-            sensor: "Distance sensor with triangulation",
-            minDistance: 10,
-            maxDistance: 70,
-            lightSource: "Laser, red (Class 1)",
-        },
-        {
-            name: "FT 10-RL-60-PNSL-K4",
-            sensor: "Distance sensor with triangulation",
-            minDistance: 10,
-            maxDistance: 70,
-            lightSource: "Laser, red (Class 1)",
-        },
-        // Add more products here
-    ];
+    useEffect(() => {
+        if (id) {
+            fetchProductResults(id);
+        }
+    }, [id]);
+
+    const fetchProductResults = async (terms) => {
+        try {
+            const response = await getSingleProduct(terms);
+            console.log(response)
+            if (response?.status === 200) {
+                const productData = response?.data?.data;
+                setProduct(productData);
+                setProductDescription(productData.product_description || "");
+                setMainImage(productData?.product_image );  // Use the first image as the main image
+            } else {
+                console.error('Failed to fetch product details');
+            }
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
 
     return (
         <>
@@ -63,17 +55,28 @@ const ProductDetail = () => {
                         <Grid item xs={12} md={6}>
                             <Box>
                                 {/* Main Product Image */}
-                                <Box component="img" src={mainImage} alt="Main Product" sx={{ width: "100%", borderRadius: 2 }} />
+                                <Box
+                                    component="img"
+                                    src={ baseUrl + mainImage[0]?.image}
+                                    alt="Main Product"
+                                    sx={{ width: "100%", borderRadius: 2 }}
+                                />
                             </Box>
                             <Box sx={{ display: "flex", mt: 2 }}>
                                 {/* Product Carousel */}
-                                {productImages.map((image, index) => (
+                                {mainImage.map((image, index) => (
                                     <Box
                                         key={index}
                                         component="img"
-                                        src={image}
+                                        src={baseUrl + image?.image}
                                         alt={`Product ${index + 1}`}
-                                        sx={{ width: 60, height: 60, mx: 1, cursor: "pointer", border: mainImage === image ? '2px solid orange' : 'none' }}
+                                        sx={{
+                                            width: 60,
+                                            height: 60,
+                                            mx: 1,
+                                            cursor: "pointer",
+                                            border: mainImage === image ? '2px solid orange' : 'none'
+                                        }}
                                         onClick={() => setMainImage(image)}
                                     />
                                 ))}
@@ -82,23 +85,88 @@ const ProductDetail = () => {
 
                         {/* Product Name and Description */}
                         <Grid item xs={12} md={6}>
-                            <Typography variant="h4" fontWeight="bold">
-                                VISOR® V50 Code Reader Professional
+                            <Typography
+                                sx={{
+                                    fontSize: '20px',
+                                    fontWeight: 600,
+                                    lineHeight: '28px',
+                                    textAlign: 'left',
+                                    color: '#0462b6',
+                                    mb: 1,
+                                }}
+                            >
+                                {product?.product_name || "Product Name"}
                             </Typography>
-                            <Typography variant="body1" sx={{ mt: 2 }}>
-                                Order code: V50-CR-P3-W-M2-L <br />
-                                Product variant: V50-CR-P3-I-W-M2-L | Monochrome | LED, infrared
+                            <Grid sx={{ display: "flex" }}>
+                                <Typography
+                                    sx={{
+                                        fontSize: '14px',
+                                        fontWeight: 600,
+                                        lineHeight: '20px',
+                                        textAlign: 'left',
+                                        color: '#5f6c72',
+                                        mb: 1,
+                                    }}
+                                >
+                                    Category name :
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        fontSize: '14px',
+                                        fontWeight: 600,
+                                        lineHeight: '20px',
+                                        textAlign: 'left',
+                                        color: '#191c1f',
+                                        mb: 1,
+                                    }}
+                                >
+                                    {' '} {product?.category_name || "Product Name"}
+                                </Typography>
+                            </Grid>
+
+                            <Grid sx={{ display: "flex" }}>
+                                <Typography
+                                    sx={{
+                                        fontSize: '14px',
+                                        fontWeight: 600,
+                                        lineHeight: '20px',
+                                        textAlign: 'left',
+                                        color: '#5f6c72',
+                                        mb: 1,
+                                    }}
+                                >
+                                    Sub Category :
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        fontSize: '14px',
+                                        fontWeight: 600,
+                                        lineHeight: '20px',
+                                        textAlign: 'left',
+                                        color: '#191c1f',
+                                        mb: 1,
+                                    }}
+                                >
+                                    {' '} {product?.sub_category || "Product Name"}
+                                </Typography>
+                            </Grid>
+                            <Typography>
+                                <div
+                                    dangerouslySetInnerHTML={{ __html: productDescription }}
+                                />
                             </Typography>
-                            <Typography variant="body2" sx={{ mt: 2 }}>
-                                <strong>Description:</strong>
-                                <ul>
-                                    <li>Applications: Identification max. 255 jobs with 255 detectors...</li>
-                                    <li>Barcoded reading for 1D bar codes...</li>
-                                    <li>Pattern matching, contrast detection...</li>
-                                </ul>
-                            </Typography>
-                            <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-                                View Details
+                            <Button
+                                variant="contained"
+                                endIcon={<ArrowForwardIcon />}
+                                sx={{
+                                    textTransform: 'none',
+                                    padding: '10px 20px',
+                                    fontSize: { xs: '14px', md: '16px' },
+                                    backgroundColor: '#FA8232',
+                                    color: '#FFFFFF',
+                                }}
+                            >
+                                View All
                             </Button>
                         </Grid>
                     </Grid>
@@ -116,42 +184,14 @@ const ProductDetail = () => {
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" fontWeight="bold">Product Videos</Typography>
-                            {/* Embed a video */}
-                            <YouTube videoId="Js--R6WIBww" opts={{ height: '200', width: '100%' }} />
-                          </Grid>
+                            <Box sx={{ mt: 2 }}>
+                                <video width="100%" controls>
+                                    <source src='https://dc.damio.in/assets/video/1727423588.Temperature%20transmitters%20_%20tasks,%20traits%20and%20technology%20_%20endresshauser.mp4' type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video>
+                            </Box>
+                        </Grid>
                     </Grid>
-
-                    {/* Third Section: Products Match Your Search Criteria */}
-                    <Typography variant="h5" fontWeight="bold" sx={{ mt: 4 }}>
-                        Products match your search criteria
-                    </Typography>
-                    <TableContainer component={Paper} sx={{ mt: 2 }}>
-                        <Table>
-                            <TableHead sx={{background: "#F2F4F5"}}>
-                                <TableRow>
-                                    <TableCell>PRODUCTS</TableCell>
-                                    <TableCell>Sensor Principle</TableCell>
-                                    <TableCell>Working Distance Min</TableCell>
-                                    <TableCell>Working Distance Max</TableCell>
-                                    <TableCell>Light Source</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {matchingProducts.map((product, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell>{product.name}</TableCell>
-                                        <TableCell>{product.sensor}</TableCell>
-                                        <TableCell>{product.minDistance}</TableCell>
-                                        <TableCell>{product.maxDistance}</TableCell>
-                                        <TableCell>{product.lightSource}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-
-                    {/* Pagination */}
-                    <Pagination count={6} sx={{ mt: 2, display: "flex", justifyContent: "right",  }} />
                 </Box>
             </Container>
             <Footer />

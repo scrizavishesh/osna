@@ -44,7 +44,7 @@ export const GetBanner = async () => {
 
 export const GetProduct = async () => {
     axios.defaults.headers.common["Authorization"] = '';
-    var response = await axios.get(`${API_URL}/products/`,);
+    var response = await axios.get(`${API_URL}/products`,);
     if (response) {
       return response;
     } else {
@@ -82,5 +82,26 @@ export const GetProduct = async () => {
       return [];
     }
   }
+
+  export const Search = async (data) => {
+    axios.defaults.headers.common["Authorization"] = bearerToken;
+    var response = await axios.get(`${API_URL}/search-product?search_term=${data}`,);
+    if (response) {
+      return response;
+    } else {
+      return [];
+    }
+  }
+
+  export const getSingleProduct = async (data) => {
+    axios.defaults.headers.common["Authorization"] = bearerToken;
+    var response = await axios.get(`${API_URL}/products/${data}`,);
+    if (response) {
+      return response;
+    } else {
+      return [];
+    }
+  }
+
 
 

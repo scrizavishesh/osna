@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Footer from '../Layouts/Footer';
 import Header from '../Layouts/Header';
 import Navbar from '../Layouts/Navbar';
-import { GetCategorySubcategory } from '../Utils/Apis';
+import { GetCategorySubcategory, GetProduct } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 
 const Product = () => {
@@ -55,6 +55,28 @@ const Product = () => {
         setSelectedType(
             selectedSubCategory.types.find((type) => type.id === parseInt(event.target.value))
         );
+    };
+
+    const [cardDetails, setcardDetails] = useState([]);
+    const baseUrl = 'https://dc.damio.in/'
+
+    useEffect(() => {
+        getProduct();
+    }, []);
+
+    const getProduct = async () => {
+        try {
+            const response = await GetProduct();
+            console.log(response, "get product");
+            if (response?.status === 200) {
+                toast.success("Got Product successfully");
+                setcardDetails(response?.data?.data);
+            } else {
+                toast.error("Failed to fetch categories");
+            }
+        } catch (err) {
+            toast.error(err?.message);
+        }
     };
 
     return (
@@ -236,7 +258,7 @@ const Product = () => {
                                                 {product.short_description}
                                             </Typography>
                                             <Button
-                                                to={`/sub_products/${product.id}`}
+                                                to={`/products_Detail/${product.id}`}
                                                 component={Link}
                                                 variant="contained"
                                                 sx={{ backgroundColor: '#FA8232', color: '#FFF' }}
@@ -247,7 +269,31 @@ const Product = () => {
                                     </Grid>
                                 ))
                             ) : (
-                                <Typography variant="body1">No products available for this selection.</Typography>
+                                <>
+                                    {cardDetails.map((item, index) => (
+                                        <Grid item xs={12} sm={6} md={4} key={item.id}>
+                                            <Card sx={{ p: 2, textAlign: 'center' }}>
+                                                <Box sx={{ mb: 2 }}>
+                                                    <img src="./Product_Main_Image.png" alt={item.title} style={{ width: '100%', objectFit: 'cover' }} />
+                                                </Box>
+                                                <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                                                    {item.product_name}
+                                                </Typography>
+                                                <Typography variant="body2" sx={{ mb: 2 }}>
+                                                    {item.short_description}
+                                                </Typography>
+                                                <Button
+                                                    to={`/products_Detail/${item.id}`}
+                                                    component={Link}
+                                                    variant="contained"
+                                                    sx={{ backgroundColor: '#FA8232', color: '#FFF' }}
+                                                >
+                                                    View All
+                                                </Button>
+                                            </Card>
+                                        </Grid>
+                                    ))}
+                                </>
                             )}
                         </Grid>
                     </Grid>

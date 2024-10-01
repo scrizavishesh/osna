@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import { Grid, Button, Container, Divider, Grid2, OutlinedInput, Stack, Typography } from '@mui/material';
 // import Grid from '@mui/material/Unstable_Grid2'; 
@@ -9,8 +9,18 @@ import RedditIcon from '@mui/icons-material/Reddit';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import { SearchOffOutlined } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
+import MainSVG from '../SVG/MainSVG';
 
 const Header = () => {
+
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+
     return (
         <Container maxWidth="lg">
             {/* Top Bar with welcome text and social icons */}
@@ -55,7 +65,7 @@ const Header = () => {
                     gap: { xs: 2, md: 0 },
                 }}
             >
-                <img src={'./logo-white 1.svg'} loading="lazy" alt="Logo" style={{ maxWidth: '150px', height: 'auto' }} />
+                <MainSVG sx={{maxWidth: '150px'}}/>
 
                 {/* Search bar */}
                 <Box
@@ -70,6 +80,7 @@ const Header = () => {
                     <OutlinedInput
                         type="text"
                         id="search"
+                        onChange={handleSearchChange}
                         placeholder="Search for anything..."
                         sx={{
                             flex: 1,
@@ -78,6 +89,8 @@ const Header = () => {
                         }}
                     />
                     <Button
+                        to={`/search_result?search_term=${encodeURIComponent(searchTerm)}`} // Pass search term as a query param
+                        component={Link}
                         sx={{
                             backgroundColor: '#fff',
                             borderRadius: '0 1px 1px 0',

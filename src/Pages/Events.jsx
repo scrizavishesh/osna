@@ -1,11 +1,12 @@
 
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardMedia, CardContent, Typography, Grid, Button, Box } from '@mui/material';
 import Header from '../Layouts/Header';
 import Navbar from '../Layouts/Navbar';
 import Footer from '../Layouts/Footer';
 import { GetEvents } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
+import { Container } from '@mui/system';
 
 const events = [
     {
@@ -58,38 +59,39 @@ const EventsPage = () => {
                 <Header />
             </Grid>
             <Navbar />
-
-            <Box sx={{ padding: '2rem' }}>
-                <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: '2rem' }}>
-                    Past Events
-                </Typography>
-                <Grid container spacing={3}>
-                    {Events.map((event) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={event.id}>
-                            <Card sx={{ height: '100%' }}>
-                                <CardMedia
-                                    component="img"
-                                    height="300" // Fixed height for images
-                                    image={baseUrl + event.event_image}
-                                    alt={event.title}
-                                    sx={{ objectFit: 'cover' }} // Ensures consistent image display
-                                />
-                                <CardContent sx={{ textAlign: 'left', padding: '1rem' }}>
-                                    <Typography variant="subtitle2" color="textSecondary">
-                                        {event.start_date} - {event.end_date}
-                                    </Typography>
-                                    <Typography variant="h6" sx={{ fontWeight: 'bold', margin: '0.5rem 0' }}>
-                                        {event.event_name}
-                                    </Typography>
-                                    <Button variant="contained" size="small" sx={{ mt: 2 }}>
-                                        Read More
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
-            </Box>
+            <Container maxWidth="lg" sx={{ mt: 4 }}>
+                <Box sx={{ padding: '2rem' }}>
+                    <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: '2rem' }}>
+                        Past Events
+                    </Typography>
+                    <Grid container spacing={3}>
+                        {Events.map((event) => (
+                            <Grid item xs={12} sm={6} md={4} lg={3} key={event.id}>
+                                <Card sx={{ height: '100%' }}>
+                                    <CardMedia
+                                        component="img"
+                                        height="300" // Fixed height for images
+                                        image={baseUrl + event.event_image}
+                                        alt={event.title}
+                                        sx={{ objectFit: 'cover' }} // Ensures consistent image display
+                                    />
+                                    <CardContent sx={{ textAlign: 'left', padding: '1rem' }}>
+                                        <Typography variant="subtitle2" color="textSecondary">
+                                            {event.start_date} - {event.end_date}
+                                        </Typography>
+                                        <Typography variant="h6" sx={{ fontWeight: 'bold', margin: '0.5rem 0' }}>
+                                            {event.event_name}
+                                        </Typography>
+                                        <Button variant="contained" size="small" sx={{ mt: 2 }}>
+                                            Read More
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Box>
+            </Container>
 
             <Footer />
         </>

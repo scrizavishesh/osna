@@ -122,13 +122,14 @@ const CarouselSlider = () => {
                                 left: '5%', // Align to the left side
                                 transform: 'translateY(-50%)', // Perfect centering
                                 color: '#000',
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
                                 textAlign: 'left',
                                 maxWidth: '400px',
                                 padding: '1.5rem',
                                 borderRadius: '8px',
                             }}
                         >
-                            <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 2, fontSize: '2rem' }}>
+                            <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 2, fontSize: '2rem',  color: '#fff', }}>
                                 {item.heading}
                             </Typography>
                             <Box sx={{ display: 'flex', gap: '1rem', mt: 2 }}>
@@ -151,10 +152,10 @@ const CarouselSlider = () => {
                                     to={`/contact`}
                                     variant="outlined"
                                     sx={{
-                                        color: '#000',
-                                        borderColor: '#000',
+                                        color: '#fff',
+                                        borderColor: '#fff',
                                         '&:hover': {
-                                            borderColor: '#000',
+                                            borderColor: '#fff',
                                             backgroundColor: 'rgba(211, 37, 37, 0.1)',
                                         },
                                     }}
