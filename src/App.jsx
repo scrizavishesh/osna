@@ -9,17 +9,19 @@ import Sub_ProductDetails from './Pages/Sub_ProductDetails';
 import EventsPage from './Pages/Events';
 import { Search } from '@mui/icons-material';
 import SearchResult from './Pages/SearchResult';
+import TawkTo from './Layouts/ChatBot';
 
 function App() {
   return (
     <Router>
+      <TawkTo />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/products" element={<Product />} />
         <Route path="/products_Detail/:id" element={<ProductDetail />} />
-        <Route path="/sub_products" element={<Sub_ProductDetails />} />
+        <Route path="/categories" element={<Sub_ProductDetails />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/search_result" element={<SearchResult />} />
       </Routes>

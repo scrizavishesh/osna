@@ -1,13 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Typography, Button, Box, Card, CardMedia, CardContent } from '@mui/material';
 import YouTube from 'react-youtube';
 import Header from '../Layouts/Header';
 import Navbar from '../Layouts/Navbar';
 import { Container } from '@mui/system';
 import Footer from '../Layouts/Footer';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { getCategoryDetails } from '../Utils/Apis';
 
 const Sub_ProductDetails = () => {
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const category_name = searchParams.get('category_name');
+
+    const [category, setCategory] = useState([]);
+    const [description, setDescription] = useState('')
+
+    const baseUrl = 'https://dc.damio.in/';
+
+    useEffect(() => {
+        if (category_name) {
+            fetchCategory(category_name);
+        }
+    }, [category_name]);
+
+    const fetchCategory = async (terms) => {
+        try {
+            const response = await getCategoryDetails(terms);
+            console.log(response, 'Category data');
+            if (response?.status === 200) {
+                setCategory(response?.data?.data?.category_details);
+                setDescription(response?.data?.data?.category_details?.category_description)
+            } else {
+                console.error('Failed to fetch categories');
+            }
+        } catch (err) {
+            console.error(err?.message);
+        }
+    };
+
+
     return (
         <>
             <Grid sx={{ bgcolor: '#0462B6' }}>
@@ -20,19 +52,20 @@ const Sub_ProductDetails = () => {
                     <Grid container spacing={2} sx={{ marginBottom: '4rem' }}>
                         <Grid item xs={12} md={6}>
                             <Typography variant="h3" color="primary">
-                                Vision Sensors
+                                {category?.category_name}
                             </Typography>
                             <Typography variant="h5" sx={{ marginTop: '1rem' }}>
-                                For Factory Automation
+                                {category?.type_parent}
                             </Typography>
-                            <Typography variant="body1" sx={{ marginTop: '1rem' }}>
-                                Perfectly in tune: A combination of sophisticated hardware and easily configurable software.
-                                Scalability: Select your VISOR® to suit your own requirements.
+                            <Typography>
+                                <div
+                                    dangerouslySetInnerHTML={{ __html: description }}
+                                />
                             </Typography>
                             <Button
-                            component={Link}
-                            to="/products_Detail"
-                             variant="contained" color="warning" sx={{ marginTop: '2rem' }}>
+                                component={Link}
+                                to="/products_Detail"
+                                variant="contained" color="warning" sx={{ marginTop: '2rem' }}>
                                 VISOR® Product Overview
                             </Button>
                         </Grid>
@@ -40,7 +73,7 @@ const Sub_ProductDetails = () => {
                             <Card sx={{ boxShadow: 'none', border: 'none' }}>
                                 <CardMedia
                                     component="img"
-                                    image="./sub_main.png" // Replace with product image
+                                    image={baseUrl + category?.category_image}
                                     alt="Product Image"
                                     sx={{ height: 250, objectFit: 'contain' }}
                                 />

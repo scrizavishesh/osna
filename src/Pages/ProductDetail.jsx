@@ -1,45 +1,83 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Grid, Box, Button, Typography, Container } from "@mui/material";
+import { Grid, Box, Button, Typography, Container, CardMedia, CardContent, Card } from "@mui/material";
 import Header from "../Layouts/Header";
 import Navbar from "../Layouts/Navbar";
 import Footer from "../Layouts/Footer";
-import YouTube from "react-youtube";
-import { getSingleProduct } from '../Utils/Apis';
+import { getProductAccessories, getSingleProduct } from '../Utils/Apis';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import DownloadPDF from '../Layouts/DownloadPDF';
+import Modal from '../Layouts/Modal';
 
 const ProductDetail = () => {
 
     const baseUrl = 'https://dc.damio.in/';
+    const token = localStorage.getItem('osna_token');
 
-    // State for main image
-    const [mainImage, setMainImage] = useState([]);
+    // State for main image list and selected main image
+    const [mainImageList, setMainImageList] = useState([]); // Holds the list of product images
+    const [selectedImage, setSelectedImage] = useState(''); // Holds the currently selected main image
     const [product, setProduct] = useState({});
     const [productDescription, setProductDescription] = useState('');
+    const [open, setOpen] = useState(false);
+    const [PDFData, setPDFData] = useState('');
+    const [accessories, setAccessories] = useState([]);
+    const [productAcccess, setproductAcccess] = useState('')
 
     const { id } = useParams();
 
     useEffect(() => {
         if (id) {
             fetchProductResults(id);
+            fetchProductAccessories(id);
         }
     }, [id]);
 
     const fetchProductResults = async (terms) => {
         try {
             const response = await getSingleProduct(terms);
-            console.log(response)
+            console.log(response);
             if (response?.status === 200) {
                 const productData = response?.data?.data;
                 setProduct(productData);
                 setProductDescription(productData.product_description || "");
-                setMainImage(productData?.product_image );  // Use the first image as the main image
+
+                // Set mainImageList and the first image as the selected main image
+                const imageList = Array.isArray(productData?.product_image) ? productData?.product_image : [];
+                setMainImageList(imageList);
+                if (imageList.length > 0) {
+                    setSelectedImage(imageList[0]?.image); // Set the first image as the initial main image
+                }
             } else {
                 console.error('Failed to fetch product details');
             }
         } catch (err) {
             console.error(err.message);
         }
+    };
+
+    const fetchProductAccessories = async (terms) => {
+        try {
+            const response = await getProductAccessories(terms);
+            console.log(response, "Accessories");
+            if (response?.status === 200) {
+                setAccessories(response?.data?.data);
+                setproductAcccess(response?.data?.data?.accessory_description);
+            } else {
+                console.error('Failed to fetch product details');
+            }
+        } catch (err) {
+            console.error(err.message);
+        }
+    };
+
+    const handleOpen = (pdf) => {
+        setOpen(true);
+        setPDFData(pdf);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
     };
 
     return (
@@ -57,14 +95,21 @@ const ProductDetail = () => {
                                 {/* Main Product Image */}
                                 <Box
                                     component="img"
-                                    src={ baseUrl + mainImage[0]?.image}
+                                    src={baseUrl + selectedImage}
                                     alt="Main Product"
-                                    sx={{ width: "100%", borderRadius: 2 }}
+                                    sx={{
+                                        width: "100%",
+                                        height: "500px",
+                                        objectFit: "cover",  // Fills the container, but may crop parts of the image
+                                        objectPosition: "center",
+                                        borderRadius: 2
+                                    }}
                                 />
+
                             </Box>
                             <Box sx={{ display: "flex", mt: 2 }}>
                                 {/* Product Carousel */}
-                                {mainImage.map((image, index) => (
+                                {mainImageList.map((image, index) => (
                                     <Box
                                         key={index}
                                         component="img"
@@ -73,12 +118,14 @@ const ProductDetail = () => {
                                         sx={{
                                             width: 60,
                                             height: 60,
+                                            objectFit: "cover", // Makes sure the image covers the entire box, even if cropped slightly
                                             mx: 1,
                                             cursor: "pointer",
-                                            border: mainImage === image ? '2px solid orange' : 'none'
+                                            border: selectedImage === image?.image ? '2px solid orange' : 'none'
                                         }}
-                                        onClick={() => setMainImage(image)}
+                                        onClick={() => setSelectedImage(image?.image)} // Set the clicked image as the main image
                                     />
+
                                 ))}
                             </Box>
                         </Grid>
@@ -120,7 +167,7 @@ const ProductDetail = () => {
                                         mb: 1,
                                     }}
                                 >
-                                    {' '} {product?.category_name || "Product Name"}
+                                    {' '} {product?.category_name || "Category Name"}
                                 </Typography>
                             </Grid>
 
@@ -147,7 +194,7 @@ const ProductDetail = () => {
                                         mb: 1,
                                     }}
                                 >
-                                    {' '} {product?.sub_category || "Product Name"}
+                                    {' '} {product?.sub_category || "Sub Category"}
                                 </Typography>
                             </Grid>
                             <Typography>
@@ -156,6 +203,7 @@ const ProductDetail = () => {
                                 />
                             </Typography>
                             <Button
+                                onClick={(e) => handleOpen(product?.document)}
                                 variant="contained"
                                 endIcon={<ArrowForwardIcon />}
                                 sx={{
@@ -193,10 +241,39 @@ const ProductDetail = () => {
                         </Grid>
                     </Grid>
                 </Box>
+
+                {/* Third Container: Related Product Details */}
+                <Typography variant="h5" color="primary" align="center" sx={{ marginBottom: '2rem' }}>
+                    The VISOR® Vision Sensor Family Offers the Right Product for Every Application
+                </Typography>
+
+
+                <Grid container spacing={2}>
+                    {accessories.map((item, index) => (
+                        <Grid item xs={12} md={4}>
+                            <Card>
+                                <CardContent>
+                                    <CardMedia
+                                        component="img"
+                                        image={baseUrl + item?.accessory_image[0]?.image} // Replace with product image
+                                        alt="green iguana"
+                                    />
+                                    <Typography gutterBottom variant="h6" component="div">
+                                        {item?.product_accessory}
+                                    </Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica.
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
             </Container>
+            <DownloadPDF open={open} handleClose={handleClose} PDFData={PDFData} />
             <Footer />
         </>
     );
-};
+}
 
 export default ProductDetail;

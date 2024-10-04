@@ -103,5 +103,81 @@ export const GetProduct = async () => {
     }
   }
 
+  export const getContacts = async () => {
+    axios.defaults.headers.common["Authorization"] = bearerToken;
+    var response = await axios.get(`${API_URL}/get-contact-information`,);
+    if (response) {
+      return response;
+    } else {
+      return [];
+    }
+  }
+
+  export const getBranches = async () => {
+    axios.defaults.headers.common["Authorization"] = bearerToken;
+    var response = await axios.get(`${API_URL}/get-branches`,);
+    if (response) {
+      return response;
+    } else {
+      return [];
+    }
+  }
+
+
+  export const getProductAccessories = async (data) => {
+    axios.defaults.headers.common["Authorization"] = bearerToken;
+    var response = await axios.get(`${API_URL}/get-product-accessories?product_id=${data}`,);
+    if (response) {
+      return response;
+    } else {
+      return [];
+    }
+  }
+
+
+
+  export const getCategoryDetails  = async (data) => {
+    axios.defaults.headers.common["Authorization"] = bearerToken;
+    var response = await axios.get(`${API_URL}/get-category-details?category_name=${data}`,);
+    if (response) {
+      return response;
+    } else {
+      return [];
+    }
+  }
+
+
+  export const getCategoryNames  = async () => {
+    axios.defaults.headers.common["Authorization"] = bearerToken;
+    var response = await axios.get(`${API_URL}/get-category-name`,);
+    if (response) {
+      return response;
+    } else {
+      return [];
+    }
+  }
+
+
+  export const createQuestions  = async (data) => {
+    axios.defaults.headers.common["Authorization"] = bearerToken;
+    var response = await axios.post(`${API_URL}/create-question`, data);
+    if (response) {
+      return response;
+    } else {
+      return [];
+    }
+  }
+
+
+  export const getAnswers  = async () => {
+    axios.defaults.headers.common["Authorization"] = bearerToken;
+    var response = await axios.get(`${API_URL}/get-question-answer`,);
+    if (response) {
+      return response;
+    } else {
+      return [];
+    }
+  }
+
 
 

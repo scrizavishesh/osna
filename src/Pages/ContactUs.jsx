@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Container, Grid, Box, TextField, Button, MenuItem, Typography, Paper, Card, Select } from '@mui/material';
+import { Container, Grid, Box, TextField, Button, MenuItem, Typography, Paper, Card, Select, Divider } from '@mui/material';
 import { Phone, Email, LocationOn } from '@mui/icons-material';
 import Footer from '../Layouts/Footer';
 import Header from '../Layouts/Header';
 import Navbar from '../Layouts/Navbar';
-import { handleContact } from '../Utils/Apis';
+import { getBranches, getContacts, handleContact } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 
 const ContactUs = () => {
+
+    const [branches, setBranches] = useState([]);
+    const [contact, setContact] = useState('')
+    console.log(branches)
     const { register, handleSubmit, reset, formState: { errors }, } = useForm();
 
 
@@ -34,6 +38,41 @@ const ContactUs = () => {
             }
         } catch (error) {
             toast.error("Something went wrong");
+        }
+    };
+
+    useEffect(() => {
+        Contact();
+        Branches();
+    }, []);
+
+    const Contact = async () => {
+        try {
+            const response = await getContacts();
+            console.log(response, "get Contact");
+            if (response?.status === 200) {
+                toast.success("Get Contact");
+                setContact(response?.data?.data[0]);
+            } else {
+                toast.error("Failed to fetch categories");
+            }
+        } catch (err) {
+            toast.error(err?.message);
+        }
+    };
+
+
+    const Branches = async () => {
+        try {
+            const response = await getBranches();
+            if (response?.status === 200) {
+                toast.success("Get Branches");
+                setBranches(response?.data?.data);
+            } else {
+                toast.error("Failed to fetch categories");
+            }
+        } catch (err) {
+            toast.error(err?.message);
         }
     };
 
@@ -104,9 +143,19 @@ const ContactUs = () => {
                                     >
                                         <Phone />
                                     </Box>
-                                    <Typography>+91 999-999-9999</Typography>
+                                    <Typography
+                                        sx={{
+                                            fontSize: '14px',
+                                            fontWeight: 400,
+                                            lineHeight: '20px',
+                                            color: "#999999",
+                                        }}
+                                    >
+                                        {contact?.contact_phone_number}
+                                    </Typography>
                                 </Box>
-                                <Box display="flex" alignItems="center" mb={2}>
+                                <Divider variant="middle" />
+                                <Box display="flex" alignItems="center" mb={2} mt={2}>
                                     <Box
                                         sx={{
                                             backgroundColor: '#0462B6',
@@ -122,9 +171,19 @@ const ContactUs = () => {
                                     >
                                         <Email />
                                     </Box>
-                                    <Typography>osnaelectronics@gmail.com</Typography>
+                                    <Typography
+                                        sx={{
+                                            fontSize: '14px',
+                                            fontWeight: 400,
+                                            lineHeight: '20px',
+                                            color: "#999999",
+                                        }}
+                                    >
+                                        {contact?.contact_email}
+                                    </Typography>
                                 </Box>
-                                <Box display="flex" alignItems="center" mb={2}>
+                                <Divider variant="middle" />
+                                <Box display="flex" alignItems="center" mb={2} mt={2}>
                                     <Box
                                         sx={{
                                             backgroundColor: '#0462B6',
@@ -140,22 +199,60 @@ const ContactUs = () => {
                                     >
                                         <LocationOn />
                                     </Box>
-                                    <Typography>
-                                        Ground Floor, Logix Park
+                                    <Typography sx={{
+                                        fontSize: '14px',
+                                        fontWeight: 400,
+                                        lineHeight: '20px',
+                                        color: "#999999",
+                                        alignItems: 'center',
+                                    }}>
+                                        {contact?.contact_address}
                                     </Typography>
                                 </Box>
-                                {/* Map */}
-                                <Box mt={2}>
-                                    <iframe
-                                        title="Company Location"
-                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3504.6643330174115!2d77.27097867508039!3d28.549807387833255!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce1597b5509e5%3A0x25c6cf2c60b12316!2sOsna%20Electronics%20Private%20Limited!5e0!3m2!1sen!2sin!4v1726644963757!5m2!1sen!2sin"
-                                        width="280"
-                                        height="280"
-                                        style={{ border: 0 }}
-                                        allowFullScreen=""
-                                        loading="lazy"
-                                    ></iframe>
+                                <Divider variant="middle" />
+
+                                {/* Banches */}
+
+                                <Box mb={2}>
+                                    <Typography
+                                        sx={{
+                                            fontSize: '21px',
+                                            fontWeight: 500,
+                                            lineHeight: '64px',
+                                            color: "#2c2c2c",
+                                            mb: 2,
+                                        }}
+                                    >
+                                        Branch Office
+                                    </Typography>
                                 </Box>
+                                {branches?.map((item) => (
+                                    <Box alignItems="center" mb={2}>
+                                        <Typography
+                                            sx={{
+                                                fontSize: '14px',
+                                                fontWeight: 400,
+                                                lineHeight: '20px',
+                                                color: "#2c2c2c",
+                                            }}
+                                        >
+                                            {item?.branch_name}
+                                            {console.log(item?.branch_name)}
+                                        </Typography>
+                                        <Typography
+                                            sx={{
+                                                fontSize: '14px',
+                                                fontWeight: 400,
+                                                lineHeight: '20px',
+                                                color: "#999999",
+                                            }}
+                                        >
+                                            Mobile No - {item?.email}
+                                            Email Id - {item?.mobile}
+                                        </Typography>
+                                    </Box>
+                                ))}
+                                <Divider variant="middle" />
                             </Paper>
                         </Grid>
 
@@ -177,7 +274,6 @@ const ContactUs = () => {
                                     <Grid container spacing={2}>
                                         <Grid item xs={12}>
                                             <Select
-                                                
                                                 // label="Type of Request"
                                                 fullWidth
                                                 variant="outlined"
@@ -261,6 +357,18 @@ const ContactUs = () => {
                                     </Grid>
                                 </form>
                             </Card>
+                            <Box mt={2}>
+                                <iframe
+                                    title="Company Location"
+                                    src={contact?.map}
+                                    width="100%"
+                                    height="280"
+                                    style={{ border: 0 }}
+                                    allowFullScreen=""
+                                    loading="lazy"
+                                >
+                                </iframe>
+                            </Box>
                         </Grid>
                     </Grid>
                 </Paper>

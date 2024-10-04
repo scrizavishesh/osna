@@ -5,6 +5,7 @@ import { Box } from '@mui/system';
 import Header from '../Layouts/Header';
 import Navbar from '../Layouts/Navbar';
 import { Search } from '../Utils/Apis';
+import Footer from '../Layouts/Footer';
 
 const SearchResult = () => {
   const location = useLocation();
@@ -42,7 +43,7 @@ const SearchResult = () => {
 
       <Grid sx={{ background: '#FAFAFA', py: 2 }}>
         <Container maxWidth="lg">
-          <Grid container spacing={2}>
+          <Grid container spacing={2} mb={5}>
             {/* Title */}
             <Grid item xs={12} sx={{ p: 2 }}>
               <Typography
@@ -141,6 +142,7 @@ const SearchResult = () => {
           </Grid>
         </Container>
       </Grid>
+      <Footer />
     </>
   );
 };

@@ -10,7 +10,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const Footer = () => {
     return (
-        <Box component="footer" sx={{ backgroundColor: '#0462B6', color: 'white', pt: 4, pb: 2 }}>
+        <Box component="footer" sx={{ backgroundColor: '#0462B6', color: 'white', pt: 4, pb: 2 , mt: 4}}>
             <Container maxWidth="lg">
                 <Grid container spacing={4} justifyContent="center">
                     {/* Logo and Contact Information */}

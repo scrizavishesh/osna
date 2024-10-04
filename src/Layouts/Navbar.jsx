@@ -1,10 +1,12 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AppBar, Toolbar, Container, Box, Typography, Stack, Button, FormControl, MenuItem, Select, Divider, IconButton, Menu } from '@mui/material';
 import { HeadsetMic as HeadsetMicIcon, Phone as PhoneIcon, Menu as MenuIcon } from '@mui/icons-material';
+import { getCategoryNames } from '../Utils/Apis';
+import { toast } from 'react-hot-toast';
 
 const Navbar = () => {
-    const location = useLocation();  // To get the current path for active class
+    const location = useLocation();  
     const pages = [
         { name: 'Home', path: '/' },
         { name: 'Product', path: '/products' },
@@ -13,11 +15,12 @@ const Navbar = () => {
         { name: 'Events', path: '/events' },
     ];
 
-    const [age, setAge] = React.useState('');
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const [category, setCategory] = useState(''); 
+    const [anchorElNav, setAnchorElNav] = useState(null);
+    const [categoryNames, setCategoryNames] = useState([]); 
 
     const handleChange = (event) => {
-        setAge(event.target.value);
+        setCategory(event.target.value); 
     };
 
     const handleOpenNavMenu = (event) => {
@@ -26,6 +29,23 @@ const Navbar = () => {
 
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
+    };
+
+    useEffect(() => {
+        CategoryByNames();
+    }, []);
+
+    const CategoryByNames = async () => {
+        try {
+            const response = await getCategoryNames();
+            if (response?.status === 200) {
+                setCategoryNames(response?.data?.data); 
+            } else {
+                toast.error("Failed to fetch categories");
+            }
+        } catch (err) {
+            toast.error(err?.message);
+        }
     };
 
     return (
@@ -66,7 +86,7 @@ const Navbar = () => {
                         {/* Category dropdown */}
                         <FormControl sx={{ m: 1, minWidth: { xs: 100, sm: 150 } }} size="small">
                             <Select
-                                value={age}
+                                value={category}
                                 onChange={handleChange}
                                 displayEmpty
                                 inputProps={{ 'aria-label': 'Without label' }}
@@ -75,7 +95,23 @@ const Navbar = () => {
                                 <MenuItem value="">
                                     <em>All Categories</em>
                                 </MenuItem>
-                                {/* Add categories here */}
+                                {categoryNames.map((cat) => (
+                                    <MenuItem key={cat.id} value={cat.category_name}>
+                                        <Button
+                                            component={Link}
+                                            to={`/categories?category_name=${encodeURIComponent(cat.category_name)}`}
+                                            sx={{
+                                                color: '#0462B6',
+                                                textTransform: 'none',
+                                                fontWeight: 'bold',
+                                                fontSize: '14px',
+                                                '&:hover': { backgroundColor: '#f0f0f0' }
+                                            }}
+                                        >
+                                            {cat.category_name}
+                                        </Button>
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
 

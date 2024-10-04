@@ -12,7 +12,7 @@ const Product = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [selectedSubCategory, setSelectedSubCategory] = useState(null);
     const [selectedType, setSelectedType] = useState(null);
-    const [response, setResponse] = useState(null); // Initial state set to `null` instead of `undefined`
+    const [response, setResponse] = useState(null);
 
     useEffect(() => {
         getEmployess();
@@ -24,7 +24,7 @@ const Product = () => {
             console.log(response, "get category");
             if (response?.status === 200) {
                 toast.success("Got categories successfully");
-                setResponse(response?.data); // Save the data from the response
+                setResponse(response?.data); 
             } else {
                 toast.error("Failed to fetch categories");
             }
@@ -91,7 +91,7 @@ const Product = () => {
                     <Grid item xs={12} md={3}>
                         {/* Category Section */}
                         <Grid item xs={12} sx={{ backgroundColor: '#FFF', p: 2 }}>
-                            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                            <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
                                 CATEGORY
                             </Typography>
 
@@ -108,9 +108,31 @@ const Product = () => {
                                     ))}
                                 </RadioGroup>
                             ) : selectedCategory ? (
-                                <Typography variant="subtitle1" sx={{ mb: 2 }}>
-                                    Selected Category: {selectedCategory.parent.name}
-                                    <Button onClick={() => setSelectedCategory(null)} sx={{ ml: 2 }}>
+                                <Typography
+                                    sx={{
+                                        fontSize: '14px',
+                                        fontWeight: 400,
+                                        lineHeight: '20px',
+                                        color: "#2c2c2c",
+                                    }}
+                                >
+                                    Selected Category
+                                    <br />
+                                    <Typography
+                                        sx={{
+                                            fontSize: '14px',
+                                            fontWeight: 400,
+                                            lineHeight: '20px',
+                                            color: "#999999",
+                                        }}
+                                    >
+                                        {selectedCategory.parent.name}
+                                    </Typography>
+                                    <Button onClick={() => setSelectedCategory(null)} sx={{
+                                        fontSize: '14px',
+                                        fontWeight: 400,
+                                        lineHeight: '20px',
+                                    }}>
                                         Change Category
                                     </Button>
                                 </Typography>
@@ -139,9 +161,28 @@ const Product = () => {
 
                             {/* Show selected subcategory */}
                             {selectedSubCategory && (
-                                <Typography variant="subtitle1" sx={{ mb: 2 }}>
-                                    Selected Subcategory: {selectedSubCategory.subcategory_name}
-                                    <Button onClick={() => setSelectedSubCategory(null)} sx={{ ml: 2 }}>
+                                <Typography variant="subtitle1" sx={{
+                                    fontSize: '14px',
+                                    fontWeight: 400,
+                                    lineHeight: '20px',
+                                    color: "#2c2c2c",
+                                }}>
+                                    Selected Subcategory:
+                                    <Typography
+                                        sx={{
+                                            fontSize: '14px',
+                                            fontWeight: 400,
+                                            lineHeight: '20px',
+                                            color: "#999999",
+                                        }}
+                                    >
+                                        {selectedSubCategory.subcategory_name}
+                                    </Typography>
+                                    <Button onClick={() => setSelectedSubCategory(null)} sx={{
+                                        fontSize: '14px',
+                                        fontWeight: 400,
+                                        lineHeight: '20px',
+                                    }}>
                                         Change Subcategory
                                     </Button>
                                 </Typography>
@@ -230,7 +271,7 @@ const Product = () => {
                         </Box>
 
                         <Grid container spacing={2} mb={4}>
-                            {/* Display products under the selected type if present */}
+                            {/* Case: Products exist for selected Type */}
                             {selectedType && selectedType.products.length > 0 ? (
                                 selectedType.products.map((product) => (
                                     <Grid item xs={12} sm={6} md={4} key={product.id}>
@@ -244,6 +285,10 @@ const Product = () => {
                                         </Card>
                                     </Grid>
                                 ))
+                            ) : selectedType && selectedType.products.length === 0 ? (
+                                <Typography variant="h6" sx={{ color: 'red', mt: 2 }}>
+                                    No products found for this type.
+                                </Typography>
                             ) : selectedSubCategory && selectedSubCategory.products.data.length > 0 ? (
                                 selectedSubCategory?.products?.data.map((product) => (
                                     <Grid item xs={12} sm={6} md={4} key={product.id}>
@@ -268,35 +313,42 @@ const Product = () => {
                                         </Card>
                                     </Grid>
                                 ))
+                            ) : selectedSubCategory && selectedSubCategory.products.data.length === 0 ? (
+                                <Typography variant="h6" sx={{ color: 'red', mt: 2 }}>
+                                    No products found for this search.
+                                </Typography>
+                            ) : cardDetails.length > 0 ? (
+                                cardDetails.map((item, index) => (
+                                    <Grid item xs={12} sm={6} md={4} key={item.id}>
+                                        <Card sx={{ p: 2, textAlign: 'center' }}>
+                                            <Box sx={{ mb: 2 }}>
+                                                <img src="./Product_Main_Image.png" alt={item.title} style={{ width: '100%', objectFit: 'cover' }} />
+                                            </Box>
+                                            <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                                                {item.product_name}
+                                            </Typography>
+                                            <Typography variant="body2" sx={{ mb: 2 }}>
+                                                {item.short_description}
+                                            </Typography>
+                                            <Button
+                                                to={`/products_Detail/${item.id}`}
+                                                component={Link}
+                                                variant="contained"
+                                                sx={{ backgroundColor: '#FA8232', color: '#FFF' }}
+                                            >
+                                                View All
+                                            </Button>
+                                        </Card>
+                                    </Grid>
+                                ))
                             ) : (
-                                <>
-                                    {cardDetails.map((item, index) => (
-                                        <Grid item xs={12} sm={6} md={4} key={item.id}>
-                                            <Card sx={{ p: 2, textAlign: 'center' }}>
-                                                <Box sx={{ mb: 2 }}>
-                                                    <img src="./Product_Main_Image.png" alt={item.title} style={{ width: '100%', objectFit: 'cover' }} />
-                                                </Box>
-                                                <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                                                    {item.product_name}
-                                                </Typography>
-                                                <Typography variant="body2" sx={{ mb: 2 }}>
-                                                    {item.short_description}
-                                                </Typography>
-                                                <Button
-                                                    to={`/products_Detail/${item.id}`}
-                                                    component={Link}
-                                                    variant="contained"
-                                                    sx={{ backgroundColor: '#FA8232', color: '#FFF' }}
-                                                >
-                                                    View All
-                                                </Button>
-                                            </Card>
-                                        </Grid>
-                                    ))}
-                                </>
+                                <Typography variant="h6" sx={{ color: 'red', mt: 2 }}>
+                                    No products available at the moment.
+                                </Typography>
                             )}
                         </Grid>
                     </Grid>
+
                 </Grid>
             </Container>
             <Footer />
