@@ -180,4 +180,37 @@ export const GetProduct = async () => {
   }
 
 
+  export const getHomePageContent  = async () => {
+    axios.defaults.headers.common["Authorization"] = bearerToken;
+    var response = await axios.get(`${API_URL}/home-page-content`,);
+    if (response) {
+      return response;
+    } else {
+      return [];
+    }
+  }
+
+
+  export const getAboutPageContent  = async () => {
+    axios.defaults.headers.common["Authorization"] = bearerToken;
+    var response = await axios.get(`${API_URL}/about-us-page-content`,);
+    if (response) {
+      return response;
+    } else {
+      return [];
+    }
+  }
+
+
+  export const getCoreMembers  = async () => {
+    axios.defaults.headers.common["Authorization"] = bearerToken;
+    var response = await axios.get(`${API_URL}/get-teams`,);
+    if (response) {
+      return response;
+    } else {
+      return [];
+    }
+  }
+
+
 

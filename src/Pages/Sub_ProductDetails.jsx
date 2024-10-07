@@ -14,7 +14,8 @@ const Sub_ProductDetails = () => {
     const category_name = searchParams.get('category_name');
 
     const [category, setCategory] = useState([]);
-    const [description, setDescription] = useState('')
+    const [description, setDescription] = useState('');
+    const [subCategoryDetails, setsubCategoryDetails] = useState([])
 
     const baseUrl = 'https://dc.damio.in/';
 
@@ -30,7 +31,9 @@ const Sub_ProductDetails = () => {
             console.log(response, 'Category data');
             if (response?.status === 200) {
                 setCategory(response?.data?.data?.category_details);
-                setDescription(response?.data?.data?.category_details?.category_description)
+                setDescription(response?.data?.data?.category_details?.category_description);
+                setsubCategoryDetails(response?.data?.data?.category_product);
+
             } else {
                 console.error('Failed to fetch categories');
             }
@@ -107,56 +110,24 @@ const Sub_ProductDetails = () => {
                     </Typography>
 
                     <Grid container spacing={2}>
-                        <Grid item xs={12} md={4}>
-                            <Card>
-                                <CardContent>
-                                    <CardMedia
-                                        component="img"
-                                        image="./sub_main.png" // Replace with product image
-                                        alt="Product Image"
-                                        sx={{ height: "100%", objectFit: 'contain' }}
-                                    />
-                                    <Typography variant="h6">VISOR® Code Reader</Typography>
-                                    <Typography variant="body2">
-                                        The compact code reader with its integrated object detection reads up to 20 barcodes, 2D data matrix codes, and
-                                        OCR.
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Card>
-                                <CardContent>
-                                    <CardMedia
-                                        component="img"
-                                        image="./sub_main.png" // Replace with product image
-                                        alt="Product Image"
-                                        sx={{ height: "100%", objectFit: 'contain' }}
-                                    />
-                                    <Typography variant="h6">VISOR® Object (AI)</Typography>
-                                    <Typography variant="body2">
-                                        Classification of objects made easy with artificial intelligence.
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Card>
-                                <CardContent>
-                                    <CardMedia
-                                        component="img"
-                                        image="./sub_main.png" // Replace with product image
-                                        alt="Product Image"
-                                        sx={{ height: "100%", objectFit: 'contain' }}
-                                    />
-                                    <Typography variant="h6">VISOR® Robotic</Typography>
-                                    <Typography variant="body2">
-                                        An eye on everything – the expert for robotics applications with simple connection to robotics systems of leading
-                                        manufacturers.
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
+                        {subCategoryDetails.map((subCategory) => (
+                            <Grid item xs={12} md={4}>
+                                <Card>
+                                    <CardContent>
+                                        <CardMedia
+                                            component="img"
+                                            image={baseUrl + subCategory?.product_image} // Replace with product image
+                                            alt="Product Image"
+                                            sx={{ height: "100%", objectFit: 'contain' }}
+                                        />
+                                        <Typography variant="h6">{subCategory?.sub_category}</Typography>
+                                        <Typography variant="body2">
+                                            {subCategory?.short_description}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        ))}
                     </Grid>
 
                     <Box textAlign="center" sx={{ marginTop: '2rem' }}>

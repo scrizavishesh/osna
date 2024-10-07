@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button, Card, Typography, Container, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 import Header from '../Layouts/Header';
@@ -66,6 +66,7 @@ const SearchResult = () => {
               events.map((item, index) => (
                 <Grid
                   item
+                  mt={5}
                   xs={12}
                   sm={6}
                   md={4}
@@ -110,6 +111,8 @@ const SearchResult = () => {
                       {item.short_description}
                     </Typography>
                     <Button
+                      to={`/products_Detail/${item.id}`}
+                      component={Link}
                       variant="contained"
                       sx={{
                         textTransform: 'none',

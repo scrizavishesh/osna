@@ -19,7 +19,7 @@ import ChatBot from '../Layouts/ChatBot';
 import Modal from '../Layouts/Modal';
 import Carousel from '../SubPages/Carousel';
 import CompanyCarousel from '../SubPages/CompanyCarousel';
-import { GetBanner, GetProduct } from '../Utils/Apis';
+import { GetBanner, getHomePageContent, GetProduct } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 
 
@@ -28,10 +28,12 @@ const MyComponent = () => {
     const token = localStorage.getItem('osna_token');
 
     const [cardDetails, setcardDetails] = useState([]);
+    const [pageHome, setpageHome] = useState('')
     const baseUrl = 'https://dc.damio.in/'
 
     useEffect(() => {
         getProduct();
+        getHome();
     }, []);
 
     const getProduct = async () => {
@@ -41,6 +43,21 @@ const MyComponent = () => {
             if (response?.status === 200) {
                 toast.success("Got Product successfully");
                 setcardDetails(response?.data?.data);
+            } else {
+                toast.error("Failed to fetch categories");
+            }
+        } catch (err) {
+            toast.error(err?.message);
+        }
+    };
+
+    const getHome = async () => {
+        try {
+            const response = await getHomePageContent();
+            console.log(response, "Home Page Content");
+            if (response?.status === 200) {
+                toast.success("Get Home Page Content");
+                setpageHome(response?.data?.data[0]);
             } else {
                 toast.error("Failed to fetch categories");
             }
@@ -91,7 +108,7 @@ const MyComponent = () => {
                                             lineHeight="56px"
                                             gutterBottom
                                         >
-                                            Detect the difference
+                                            {pageHome?.section_one_heading}
                                         </Typography>
                                         <Typography
                                             variant="body1"
@@ -99,7 +116,7 @@ const MyComponent = () => {
                                             lineHeight="24px"
                                             mb={3}
                                         >
-                                            With our innovative sensors and vision cameras, we accompany your transformation into a digital factory. Whether for the identification or inspection of objects, positioning tasks in the robotics industry, or numerous other sensor tasks, we offer simple and reliable solutions using state-of-the-art technologies, designed with modern interfaces for integration into future-oriented infrastructure.
+                                            {pageHome?.section_one_description}
                                         </Typography>
                                         <Button
                                             component={Link}
@@ -117,11 +134,10 @@ const MyComponent = () => {
                                             View All
                                         </Button>
                                     </Box>
-
                                     {/* Image Section */}
                                     <Box width={{ xs: '100%', md: '35%' }} height="auto">
                                         <img
-                                            src="./first_main.svg"
+                                            src={baseUrl + pageHome?.section_one_image}
                                             alt="Placeholder"
                                             style={{ width: '100%', objectFit: 'cover', height: 'auto' }}
                                         />
@@ -129,7 +145,6 @@ const MyComponent = () => {
                                 </Box>
                             </Card>
                         </Grid>
-
                         {/* Right Section */}
                         <Grid item xs={12} md={4}>
                             {/* Upper Section */}
@@ -184,7 +199,6 @@ const MyComponent = () => {
                                             View All
                                         </Button>
                                     </Box>
-
                                     {/* Image Section */}
                                     <Box
                                         position="relative"
@@ -205,7 +219,6 @@ const MyComponent = () => {
                                     </Box>
                                 </Box>
                             </Card>
-
                             {/* Lower Section */}
                             <Card
                                 elevation={3}
@@ -418,7 +431,7 @@ const MyComponent = () => {
                                     mb: 2,
                                 }}
                             >
-                                We are Osna
+                                {pageHome?.section_two_heading}
                             </Typography>
 
                             <Typography
@@ -430,7 +443,7 @@ const MyComponent = () => {
                                     mb: 2,
                                 }}
                             >
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
+                                {pageHome?.section_two_subheading}
                             </Typography>
 
                             <Typography
@@ -442,7 +455,7 @@ const MyComponent = () => {
                                     mb: 3,
                                 }}
                             >
-                                In the more than 30 years of our existence we have made an international name for ourselves as an innovative sensor company. For example, we are the technological leader in the market of industrial image processing with our VISOR® series or in many areas of optical sensors. Whether switching sensor or vision sensor - users particularly appreciate the well thought-out, practical functionality of our products as well as their easy setup and operation.
+                                {pageHome?.section_two_description}
                             </Typography>
 
                             <Button
@@ -474,7 +487,7 @@ const MyComponent = () => {
                             }}
                         >
                             <img
-                                src="./main_page_metting.svg"
+                                src={baseUrl + pageHome?.section_two_image}
                                 alt="Placeholder"
                                 style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
                             />
@@ -504,7 +517,7 @@ const MyComponent = () => {
                         </Grid>
 
                         {/* Cards */}
-                        {cardDetails.map((item, index) => (
+                        {cardDetails.slice(0, 10).map((item, index) => (
                             <Grid
                                 item
                                 xs={12} sm={6} md={4} lg={2.4} mb={4}  // Responsive card sizes
@@ -519,12 +532,13 @@ const MyComponent = () => {
                                         borderRadius: '8px',
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        alignItems: 'center',
+                                        justifyContent: 'space-between',  // Ensure content is spaced correctly
                                         p: 2,
                                         height: '100%',
-                                        mb: 2
+                                        mb: 2,
                                     }}
                                 >
+                                    {/* Header Section: Image */}
                                     <Box sx={{ width: '100%', height: 'auto', mb: 2 }}>
                                         <img
                                             src="./first_main.svg"
@@ -532,36 +546,55 @@ const MyComponent = () => {
                                             style={{ width: '100%', objectFit: 'cover', height: 'auto' }}
                                         />
                                     </Box>
-                                    <Typography
+
+                                    {/* Middle Section: Product Name & Description */}
+                                    <Box sx={{ flexGrow: 1, textAlign: 'center', mb: 2 }}>
+                                        <Typography
+                                            sx={{
+                                                fontSize: '16px',
+                                                fontWeight: 400,
+                                                lineHeight: '20px',
+                                                textAlign: 'center',
+                                                color: "#191C1F",
+                                                mb: 2,
+                                            }}
+                                        >
+                                            {item?.product_name}
+                                        </Typography>
+                                        <Typography variant="body2" sx={{ mb: 2 }}>
+                                            {item.short_description}
+                                        </Typography>
+                                    </Box>
+
+                                    {/* Footer Section: Button */}
+                                    <Box
                                         sx={{
-                                            fontSize: '16px',
-                                            fontWeight: 400,
-                                            lineHeight: '20px',
-                                            textAlign: 'center',
-                                            color: "#191C1F",
-                                            mb: 2,
+                                            display: 'flex',  // Use colon instead of "="
+                                            justifyContent: 'center',
+                                            mb: 4 // Corrected syntax
                                         }}
                                     >
-                                        {item?.product_name}
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ mb: 2 }}>
-                                        {item.short_description}
-                                    </Typography>
-                                    <Button
-                                        variant="contained"
-                                        sx={{
-                                            textTransform: 'none',
-                                            padding: '5px 15px',
-                                            fontSize: '14px',
-                                            backgroundColor: '#FA8232',
-                                            color: '#FFFFFF',
-                                        }}
-                                    >
-                                        View All
-                                    </Button>
+                                        <Button
+                                            to={`/products_Detail/${item.id}`}
+                                            component={Link}
+                                            variant="contained"
+                                            sx={{
+                                                textTransform: 'none',
+                                                padding: '5px 15px',
+                                                fontSize: '14px',
+                                                backgroundColor: '#FA8232',
+                                                color: '#FFFFFF',
+
+                                            }}
+                                        >
+                                            View All
+                                        </Button>
+                                    </Box>
+
                                 </Card>
                             </Grid>
                         ))}
+
                     </Grid>
                 </Container>
             </Grid>

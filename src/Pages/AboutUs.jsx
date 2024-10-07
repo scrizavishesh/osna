@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Grid, Typography, Card, Avatar, Container, IconButton } from '@mui/material';
 import { Facebook, Twitter, LinkedIn, Instagram } from '@mui/icons-material';
 import Header from '../Layouts/Header';
 import Navbar from '../Layouts/Navbar';
 import Footer from '../Layouts/Footer';
-import { display, spacing } from '@mui/system';
+import { getAboutPageContent, getCoreMembers } from '../Utils/Apis';
+import { toast } from 'react-hot-toast';
 
 const teamMembers = [
     { name: 'Floyd Miles', role: 'Marketing Director', image: 'link-to-image', social: { fb: '#', tw: '#', ln: '#', ig: '#' } },
@@ -17,7 +18,48 @@ const teamMembers = [
     { name: 'Jacob Jones', role: 'Principal', image: 'link-to-image', social: { fb: '#', tw: '#', ln: '#', ig: '#' } },
 ];
 
+
+
 const AboutUs = () => {
+    const baseUrl = 'https://dc.damio.in/'
+
+    const [AboutUs, setAboutUs] = useState('');
+    const [coreMember, setcoreMember] = useState([])
+
+    useEffect(() => {
+        getAbout();
+        getTeam();
+    }, [])
+
+    const getAbout = async () => {
+        try {
+            const response = await getAboutPageContent();
+            console.log(response, "About Page Content");
+            if (response?.status === 200) {
+                toast.success("Get About Page Content");
+                setAboutUs(response?.data?.data[0]);
+            } else {
+                toast.error("Failed to fetch categories");
+            }
+        } catch (err) {
+            toast.error(err?.message);
+        }
+    };
+
+    const getTeam = async () => {
+        try {
+            const response = await getCoreMembers();
+            console.log(response, "Core Members");
+            if (response?.status === 200) {
+                toast.success("");
+                setcoreMember(response?.data?.data);
+            } else {
+                toast.error("Failed to fetch categories");
+            }
+        } catch (err) {
+            toast.error(err?.message);
+        }
+    };
     return (
         <>
             <Grid sx={{ bgcolor: '#0462B6' }}>
@@ -51,7 +93,7 @@ const AboutUs = () => {
                                     marginBottom: '16px',
                                 }}
                             >
-                                We are Osna
+                                {AboutUs?.section_one_heading}
                             </Typography>
                             <Typography
                                 sx={{
@@ -61,7 +103,7 @@ const AboutUs = () => {
                                     color: '#4c4c4c',
                                 }}
                             >
-                                SensoPart is one of the leading manufacturers of photoelectric sensors and image processing for factory automation. Our aim is to remain one step ahead to be able to offer our customers the most innovative products on the market. In this way, we help them to pave the way to the digital factory. In order to maintain our ability to offer the latest technologies, we invest more than usual in research and development and work together with renowned universities and research institutes. Successful products, now considered indispensable for modern factory automation, have been created from the many future-oriented ideas of earlier days. But we do not simply rest on our laurels – because we still have many ideas for the future.
+                                {AboutUs?.section_one_description}
                             </Typography>
                         </Box>
 
@@ -69,16 +111,17 @@ const AboutUs = () => {
                         <Box
                             sx={{
                                 position: 'relative',
-                                backgroundImage: 'url(./about_us_main.svg)', // Add the correct image path
+                                backgroundImage: `url(${baseUrl + AboutUs?.section_one_image})`, // Corrected background image syntax
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
-                                height: { xs: '300px', sm: '350px', md: '400px' },  // Responsive height
+                                height: { xs: '300px', sm: '350px', md: '400px' }, // Responsive height
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'flex-start',
                                 paddingTop: { xs: '50px', sm: '60px', md: '80px' }, // Adjust padding for smaller screens
                             }}
                         >
+
                             {/* Statistics Section */}
                             <Box
                                 sx={{
@@ -153,7 +196,7 @@ const AboutUs = () => {
                                         mb: 2,
                                     }}
                                 >
-                                    Our Mission
+                                    {AboutUs?.section_two_heading_part_one}
                                 </Typography>
                                 <Typography
                                     sx={{
@@ -165,7 +208,7 @@ const AboutUs = () => {
                                         mb: 2,
                                     }}
                                 >
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                    {AboutUs?.section_two_subheading_part_one}
                                 </Typography>
                                 <Typography
                                     sx={{
@@ -177,7 +220,7 @@ const AboutUs = () => {
                                         mb: 2,
                                     }}
                                 >
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Non blandit massa enim nec. Scelerisque viverra mauris in aliquam sem. At risus viverra adipiscing at in tellus.
+                                    {AboutUs?.section_two_description_part_one}
                                 </Typography>
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -191,7 +234,7 @@ const AboutUs = () => {
                                         mb: 2,
                                     }}
                                 >
-                                    Our Mission
+                                   {AboutUs?.section_two_heading_part_two}
                                 </Typography>
                                 <Typography
                                     sx={{
@@ -203,7 +246,7 @@ const AboutUs = () => {
                                         mb: 2,
                                     }}
                                 >
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                    {AboutUs?.section_two_subheading_part_two}
                                 </Typography>
                                 <Typography
                                     sx={{
@@ -215,7 +258,7 @@ const AboutUs = () => {
                                         mb: 2,
                                     }}
                                 >
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Non blandit massa enim nec. Scelerisque viverra mauris in aliquam sem. At risus viverra adipiscing at in tellus.
+                                    {AboutUs?.section_two_description_part_two}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -235,7 +278,7 @@ const AboutUs = () => {
                                         mb: 2,
                                     }}
                                 >
-                                    Milestones of product development
+                                   {AboutUs?.section_three_heading}
                                 </Typography>
                                 <Typography
                                     sx={{
@@ -247,7 +290,7 @@ const AboutUs = () => {
                                         mb: 2,
                                     }}
                                 >
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
+                                     {AboutUs?.section_three_subheading}
                                 </Typography>
                                 <Typography
                                     sx={{
@@ -259,13 +302,13 @@ const AboutUs = () => {
                                         mb: 2,
                                     }}
                                 >
-                                    In the more than 30 years of our existence we have made an international name for ourselves as an innovative sensor company. For example, we are the technological leader in the market of industrial image processing with our VISOR® series or in many areas of optical sensors. Whether switching sensor or vision sensor - users particularly appreciate the well thought-out, practical functionality of our products as well as their easy setup and operation
+                                    {AboutUs?.section_three_description}
                                 </Typography>
                             </Grid>
                             <Grid item xs={12} md={6} sx={{ position: 'relative' }}>
                                 <Box
                                     component="img"
-                                    src="./hand_sake.svg"
+                                    src={baseUrl + AboutUs?.section_three_image}
                                     alt="Milestones of product"
                                     sx={{ width: '100%', height: 'auto', zIndex: 1, position: 'relative' }}
                                 />
@@ -279,7 +322,7 @@ const AboutUs = () => {
                             <Grid item xs={12} md={6} sx={{ position: 'relative' }}>
                                 <Box
                                     component="img"
-                                    src="./meeting.svg"
+                                    src={baseUrl + AboutUs?.section_four_image}
                                     alt="Milestones in history"
                                     sx={{ width: '100%', height: 'auto', zIndex: 1, position: 'relative' }}
                                 />
@@ -295,7 +338,7 @@ const AboutUs = () => {
                                         mb: 2,
                                     }}
                                 >
-                                    Milestones of product development
+                                     {AboutUs?.section_four_heading}
                                 </Typography>
                                 <Typography
                                     sx={{
@@ -307,8 +350,8 @@ const AboutUs = () => {
                                         mb: 2,
                                     }}
                                 >
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
-                                </Typography>
+                                    {AboutUs?.section_four_subheading}
+\                                </Typography>
                                 <Typography
                                     sx={{
                                         fontSize: '16px',
@@ -319,7 +362,7 @@ const AboutUs = () => {
                                         mb: 2,
                                     }}
                                 >
-                                    In the more than 30 years of our existence we have made an international name for ourselves as an innovative sensor company. For example, we are the technological leader in the market of industrial image processing with our VISOR® series or in many areas of optical sensors. Whether switching sensor or vision sensor - users particularly appreciate the well thought-out, practical functionality of our products as well as their easy setup and operation
+                                    {AboutUs?.section_four_description}
                                 </Typography>
                             </Grid>
                         </Grid>
