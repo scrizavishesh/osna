@@ -103,6 +103,16 @@ export const GetProduct = async () => {
     }
   }
 
+  export const getSingleAccessories = async (data) => {
+    axios.defaults.headers.common["Authorization"] = bearerToken;
+    var response = await axios.get(`${API_URL}/get-accessory-by-id?accessory_id=${data}`,);
+    if (response) {
+      return response;
+    } else {
+      return [];
+    }
+  }
+
   export const getContacts = async () => {
     axios.defaults.headers.common["Authorization"] = bearerToken;
     var response = await axios.get(`${API_URL}/get-contact-information`,);
@@ -205,6 +215,18 @@ export const GetProduct = async () => {
   export const getCoreMembers  = async () => {
     axios.defaults.headers.common["Authorization"] = bearerToken;
     var response = await axios.get(`${API_URL}/get-teams`,);
+    if (response) {
+      return response;
+    } else {
+      return [];
+    }
+  }
+
+
+
+  export const CareerAPI  = async (data) => {
+    axios.defaults.headers.common["Authorization"] = bearerToken;
+    var response = await axios.post(`${API_URL}/career`, data);
     if (response) {
       return response;
     } else {

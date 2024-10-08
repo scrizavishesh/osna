@@ -1,29 +1,51 @@
-import React, { useState } from 'react';
-import Box from '@mui/material/Box';
-import { Grid, Button, Container, Divider, Grid2, OutlinedInput, Stack, Typography } from '@mui/material';
-// import Grid from '@mui/material/Unstable_Grid2'; 
-import TwitterIcon from '@mui/icons-material/Twitter';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import PinterestIcon from '@mui/icons-material/Pinterest';
-import RedditIcon from '@mui/icons-material/Reddit';
-import YouTubeIcon from '@mui/icons-material/YouTube';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import { SearchOffOutlined } from '@mui/icons-material';
+import React, { useState, useEffect } from 'react';
+import { Box, Button, Container, Divider, IconButton, OutlinedInput, Stack, Typography } from '@mui/material';
+import { SearchOffOutlined, Person, PersonAdd } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import MainSVG from '../SVG/MainSVG';
+import { getContacts } from '../Utils/Apis';
+import { toast } from 'react-hot-toast';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import YouTubeIcon from '@mui/icons-material/YouTube';
 
 const Header = () => {
-
     const [searchTerm, setSearchTerm] = useState('');
+    const [activeButton, setActiveButton] = useState(null);
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
     };
 
+    const [contact, setContact] = useState('');
+
+    useEffect(() => {
+        Contact();
+    }, []);
+
+    const Contact = async () => {
+        try {
+            const response = await getContacts();
+            console.log(response, "get Contact");
+            if (response?.status === 200) {
+                toast.success("Get Contact");
+                setContact(response?.data?.data[0]);
+            } else {
+                toast.error("Failed to fetch categories");
+            }
+        } catch (err) {
+            toast.error(err?.message);
+        }
+    };
+
+    const handleActiveButton = (buttonType) => {
+        setActiveButton(buttonType);
+    };
 
     return (
         <Container maxWidth="lg">
-            {/* Top Bar with welcome text and social icons */}
             <Box sx={{ p: 2 }}>
                 <Stack
                     direction={{ xs: 'column', sm: 'row' }}
@@ -33,28 +55,45 @@ const Header = () => {
                     <Typography variant="body2" sx={{ color: '#fff' }}>
                         Welcome to Osna Electronics Pvt Ltd
                     </Typography>
-                    <Stack
-                        direction="row"
-                        spacing={1}
-                        alignItems="center"
-                        sx={{ justifyContent: { xs: 'center', sm: 'flex-end' } }}
-                    >
+                    <Stack direction="row" spacing={1} alignItems="center" sx={{ justifyContent: { xs: 'center', sm: 'flex-end' } }}>
                         <Typography variant="body2" sx={{ color: '#fff' }}>
                             Follow us:
                         </Typography>
-                        <TwitterIcon sx={{ color: '#fff' }} />
-                        <FacebookIcon sx={{ color: '#fff' }} />
-                        <PinterestIcon sx={{ color: '#fff' }} />
-                        <RedditIcon sx={{ color: '#fff' }} />
-                        <YouTubeIcon sx={{ color: '#fff' }} />
-                        <InstagramIcon sx={{ color: '#fff' }} />
+                        <Box>
+                            {[
+                                { icon: <FacebookIcon />, href: `${contact?.facebook_url}` },
+                                { icon: <TwitterIcon />, href: `${contact?.twitter_url}` },
+                                { icon: <InstagramIcon />, href: `${contact?.instagram_url}` },
+                                { icon: <LinkedInIcon />, href: `${contact?.linkedin_url}` },
+                                { icon: <YouTubeIcon />, href: `${contact?.youtube_url}` },
+                            ].map((social, index) => (
+                                <IconButton
+                                    key={index}
+                                    href={social.href}
+                                    sx={{
+                                        // backgroundColor: '#FFFFFF',
+                                        color: '#fff',
+                                        // borderRadius: '50%',
+                                        width: '40px',
+                                        height: '40px',
+                                        mr: 1,
+                                        '&:hover': {
+                                            backgroundColor: '#FFA163',
+                                            color: '#FFFFFF',
+                                        },
+                                    }}
+                                >
+                                    {social.icon}
+                                </IconButton>
+                            ))}
+                        </Box>
                     </Stack>
                 </Stack>
             </Box>
 
             <Divider sx={{ color: '#fff' }} />
 
-            {/* Logo and Search bar section */}
+            {/* Logo, Search bar, Log In/Sign Up */}
             <Box
                 sx={{
                     display: 'flex',
@@ -65,7 +104,7 @@ const Header = () => {
                     gap: { xs: 2, md: 0 },
                 }}
             >
-                <MainSVG sx={{maxWidth: '150px'}}/>
+                <MainSVG sx={{ maxWidth: '150px' }} />
 
                 {/* Search bar */}
                 <Box
@@ -73,7 +112,7 @@ const Header = () => {
                         display: 'flex',
                         backgroundColor: '#fff',
                         overflow: 'hidden',
-                        width: { xs: '100%', md: '50%' },
+                        width: { xs: '100%', md: '40%' },
                         height: '42px',
                     }}
                 >
@@ -89,22 +128,52 @@ const Header = () => {
                         }}
                     />
                     <Button
-                        to={`/search_result?search_term=${encodeURIComponent(searchTerm)}`} // Pass search term as a query param
+                        to={`/search_result?search_term=${encodeURIComponent(searchTerm)}`}
                         component={Link}
                         sx={{
                             backgroundColor: '#fff',
                             borderRadius: '0 1px 1px 0',
-                            '&:hover': {
-                                backgroundColor: '#fff',
-                            },
+                            '&:hover': { backgroundColor: '#fff' },
                         }}
                     >
                         <SearchOffOutlined sx={{ color: '#0462B6' }} />
                     </Button>
                 </Box>
+
+                {/* Log In and Sign Up Buttons with Icons */}
+                <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
+                    <Button
+                        onClick={() => handleActiveButton('login')}
+                        sx={{
+                            backgroundColor: activeButton === 'login' ? '#FA8232' : 'transparent',
+                            color: activeButton === 'login' ? '#fff' : '#fff',
+                            '&:hover': { backgroundColor: '#FA8232', color: '#fff' },
+                            borderRadius: '20px',
+                            textTransform: 'none',
+                        }}
+                        startIcon={<Person />}
+                    >
+                        Log In
+                    </Button>
+                    <Button
+                        to='/signup'
+                        component={Link}
+                        onClick={() => handleActiveButton('signup')}
+                        sx={{
+                            backgroundColor: activeButton === 'signup' ? '#FA8232' : 'transparent',
+                            color: activeButton === 'signup' ? '#fff' : '#fff',
+                            '&:hover': { backgroundColor: '#FA8232', color: '#fff' },
+                            borderRadius: '20px',
+                            textTransform: 'none',
+                        }}
+                        startIcon={<PersonAdd />}
+                    >
+                        Sign Up
+                    </Button>
+                </Stack>
             </Box>
         </Container>
-    )
-}
+    );
+};
 
-export default Header
+export default Header;

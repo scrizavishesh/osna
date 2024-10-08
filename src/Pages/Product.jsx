@@ -7,6 +7,8 @@ import Header from '../Layouts/Header';
 import Navbar from '../Layouts/Navbar';
 import { GetCategorySubcategory, GetProduct } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 const Product = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -24,7 +26,7 @@ const Product = () => {
             console.log(response, "get category");
             if (response?.status === 200) {
                 toast.success("Got categories successfully");
-                setResponse(response?.data); 
+                setResponse(response?.data);
             } else {
                 toast.error("Failed to fetch categories");
             }
@@ -291,28 +293,34 @@ const Product = () => {
                                 </Typography>
                             ) : selectedSubCategory && selectedSubCategory.products.data.length > 0 ? (
                                 selectedSubCategory?.products?.data.map((product) => (
-                                    <Grid item xs={12} sm={6} md={4} key={product.id}>
-                                        <Card sx={{ p: 2, textAlign: 'center' }}>
-                                            <Box sx={{ mb: 2 }}>
-                                                <img src="./Product_Main_Image.png" alt={product.title} style={{ width: '100%', objectFit: 'cover' }} />
-                                            </Box>
-                                            <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                                                {product.product_name}
-                                            </Typography>
-                                            <Typography variant="body2" sx={{ mb: 2 }}>
-                                                {product.short_description}
-                                            </Typography>
-                                            <Button
-                                                to={`/products_Detail/${product.id}`}
-                                                component={Link}
-                                                variant="contained"
-                                                sx={{ backgroundColor: '#FA8232', color: '#FFF' }}
-                                            >
-                                                View All
-                                            </Button>
-                                        </Card>
-                                    </Grid>
+                                    <>
+                                        <Grid item xs={12} sm={6} md={4} key={product.id}>
+                                            <Card sx={{ p: 2, textAlign: 'center' }}>
+                                                <Box sx={{ mb: 2 }}>
+                                                    <img src="./Product_Main_Image.png" alt={product.title} style={{ width: '100%', objectFit: 'cover' }} />
+                                                </Box>
+                                                <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                                                    {product.product_name}
+                                                </Typography>
+                                                <Typography variant="body2" sx={{ mb: 2 }}>
+                                                    {product.short_description}
+                                                </Typography>
+                                                <Button
+                                                    to={`/products_Detail/${product.id}`}
+                                                    component={Link}
+                                                    variant="contained"
+                                                    sx={{ backgroundColor: '#FA8232', color: '#FFF' }}
+                                                >
+                                                    View All
+                                                </Button>
+                                            </Card>
+                                        </Grid>
+                                        <Stack spacing={2}>
+                                            <Pagination count={10} showFirstButton showLastButton />
+                                        </Stack>
+                                    </>
                                 ))
+
                             ) : selectedSubCategory && selectedSubCategory.products.data.length === 0 ? (
                                 <Typography variant="h6" sx={{ color: 'red', mt: 2 }}>
                                     No products found for this search.
@@ -339,6 +347,7 @@ const Product = () => {
                                                 View All
                                             </Button>
                                         </Card>
+
                                     </Grid>
                                 ))
                             ) : (

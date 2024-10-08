@@ -10,6 +10,9 @@ import EventsPage from './Pages/Events';
 import { Search } from '@mui/icons-material';
 import SearchResult from './Pages/SearchResult';
 import TawkTo from './Layouts/ChatBot';
+import AccessoriesDetail from './Pages/AccessoriesDetail';
+import SignUp from './Pages/Signup';
+import Career from './Pages/Career';
 
 function App() {
   return (
@@ -18,12 +21,15 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutUs />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/career" element={<Career />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/products" element={<Product />} />
         <Route path="/products_Detail/:id" element={<ProductDetail />} />
         <Route path="/categories" element={<Sub_ProductDetails />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/search_result" element={<SearchResult />} />
+        <Route path="/accessories-detail/:id" element={<AccessoriesDetail />} />
       </Routes>
     </Router>
   );

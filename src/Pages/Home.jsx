@@ -19,12 +19,11 @@ import ChatBot from '../Layouts/ChatBot';
 import Modal from '../Layouts/Modal';
 import Carousel from '../SubPages/Carousel';
 import CompanyCarousel from '../SubPages/CompanyCarousel';
-import { GetBanner, getHomePageContent, GetProduct } from '../Utils/Apis';
+import { GetBanner, getContacts, getHomePageContent, GetProduct } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 
 
 const MyComponent = () => {
-    const cards = new Array(10).fill(null);
     const token = localStorage.getItem('osna_token');
 
     const [cardDetails, setcardDetails] = useState([]);
@@ -65,6 +64,9 @@ const MyComponent = () => {
             toast.error(err?.message);
         }
     };
+
+   
+
     return (
         <>
             <Grid sx={{ bgcolor: '#0462B6' }}>

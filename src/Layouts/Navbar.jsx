@@ -13,6 +13,7 @@ const Navbar = () => {
         { name: 'About Us', path: '/about' },
         { name: 'Contact Us', path: '/contact' },
         { name: 'Events', path: '/events' },
+        { name: 'Career', path: '/career' },
     ];
 
     const [category, setCategory] = useState(''); 
@@ -143,19 +144,7 @@ const Navbar = () => {
                             alignItems="center"
                             sx={{ textAlign: { xs: 'center', sm: 'left' } }}
                         >
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                <HeadsetMicIcon sx={{ color: '#FA8232' }} />
-                                <Typography
-                                    sx={{
-                                        fontSize: { xs: '12px', sm: '14px' },
-                                        fontWeight: 400,
-                                        lineHeight: '20px',
-                                        color: '#5F6C72',
-                                    }}
-                                >
-                                    Customer Support
-                                </Typography>
-                            </Box>
+                        
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <PhoneIcon sx={{ color: '#FA8232' }} />
                                 <Typography

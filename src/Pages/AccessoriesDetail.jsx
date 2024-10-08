@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Grid, Box, Button, Typography, Container, CardMedia, CardContent, Card } from "@mui/material";
 import Header from "../Layouts/Header";
 import Navbar from "../Layouts/Navbar";
 import Footer from "../Layouts/Footer";
-import { getProductAccessories, getSingleProduct } from '../Utils/Apis';
+import { getProductAccessories, getSingleAccessories, getSingleProduct } from '../Utils/Apis';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DownloadPDF from '../Layouts/DownloadPDF';
 import Modal from '../Layouts/Modal';
 
-const ProductDetail = () => {
+const AccessoriesDetail = () => {
 
     const baseUrl = 'https://dc.damio.in/';
     const token = localStorage.getItem('osna_token');
@@ -21,48 +21,28 @@ const ProductDetail = () => {
     const [productDescription, setProductDescription] = useState('');
     const [open, setOpen] = useState(false);
     const [PDFData, setPDFData] = useState('');
-    const [accessories, setAccessories] = useState([]);
-    const [productAcccess, setproductAcccess] = useState('')
 
     const { id } = useParams();
 
     useEffect(() => {
         if (id) {
             fetchProductResults(id);
-            fetchProductAccessories(id);
         }
     }, [id]);
 
     const fetchProductResults = async (terms) => {
         try {
-            const response = await getSingleProduct(terms);
-            console.log(response);
+            const response = await getSingleAccessories(terms);
+            console.log(response, "Single accessories");
             if (response?.status === 200) {
                 const productData = response?.data?.data;
                 setProduct(productData);
-                setProductDescription(productData.product_description || "");
-
-                // Set mainImageList and the first image as the selected main image
-                const imageList = Array.isArray(productData?.product_image) ? productData?.product_image : [];
+                setProductDescription(productData.accessory_description || "");
+                const imageList = Array.isArray(productData?.accessory_image) ? productData?.accessory_image : [];
                 setMainImageList(imageList);
                 if (imageList.length > 0) {
-                    setSelectedImage(imageList[0]?.image); // Set the first image as the initial main image
+                    setSelectedImage(imageList[0]?.image);
                 }
-            } else {
-                console.error('Failed to fetch product details');
-            }
-        } catch (err) {
-            console.error(err.message);
-        }
-    };
-
-    const fetchProductAccessories = async (terms) => {
-        try {
-            const response = await getProductAccessories(terms);
-            console.log(response, "Accessories");
-            if (response?.status === 200) {
-                setAccessories(response?.data?.data);
-                setproductAcccess(response?.data?.data?.accessory_description);
             } else {
                 console.error('Failed to fetch product details');
             }
@@ -142,61 +122,11 @@ const ProductDetail = () => {
                                     mb: 1,
                                 }}
                             >
-                                {product?.product_name || "Product Name"}
+                                {product?.accessory_name || "Accessories Name"}
                             </Typography>
-                            <Grid sx={{ display: "flex" }}>
-                                <Typography
-                                    sx={{
-                                        fontSize: '14px',
-                                        fontWeight: 600,
-                                        lineHeight: '20px',
-                                        textAlign: 'left',
-                                        color: '#5f6c72',
-                                        mb: 1,
-                                    }}
-                                >
-                                    Category name :
-                                </Typography>
-                                <Typography
-                                    sx={{
-                                        fontSize: '14px',
-                                        fontWeight: 600,
-                                        lineHeight: '20px',
-                                        textAlign: 'left',
-                                        color: '#191c1f',
-                                        mb: 1,
-                                    }}
-                                >
-                                    {' '} {product?.category_name || "Category Name"}
-                                </Typography>
-                            </Grid>
+                            
 
-                            <Grid sx={{ display: "flex" }}>
-                                <Typography
-                                    sx={{
-                                        fontSize: '14px',
-                                        fontWeight: 600,
-                                        lineHeight: '20px',
-                                        textAlign: 'left',
-                                        color: '#5f6c72',
-                                        mb: 1,
-                                    }}
-                                >
-                                    Sub Category :
-                                </Typography>
-                                <Typography
-                                    sx={{
-                                        fontSize: '14px',
-                                        fontWeight: 600,
-                                        lineHeight: '20px',
-                                        textAlign: 'left',
-                                        color: '#191c1f',
-                                        mb: 1,
-                                    }}
-                                >
-                                    {' '} {product?.sub_category || "Sub Category"}
-                                </Typography>
-                            </Grid>
+                            
                             <Typography>
                                 <div
                                     dangerouslySetInnerHTML={{ __html: productDescription }}
@@ -241,57 +171,6 @@ const ProductDetail = () => {
                         </Grid>
                     </Grid>
                 </Box>
-
-                {/* Third Container: Related Product Details */}
-                <Typography variant="h5" color="primary" align="center" sx={{ marginBottom: '2rem' }}>
-                    The VISOR® Vision Sensor Family Offers the Right Product for Every Application
-                </Typography>
-
-
-                <Grid container spacing={2}>
-                    {accessories.map((item, index) => (
-                        <Grid item xs={12} md={4}>
-                            <Card>
-                                <CardContent>
-                                    <CardMedia
-                                        component="img"
-                                        image={baseUrl + item?.accessory_image[0]?.image} // Replace with product image
-                                        alt="green iguana"
-                                    />
-                                    <Typography gutterBottom variant="h6" component="div">
-                                        {item?.product_accessory}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica.
-                                    </Typography>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',  // Use colon instead of "="
-                                            justifyContent: 'center',
-                                            mt: 3 // Corrected syntax
-                                        }}
-                                    >
-                                        <Button
-                                            to={`/accessories-detail/${item.id}`}
-                                            component={Link}
-                                            variant="contained"
-                                            sx={{
-                                                textTransform: 'none',
-                                                padding: '5px 15px',
-                                                fontSize: '14px',
-                                                backgroundColor: '#FA8232',
-                                                color: '#FFFFFF',
-
-                                            }}
-                                        >
-                                            View Details
-                                        </Button>
-                                    </Box>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
             </Container>
             <DownloadPDF open={open} handleClose={handleClose} PDFData={PDFData} />
             <Footer />
@@ -299,4 +178,4 @@ const ProductDetail = () => {
     );
 }
 
-export default ProductDetail;
+export default AccessoriesDetail;

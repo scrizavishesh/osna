@@ -106,7 +106,7 @@ const Sub_ProductDetails = () => {
 
                     {/* Third Container: Related Product Details */}
                     <Typography variant="h5" color="primary" align="center" sx={{ marginBottom: '2rem' }}>
-                        The VISOR® Vision Sensor Family Offers the Right Product for Every Application
+                        The OSNA Family Offers the Right Product for Every Application
                     </Typography>
 
                     <Grid container spacing={2}>
@@ -130,11 +130,11 @@ const Sub_ProductDetails = () => {
                         ))}
                     </Grid>
 
-                    <Box textAlign="center" sx={{ marginTop: '2rem' }}>
+                    {/* <Box textAlign="center" sx={{ marginTop: '2rem' }}>
                         <Button variant="outlined" color="primary">
                             Show All
                         </Button>
-                    </Box>
+                    </Box> */}
                 </Box>
             </Container>
             <Footer />
