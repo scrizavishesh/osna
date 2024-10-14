@@ -69,7 +69,9 @@ const Footer = () => {
                     {/* Logo and Contact Information */}
                     <Grid item xs={12} md={3}>
                         <Grid sx={{ flexGrow: 1 }}>
-                            <MainSVG sx={{ maxWidth: '150px' }} />
+                            <Link to="/">
+                                <MainSVG sx={{ maxWidth: '150px' }} />
+                            </Link>
                         </Grid>
                         <Box mt={2}>
                             <Typography
@@ -84,7 +86,11 @@ const Footer = () => {
                             >
                                 Customer Support:
                             </Typography>
+
+                            {/* Phone Number */}
                             <Typography
+                                component="a" // Makes it clickable
+                                href={`tel:${contact?.contact_phone_number}`} // Opens phone dialer
                                 sx={{
                                     fontSize: '18px',
                                     fontWeight: 500,
@@ -92,12 +98,19 @@ const Footer = () => {
                                     textAlign: 'left',
                                     color: "#FFFFFF",
                                     mb: 1,
+                                    textDecoration: 'none', // Remove underline from link
                                 }}
                             >
                                 {contact?.contact_phone_number}
                             </Typography>
                             <Divider sx={{ backgroundColor: '#FFFFFF', my: 1 }} />
+
+                            {/* Address */}
                             <Typography
+                                component="a" // Makes it clickable
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact?.contact_address)}`} // Opens Google Maps
+                                target="_blank" // Opens in a new tab
+                                rel="noopener noreferrer" // Ensures security when opening a new tab
                                 sx={{
                                     fontSize: '15px',
                                     fontWeight: 400,
@@ -105,18 +118,24 @@ const Footer = () => {
                                     textAlign: 'left',
                                     color: "#FFFFFF",
                                     mb: 1,
+                                    textDecoration: 'none', // Remove underline from link
                                 }}
                             >
                                 {contact?.contact_address}
                             </Typography>
                             <Divider sx={{ backgroundColor: '#FFFFFF', my: 1 }} />
+
+                            {/* Email */}
                             <Typography
+                                component="a" // Makes it clickable
+                                href={`mailto:${contact?.contact_email}`} // Opens email client
                                 sx={{
                                     fontSize: '16px',
                                     fontWeight: 500,
                                     lineHeight: '24px',
                                     textAlign: 'left',
                                     color: "#FFFFFF",
+                                    textDecoration: 'none', // Remove underline from link
                                 }}
                             >
                                 {contact?.contact_email}
@@ -142,7 +161,7 @@ const Footer = () => {
                             <Typography
                                 component={Link}
                                 to={`/categories?category_name=${encodeURIComponent(cat.category_name)}`}
-                               
+
                                 sx={{
                                     display: "flex",
                                     fontSize: '14px',

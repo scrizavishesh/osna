@@ -134,8 +134,9 @@ const Header = () => {
                     gap: { xs: 2, md: 0 },
                 }}
             >
-                <MainSVG sx={{ maxWidth: '150px' }} />
-
+                <Link to="/">
+                    <MainSVG sx={{ maxWidth: '150px' }} />
+                </Link>
                 {/* Search bar */}
                 <Box
                     sx={{

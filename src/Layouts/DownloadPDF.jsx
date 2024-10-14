@@ -3,12 +3,12 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Button, IconButton }
 import CloseIcon from '@mui/icons-material/Close';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
-const DownloadPDF = ({ open, onClose, PDFData }) => {
+const DownloadPDF = ({ open, onClose, pdfData }) => {
     const baseUrl = 'https://dc.damio.in/';
 
     const handleDownload = () => {
         const link = document.createElement('a');
-        link.href = `${baseUrl}${PDFData}`;  // Replace with your PDF path
+        link.href = `${baseUrl}${pdfData}`;  // Replace with your PDF path
         link.download = 'file.pdf';
         link.click();
     };
@@ -30,7 +30,7 @@ const DownloadPDF = ({ open, onClose, PDFData }) => {
 
                 <DialogContent dividers={true} style={{ height: '500px' }}>
                     <iframe
-                        src={console.log(`${baseUrl}${PDFData}`, "Hello data")}  // Replace with the path to the PDF
+                        src={`${baseUrl}${pdfData}`}  // Replace with the path to the PDF
                         title="PDF"
                         width="100%"
                         height="100%"

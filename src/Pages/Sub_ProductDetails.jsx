@@ -129,12 +129,6 @@ const Sub_ProductDetails = () => {
                             </Grid>
                         ))}
                     </Grid>
-
-                    {/* <Box textAlign="center" sx={{ marginTop: '2rem' }}>
-                        <Button variant="outlined" color="primary">
-                            Show All
-                        </Button>
-                    </Box> */}
                 </Box>
             </Container>
             <Footer />

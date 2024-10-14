@@ -8,6 +8,7 @@ import { getProductAccessories, getSingleProduct } from '../Utils/Apis';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DownloadPDF from '../Layouts/DownloadPDF';
 import Modal from '../Layouts/Modal';
+import ReactPlayer from 'react-player';
 
 const ProductDetail = () => {
 
@@ -239,10 +240,12 @@ const ProductDetail = () => {
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" fontWeight="bold">Product Videos</Typography>
                             <Box sx={{ mt: 2 }}>
-                                <video width="100%" controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} >
-                                    <source src={encodeURI(baseUrl + product?.video)} type="video/mp4" />
-                                    Your browser does not support the video tag.
-                                </video>
+                                <ReactPlayer
+                                    url={baseUrl + product?.video}
+                                    width="100%"
+                                    controls
+                                    onContextMenu={(e) => e.preventDefault()}
+                                />
                             </Box>
                         </Grid>
                     </Grid>
@@ -299,7 +302,7 @@ const ProductDetail = () => {
                     ))}
                 </Grid>
             </Container>
-            {token && <DownloadPDF open={open} handleClose={() => setOpen(false)} pdfData={PDFData} />}
+            {token && <DownloadPDF open={open} onClose={handleClose} pdfData={PDFData} />}
             <Footer />
         </>
     );

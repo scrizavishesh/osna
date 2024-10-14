@@ -8,6 +8,7 @@ import { getProductAccessories, getSingleAccessories, getSingleProduct } from '.
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DownloadPDF from '../Layouts/DownloadPDF';
 import Modal from '../Layouts/Modal';
+import ReactPlayer from 'react-player';
 
 const AccessoriesDetail = () => {
 
@@ -124,9 +125,9 @@ const AccessoriesDetail = () => {
                             >
                                 {product?.accessory_name || "Accessories Name"}
                             </Typography>
-                            
 
-                            
+
+
                             <Typography>
                                 <div
                                     dangerouslySetInnerHTML={{ __html: productDescription }}
@@ -163,16 +164,18 @@ const AccessoriesDetail = () => {
                         <Grid item xs={12} md={6}>
                             <Typography variant="h6" fontWeight="bold">Product Videos</Typography>
                             <Box sx={{ mt: 2 }}>
-                                <video width="100%" controls>
-                                    <source src='https://dc.damio.in/assets/video/1727423588.Temperature%20transmitters%20_%20tasks,%20traits%20and%20technology%20_%20endresshauser.mp4' type="video/mp4" />
-                                    Your browser does not support the video tag.
-                                </video>
+                                <ReactPlayer
+                                    url={baseUrl + product?.accessory_video}
+                                    width="100%"
+                                    controls
+                                    onContextMenu={(e) => e.preventDefault()}
+                                />
                             </Box>
                         </Grid>
                     </Grid>
                 </Box>
             </Container>
-            <DownloadPDF open={open} handleClose={handleClose} PDFData={PDFData} />
+            <DownloadPDF open={open} onClose={handleClose} PDFData={PDFData} />
             <Footer />
         </>
     );

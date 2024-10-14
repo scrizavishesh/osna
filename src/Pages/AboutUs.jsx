@@ -377,11 +377,11 @@ const AboutUs = () => {
                     <Container sx={{ py: 6 }}>
                         <Typography variant="h4" align="center" sx={{ mb: 4 }}>Our Core Team Member</Typography>
                         <Grid container spacing={4}>
-                            {teamMembers.map((member, index) => (
+                            {coreMember.map((member, index) => (
                                 <Grid item xs={12} sm={6} md={3} key={index}>
                                     <Card sx={{ p: 2, textAlign: 'center', background: "#F4F4F4" }}>
                                         <Avatar
-                                            src="./women_profile.svg"
+                                            src={baseUrl + member?.image}
                                             alt={member.name}
                                             sx={{ width: 80, height: 80, margin: '0 auto 10px' }}
                                         />
@@ -403,18 +403,18 @@ const AboutUs = () => {
                                                 color: "#6d6e76",
                                                 letterSpacing: "-1px",
                                                 mb: 2,
-                                            }}>{member.role}</Typography>
+                                            }}>{member.designation}</Typography>
                                         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                                            <IconButton href={member.social.fb}>
+                                            <IconButton href={member?.facebook_url}>
                                                 <Facebook />
                                             </IconButton>
-                                            <IconButton href={member.social.tw}>
+                                            <IconButton href={member?.twitter_url}>
                                                 <Twitter />
                                             </IconButton>
-                                            <IconButton href={member.social.ln}>
+                                            <IconButton href={member?.linkedin_url}>
                                                 <LinkedIn />
                                             </IconButton>
-                                            <IconButton href={member.social.ig}>
+                                            <IconButton href={member?.instagram_url}>
                                                 <Instagram />
                                             </IconButton>
                                         </Box>
