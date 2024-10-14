@@ -35,7 +35,6 @@ const AboutUs = () => {
     const getAbout = async () => {
         try {
             const response = await getAboutPageContent();
-            console.log(response, "About Page Content");
             if (response?.status === 200) {
                 toast.success("Get About Page Content");
                 setAboutUs(response?.data?.data[0]);
@@ -61,7 +60,6 @@ const AboutUs = () => {
     const getTeam = async () => {
         try {
             const response = await getCoreMembers();
-            console.log(response, "Core Members");
             if (response?.status === 200) {
                 toast.success("");
                 setcoreMember(response?.data?.data);
@@ -74,10 +72,7 @@ const AboutUs = () => {
     };
     return (
         <>
-            <Grid sx={{ bgcolor: '#0462B6' }}>
-                <Header />
-            </Grid>
-            <Navbar />
+         
             <Container maxWidth="lg" sx={{ mt: 2 }}>
                 <Box>
                     <Box sx={{ position: 'relative' }}>
@@ -425,7 +420,6 @@ const AboutUs = () => {
                     </Container>
                 </Box>
             </Container>
-            <Footer />
         </>
 
     );

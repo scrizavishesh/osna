@@ -23,7 +23,6 @@ const SearchResult = () => {
   const fetchSearchResults = async (terms) => {
     try {
       const response = await Search(terms);
-      console.log(response, 'Search');
       if (response?.status === 200) {
         setEvents(response?.data?.data?.data);
       } else {
@@ -36,10 +35,6 @@ const SearchResult = () => {
 
   return (
     <>
-      <Grid sx={{ bgcolor: '#0462B6' }}>
-        <Header />
-      </Grid>
-      <Navbar />
 
       <Grid sx={{ background: '#FAFAFA', py: 2 }}>
         <Container maxWidth="lg">
@@ -145,7 +140,6 @@ const SearchResult = () => {
           </Grid>
         </Container>
       </Grid>
-      <Footer />
     </>
   );
 };

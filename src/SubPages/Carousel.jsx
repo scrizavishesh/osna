@@ -80,7 +80,6 @@ const CarouselSlider = () => {
     const getBanner = async () => {
         try {
             const response = await GetBanner();
-            console.log(response, "get banner");
             if (response?.status === 200) {
                 toast.success("Got categories successfully");
                 setBanner(response?.data?.data); // Save the data from the response
@@ -113,7 +112,6 @@ const CarouselSlider = () => {
                         }}
 
                     >
-                        {console.log(item, "hello item")}
                         {/* Content over the image */}
                         <Box
                             sx={{

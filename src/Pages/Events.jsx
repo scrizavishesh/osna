@@ -20,7 +20,6 @@ const EventsPage = () => {
     const getEve = async () => {
         try {
             const response = await GetEvents();
-            console.log(response, "get Events");
             if (response?.status === 200) {
                 toast.success("Events retrieved successfully");
                 setEvents(response?.data?.data || []); // Ensure Events is an array
@@ -34,10 +33,6 @@ const EventsPage = () => {
 
     return (
         <>
-            <Grid sx={{ bgcolor: '#0462B6' }}>
-                <Header />
-            </Grid>
-            <Navbar />
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 <Box sx={{ padding: '2rem' }}>
                     <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -80,7 +75,6 @@ const EventsPage = () => {
                     </Grid>
                 </Box>
             </Container>
-            <Footer />
         </>
     );
 };

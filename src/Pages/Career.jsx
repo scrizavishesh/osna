@@ -17,7 +17,6 @@ const Career = () => {
     };
 
     const from = watch("applying_for");
-    console.log(from)
 
     // Function to handle form submission
     const onSubmit = async (data) => {
@@ -36,11 +35,7 @@ const Career = () => {
             if (data.resume && data.resume.length > 0) {
                 formData.append('resume', data.resume[0]); // Append the actual file
             }
-
             const response = await CareerAPI(formData); // Send FormData
-
-            console.log(response, "API Response");
-
             if (response.status === 201) {
                 toast.success('Profile submitted successfully!');
                 localStorage.setItem('osna_token', response?.data?.token);
@@ -58,10 +53,6 @@ const Career = () => {
 
     return (
         <>
-            <Grid sx={{ bgcolor: '#0462B6' }}>
-                <Header />
-            </Grid>
-            <Navbar />
             <Container sx={{ textAlign: 'center', mt: 5 }}>
                 <img src="/carrer.svg" alt="Career Icon" width="80" />
                 <Typography variant="h4" sx={{ mt: 2, fontWeight: 'bold', color: '#FA8232' }}>
@@ -341,7 +332,6 @@ const Career = () => {
                     </form>
                 </Box>
             </Container>
-            <Footer />
         </>
     );
 };

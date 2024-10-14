@@ -37,7 +37,6 @@ const ProductDetail = () => {
     const fetchProductResults = async (terms) => {
         try {
             const response = await getSingleProduct(terms);
-            console.log(response, "Single Product");
             if (response?.status === 200) {
                 const productData = response?.data?.data;
                 setProduct(productData);
@@ -58,7 +57,6 @@ const ProductDetail = () => {
     const fetchProductAccessories = async (terms) => {
         try {
             const response = await getProductAccessories(terms);
-            console.log(response, "Accessories");
             if (response?.status === 200) {
                 setAccessories(response?.data?.data);
                 setproductAcccess(response?.data?.data?.accessory_description);
@@ -72,7 +70,6 @@ const ProductDetail = () => {
 
     const handleOpen = (pdf) => {
         if (!token) {
-            console.log('User is not authenticated. Redirecting to sign in page.');
             setRedirectToSignIn(true);
             return;
         }
@@ -89,10 +86,6 @@ const ProductDetail = () => {
 
     return (
         <>
-            <Grid sx={{ bgcolor: '#0462B6' }}>
-                <Header />
-            </Grid>
-            <Navbar />
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 <Box sx={{ p: 3 }}>
                     {/* First Section: Image & Product Details */}
@@ -303,7 +296,6 @@ const ProductDetail = () => {
                 </Grid>
             </Container>
             {token && <DownloadPDF open={open} onClose={handleClose} pdfData={PDFData} />}
-            <Footer />
         </>
     );
 }

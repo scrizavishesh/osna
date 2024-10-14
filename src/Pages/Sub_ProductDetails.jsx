@@ -28,7 +28,6 @@ const Sub_ProductDetails = () => {
     const fetchCategory = async (terms) => {
         try {
             const response = await getCategoryDetails(terms);
-            console.log(response, 'Category data');
             if (response?.status === 200) {
                 setCategory(response?.data?.data?.category_details);
                 setDescription(response?.data?.data?.category_details?.category_description);
@@ -45,10 +44,6 @@ const Sub_ProductDetails = () => {
 
     return (
         <>
-            <Grid sx={{ bgcolor: '#0462B6' }}>
-                <Header />
-            </Grid>
-            <Navbar />
             <Container maxWidth="lg">
                 <Box sx={{ padding: '2rem' }}>
                     {/* First Container: Category details */}
@@ -131,7 +126,6 @@ const Sub_ProductDetails = () => {
                     </Grid>
                 </Box>
             </Container>
-            <Footer />
         </>
 
     );

@@ -39,7 +39,6 @@ const SignUp = () => {
         try {
             // API call (replace `YourAPI` with the actual API function or axios call)
             const response = await userRegistration(payload);
-            console.log(response, 'API Response');
             if (response.status === 201) {
                 toast.success("Register Successfully");
                 navigate("/signin");
@@ -55,10 +54,6 @@ const SignUp = () => {
 
     return (
         <>
-            <Grid sx={{ bgcolor: '#0462B6' }}>
-                <Header />
-            </Grid>
-            <Navbar />
             <Container maxWidth="lg">
                 <Box sx={{ mb: 4, textAlign: 'center' }}>
                     <Grid sx={{
@@ -227,7 +222,6 @@ const SignUp = () => {
                     </Grid>
                 </form>
             </Container>
-            <Footer />
         </>
     );
 };

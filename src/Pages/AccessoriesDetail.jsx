@@ -34,7 +34,6 @@ const AccessoriesDetail = () => {
     const fetchProductResults = async (terms) => {
         try {
             const response = await getSingleAccessories(terms);
-            console.log(response, "Single accessories");
             if (response?.status === 200) {
                 const productData = response?.data?.data;
                 setProduct(productData);
@@ -63,10 +62,7 @@ const AccessoriesDetail = () => {
 
     return (
         <>
-            <Grid sx={{ bgcolor: '#0462B6' }}>
-                <Header />
-            </Grid>
-            <Navbar />
+           
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 <Box sx={{ p: 3 }}>
                     {/* First Section: Image & Product Details */}
@@ -176,7 +172,6 @@ const AccessoriesDetail = () => {
                 </Box>
             </Container>
             <DownloadPDF open={open} onClose={handleClose} PDFData={PDFData} />
-            <Footer />
         </>
     );
 }

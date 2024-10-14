@@ -38,3 +38,21 @@ body {
   transform: scale(1.2);
 }
 
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #0462b6; /* Color of the scrollbar */
+  border-radius: 10px; /* Round scrollbar corners */
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f0f0f0; /* Background of the scrollbar track */
+}
+
+/* Custom Scrollbar for Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin; /* Width of the scrollbar */
+  scrollbar-color: #0462b6 #f0f0f0; /* Scrollbar color and track color */
+}
+

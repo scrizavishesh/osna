@@ -49,7 +49,6 @@ const Footer = () => {
     const Contact = async () => {
         try {
             const response = await getContacts();
-            console.log(response, "get Contact");
             if (response?.status === 200) {
                 toast.success("Get Contact");
                 setContact(response?.data?.data[0]);

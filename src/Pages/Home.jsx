@@ -38,7 +38,6 @@ const MyComponent = () => {
     const getProduct = async () => {
         try {
             const response = await GetProduct();
-            console.log(response, "get product");
             if (response?.status === 200) {
                 toast.success("Got Product successfully");
                 setcardDetails(response?.data?.data?.data);
@@ -53,7 +52,6 @@ const MyComponent = () => {
     const getHome = async () => {
         try {
             const response = await getHomePageContent();
-            console.log(response, "Home Page Content");
             if (response?.status === 200) {
                 toast.success("Get Home Page Content");
                 setpageHome(response?.data?.data[0]);
@@ -65,14 +63,11 @@ const MyComponent = () => {
         }
     };
 
-   
+
 
     return (
         <>
-            <Grid sx={{ bgcolor: '#0462B6' }}>
-                <Header />
-            </Grid>
-            <Navbar />
+            
 
             <Carousel />
 
@@ -519,10 +514,10 @@ const MyComponent = () => {
                         </Grid>
 
                         {/* Cards */}
-                        {cardDetails.slice(0, 10).map((item, index) => (
+                        {cardDetails.slice(0, 8).map((item, index) => (
                             <Grid
                                 item
-                                xs={12} sm={6} md={4} lg={2.4} mb={4}  // Responsive card sizes
+                                xs={12} sm={6} md={4} lg={3} mb={4}  // Responsive card sizes
                                 key={index}
                                 display="flex"
                                 justifyContent="center"
@@ -622,19 +617,14 @@ const MyComponent = () => {
                         </Grid>
                     </Grid>
                 </Container>
-                
+
             </Grid>
             <WorldMap />
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                 <CompanyCarousel />
             </Container>
-            <Footer />
-
-        
-                    <Modal />
-
-
+            <Modal />
             <ChatBot />
 
         </>

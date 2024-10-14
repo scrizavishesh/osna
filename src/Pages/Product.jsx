@@ -9,6 +9,7 @@ import { GetCategorySubcategory, GetProduct } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import { useInView } from 'react-intersection-observer';
 
 const Product = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -16,8 +17,14 @@ const Product = () => {
     const [selectedType, setSelectedType] = useState(null);
     const [response, setResponse] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    // Add current page state
-    const [totalPages, setTotalPages] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+
+    // Intersection observer to trigger loading more products
+    const { ref, inView } = useInView({
+        triggerOnce: false, // Trigger each time the element is in view
+        threshold: 0.1, // When 10% of the element is visible
+    });
 
     useEffect(() => {
         getEmployess();
@@ -26,7 +33,6 @@ const Product = () => {
     const getEmployess = async () => {
         try {
             const response = await GetCategorySubcategory();
-            console.log(response, "get category");
             if (response?.status === 200) {
                 toast.success("Got categories successfully");
                 setResponse(response?.data);
@@ -65,37 +71,38 @@ const Product = () => {
     const [cardDetails, setcardDetails] = useState([]);
     const baseUrl = 'https://dc.damio.in/'
 
+
     useEffect(() => {
-        getProduct(currentPage);
-    }, [currentPage]);
+        if (inView && !isLoading && hasMore) {
+            getProduct(currentPage);
+        }
+    }, [inView, currentPage]);
 
     const getProduct = async (page) => {
+        setIsLoading(true);
         try {
             const response = await GetProduct(page);
-            console.log(response, "get All product");
             if (response?.status === 200) {
-                toast.success("Got Product successfully");
-                setcardDetails(response?.data?.data?.data);
-                setTotalPages(response?.data?.data?.total);
+                const newProducts = response?.data?.data?.data;
+                if (newProducts.length === 0) {
+                    setHasMore(false); // No more products to load
+                } else {
+                    setcardDetails((prev) => [...prev, ...newProducts]); // Append new products to the existing list
+                    setCurrentPage((prev) => prev + 1); // Increment the page number for next load
+                    toast.success("Got Product successfully");
+                }
             } else {
-                toast.error("Failed to fetch categories");
+                toast.error("Failed to fetch products");
             }
         } catch (err) {
             toast.error(err?.message);
         }
+        setIsLoading(false);
     };
 
-    // Updated pagination handler
-    const handlePageChange = (event, value) => {
-        setCurrentPage(value); // Correctly update the page number
-    };
 
     return (
         <>
-            <Grid sx={{ bgcolor: '#0462B6' }}>
-                <Header />
-            </Grid>
-            <Navbar />
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 <Grid container spacing={4}>
                     {/* Left Section (Category + Advertisement) */}
@@ -154,7 +161,7 @@ const Product = () => {
                             {/* Subcategory Section */}
                             {selectedCategory && selectedCategory.subcategories?.length > 0 && !selectedSubCategory && (
                                 <>
-                                    <Typography variant="h6" sx={{ mb: 2, mt: 4, fontWeight: 600 }}>
+                                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                                         SUBCATEGORY
                                     </Typography>
                                     <RadioGroup name="subcategory" onChange={handleSubCategoryChange}>
@@ -202,7 +209,7 @@ const Product = () => {
                             {/* Type Section */}
                             {selectedSubCategory && selectedSubCategory.types?.length > 0 && !selectedType && (
                                 <>
-                                    <Typography variant="h6" sx={{ mb: 2, mt: 4, fontWeight: 600 }}>
+                                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                                         TYPE
                                     </Typography>
                                     <RadioGroup name="type" onChange={handleTypeChange}>
@@ -228,80 +235,55 @@ const Product = () => {
                                 </Typography>
                             )}
                         </Grid>
-                        {/* Advertisement Section */}
-                        <Grid item xs={12} sx={{ mt: 2 }}>
-                            <Card sx={{ p: 2, textAlign: 'center' }}>
-                                <Box sx={{ mb: 2 }}>
-                                    <img src="./adv.svg" alt="Advertisement" style={{ width: '100%', objectFit: 'cover' }} />
-                                </Box>
-                                <Typography
-                                    sx={{
-                                        fontSize: '24px',
-                                        fontWeight: 600,
-                                        lineHeight: '32px',
-                                        textAlign: 'center',
-                                        color: '#191C1F',
-                                        mb: 1,
-                                    }}
-                                >
-                                    Optical Sensors for Factory Automation
-                                </Typography>
-                                <Typography
-                                    sx={{
-                                        fontSize: '14px',
-                                        fontWeight: 400,
-                                        lineHeight: '20px',
-                                        textAlign: 'center',
-                                        color: '#5f6c72',
-                                        mb: 2,
-                                    }}
-                                >
-                                    The sensors of the F 10 series, available as LED and laser versions, form one of the most comprehensive series on the market in sub-miniature housings.
-                                </Typography>
-                                <Button variant="contained" sx={{ backgroundColor: '#FA8232', color: '#FFF' }}>
-                                    View Details
-                                </Button>
-                            </Card>
-                        </Grid>
+                        
                     </Grid>
 
                     {/* Product Section */}
                     <Grid item xs={12} md={9}>
-                        <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-                            <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                                OUR PRODUCTS
-                            </Typography>
-                            <FormControl sx={{ minWidth: 120 }}>
-                                <InputLabel>Sort by</InputLabel>
-                                <Select defaultValue="Most Popular" label="Sort by">
-                                    <MenuItem value="Most Popular">Most Popular</MenuItem>
-                                    <MenuItem value="Latest">Latest</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Box>
-
-                        <Grid container spacing={2} mb={4}>
-                            {/* Case: Products exist for selected Type */}
-                            {selectedType && selectedType.products.length > 0 ? (
-                                selectedType.products.map((product) => (
-                                    <Grid item xs={12} sm={6} md={4} key={product.id}>
-                                        <Card sx={{ p: 2 }}>
-                                            <Typography>{product.product_name}</Typography>
-                                            <img
-                                                src='./Product_Main_Image.png'
-                                                alt={product.product_name}
-                                                style={{ width: '100%', objectFit: 'cover' }}
-                                            />
-                                        </Card>
-                                    </Grid>
-                                ))
-                            ) : selectedType && selectedType.products.length === 0 ? (
-                                <Typography variant="h6" sx={{ color: 'red', mt: 2 }}>
-                                    No products found for this type.
+                        {/* Scrollable Box */}
+                        <Box
+                            className="custom-scrollbar" // Add this class for custom scrollbar styling
+                            sx={{   // Set the background color
+                                height: '700px',              // Set a fixed height for the scrollable section
+                                overflowY: 'scroll',          // Enable vertical scrolling
+                                padding: 2,                   // Optional padding
+                                borderRadius: '8px',          // Optional: Set rounded corners
+                            }}
+                        >
+                            <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+                                <Typography variant="h6" sx={{ fontWeight: 600}}>
+                                    OUR PRODUCTS
                                 </Typography>
-                            ) : selectedSubCategory && selectedSubCategory.products.data.length > 0 ? (
-                                selectedSubCategory?.products?.data.map((product) => (
-                                    <>
+                                <FormControl sx={{ minWidth: 120 }}>
+                                    <InputLabel>Sort by</InputLabel>
+                                    <Select defaultValue="Most Popular" label="Sort by">
+                                        <MenuItem value="Most Popular">Most Popular</MenuItem>
+                                        <MenuItem value="Latest">Latest</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </Box>
+
+                            <Grid container spacing={2} mb={4}>
+                                {/* Case: Products exist for selected Type */}
+                                {selectedType && selectedType.products.length > 0 ? (
+                                    selectedType.products.map((product) => (
+                                        <Grid item xs={12} sm={6} md={4} key={product.id}>
+                                            <Card sx={{ p: 2 }}>
+                                                <Typography>{product.product_name}</Typography>
+                                                <img
+                                                    src='./Product_Main_Image.png'
+                                                    alt={product.product_name}
+                                                    style={{ width: '100%', objectFit: 'cover' }}
+                                                />
+                                            </Card>
+                                        </Grid>
+                                    ))
+                                ) : selectedType && selectedType.products.length === 0 ? (
+                                    <Typography variant="h6" sx={{ color: 'red', mt: 2 }}>
+                                        No products found for this type.
+                                    </Typography>
+                                ) : selectedSubCategory && selectedSubCategory.products.data.length > 0 ? (
+                                    selectedSubCategory?.products?.data.map((product) => (
                                         <Grid item xs={12} sm={6} md={4} key={product.id}>
                                             <Card sx={{ p: 2, textAlign: 'center' }}>
                                                 <Box sx={{ mb: 2 }}>
@@ -323,18 +305,13 @@ const Product = () => {
                                                 </Button>
                                             </Card>
                                         </Grid>
-
-                                    </>
-                                ))
-
-                            ) : selectedSubCategory && selectedSubCategory.products.data.length === 0 ? (
-                                <Typography variant="h6" sx={{ color: 'red', mt: 2 }}>
-                                    No products found for this search.
-                                </Typography>
-                            ) : cardDetails.length > 0 ? (
-                                cardDetails.map((item, index) => (
-                                    <>
-
+                                    ))
+                                ) : selectedSubCategory && selectedSubCategory.products.data.length === 0 ? (
+                                    <Typography variant="h6" sx={{ color: 'red', mt: 2 }}>
+                                        No products found for this search.
+                                    </Typography>
+                                ) : cardDetails.length > 0 ? (
+                                    cardDetails.map((item, index) => (
                                         <Grid
                                             item
                                             xs={12} sm={6} md={4} lg={4} mb={4}  // Responsive card sizes
@@ -401,43 +378,30 @@ const Product = () => {
                                                             fontSize: '14px',
                                                             backgroundColor: '#FA8232',
                                                             color: '#FFFFFF',
-
                                                         }}
                                                     >
                                                         View All
                                                     </Button>
                                                 </Box>
-
                                             </Card>
                                         </Grid>
-                                    </>
+                                    ))
+                                ) : (
+                                    <Typography variant="h6" sx={{ color: 'red', mt: 2 }}>
+                                        No products available at the moment.
+                                    </Typography>
+                                )}
+                            </Grid>
 
-                                ))
-                            ) : (
-                                <Typography variant="h6" sx={{ color: 'red', mt: 2 }}>
-                                    No products available at the moment.
-                                </Typography>
-                            )}
-                        </Grid>
-                        <Grid sx={{
-
-                            display: "flex",
-                            justifyContent: "end",
-                        }}>
-                            <Stack spacing={2} sx={{ mt: 4 }}>
-                                <Pagination
-                                    count={totalPages}
-                                    page={currentPage}
-                                    onChange={handlePageChange}
-                                    color="primary"
-                                />
-                            </Stack>
-                        </Grid>
+                            {/* Lazy Loading Trigger */}
+                            <div ref={ref} />
+                            {isLoading && <p>Loading more products...</p>}
+                            {!hasMore && <p>No more products available.</p>}
+                        </Box>
                     </Grid>
 
                 </Grid>
             </Container>
-            <Footer />
 
 
 

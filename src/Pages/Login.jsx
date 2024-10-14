@@ -22,7 +22,6 @@ const SignIn = () => {
         try {
             // API call (replace `YourAPI` with the actual API function or axios call)
             const response = await userGenerateOTP(payload);
-            console.log(response, 'API Response');
             if (response.status === 200) {
                 alert('OTP has been sent to your email successfully');
                 navigate("/login", { state: { email: data.email } }); 
@@ -37,10 +36,6 @@ const SignIn = () => {
     };
     return (
         <>
-            <Grid sx={{ bgcolor: '#0462B6' }}>
-                <Header />
-            </Grid>
-            <Navbar />
 
             {/* Main Sign In Section */}
             <Container sx={{ mt: 5, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -122,9 +117,6 @@ const SignIn = () => {
                     </Grid>
                 </Grid>
             </Container>
-
-            {/* Footer */}
-            <Footer />
         </>
     );
 };

@@ -45,10 +45,7 @@ const SubmitOTP = () => {
 
     return (
         <>
-            <Grid sx={{ bgcolor: '#0462B6' }}>
-                <Header />
-            </Grid>
-            <Navbar />
+            
 
             {/* Main Section */}
             <Container sx={{ mt: 5, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -136,9 +133,6 @@ const SubmitOTP = () => {
                     </Grid>
                 </Grid>
             </Container>
-
-            {/* Footer */}
-            <Footer />
         </>
     );
 };

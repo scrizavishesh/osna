@@ -53,7 +53,6 @@ const ResponsiveCarousel = () => {
     const getBanner = async () => {
         try {
             const response = await GetLogo();
-            console.log(response, "get banner");
             if (response?.status === 200) {
                 toast.success("Get client Logo");
                 setBanner(response?.data?.data); // Save the data from the response

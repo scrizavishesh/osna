@@ -12,7 +12,6 @@ const ContactUs = () => {
 
     const [branches, setBranches] = useState([]);
     const [contact, setContact] = useState('')
-    console.log(branches)
     const { register, handleSubmit, reset, formState: { errors }, } = useForm();
 
 
@@ -29,7 +28,6 @@ const ContactUs = () => {
         formData.append('message', data.message);
         try {
             const response = await handleContact(formData);
-            console.log(response, "contact")
             if (response.status === 201) {
                 toast.success("Contact Information Save Successfully!");
                 reset();
@@ -49,7 +47,6 @@ const ContactUs = () => {
     const Contact = async () => {
         try {
             const response = await getContacts();
-            console.log(response, "get Contact");
             if (response?.status === 200) {
                 toast.success("Get Contact");
                 setContact(response?.data?.data[0]);
@@ -78,10 +75,7 @@ const ContactUs = () => {
 
     return (
         <>
-            <Grid sx={{ bgcolor: '#0462B6' }}>
-                <Header />
-            </Grid>
-            <Navbar />
+         
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 {/* Heading and Subheading */}
                 <Box mb={4} textAlign="center">
@@ -237,7 +231,6 @@ const ContactUs = () => {
                                             }}
                                         >
                                             {item?.branch_name}
-                                            {console.log(item?.branch_name)}
                                         </Typography>
                                         <Typography
                                             sx={{
@@ -373,7 +366,6 @@ const ContactUs = () => {
                     </Grid>
                 </Paper>
             </Container>
-            <Footer />
         </>
     );
 };
