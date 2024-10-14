@@ -30,7 +30,7 @@ const DownloadPDF = ({ open, onClose, PDFData }) => {
 
                 <DialogContent dividers={true} style={{ height: '500px' }}>
                     <iframe
-                        src={`${baseUrl}${PDFData}`}  // Replace with the path to the PDF
+                        src={console.log(`${baseUrl}${PDFData}`, "Hello data")}  // Replace with the path to the PDF
                         title="PDF"
                         width="100%"
                         height="100%"

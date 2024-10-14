@@ -21,10 +21,10 @@ import Carousel from '../SubPages/Carousel';
 import CompanyCarousel from '../SubPages/CompanyCarousel';
 import { GetBanner, getContacts, getHomePageContent, GetProduct } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
+import WorldMap from './WorldMap';
 
 
 const MyComponent = () => {
-    const token = localStorage.getItem('osna_token');
 
     const [cardDetails, setcardDetails] = useState([]);
     const [pageHome, setpageHome] = useState('')
@@ -41,7 +41,7 @@ const MyComponent = () => {
             console.log(response, "get product");
             if (response?.status === 200) {
                 toast.success("Got Product successfully");
-                setcardDetails(response?.data?.data);
+                setcardDetails(response?.data?.data?.data);
             } else {
                 toast.error("Failed to fetch categories");
             }
@@ -622,27 +622,17 @@ const MyComponent = () => {
                         </Grid>
                     </Grid>
                 </Container>
-                <Grid>
-                    <Box sx={{ width: '100%', height: 'auto', mb: 2 }}>
-                        <img
-                            src="./earth_map.svg"
-                            alt="Product Image"
-                            style={{ width: '100%', objectFit: 'cover', height: 'auto' }}
-                        />
-                    </Box>
-                </Grid>
+                
             </Grid>
+            <WorldMap />
 
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                 <CompanyCarousel />
             </Container>
             <Footer />
 
-            {
-                !token && (
+        
                     <Modal />
-                )
-            }
 
 
             <ChatBot />

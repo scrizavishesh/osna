@@ -1,21 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, TextField, Typography, Box, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Loginuse } from '../Utils/Apis'; // Ensure your API function is properly set up
+import { Loginuse } from '../Utils/Apis';
 
 const Modal = () => {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);  // Initially false, modal is closed
 
-    // useForm hook to manage form state and validation
-    const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    useEffect(() => {
+        const isModalShown = localStorage.getItem('modalShown');
+        if (!isModalShown) {
+            setOpen(true);  // Show modal if not previously shown
+        }
+    }, []);
 
     const handleClose = () => {
         setOpen(false);
+        localStorage.setItem('modalShown', 'true');  // Set flag in localStorage
     };
 
-    // Function to handle form submission
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
+
     const onSubmit = async (data) => {
         try {
             const formData = {
@@ -23,21 +29,18 @@ const Modal = () => {
                 email: data.email,
                 phone: data.phone
             };
-            const response = await Loginuse(formData); // Send formData instead of undefined variable
-
-            console.log(response, "API Response");
+            const response = await Loginuse(formData);
 
             if (response.status === 201) {
                 toast.success('Profile submitted successfully!');
                 localStorage.setItem('osna_token', response?.data?.token);
-                reset(); 
+                reset();
                 handleClose();
             } else {
                 toast.error('Failed to submit profile');
             }
         } catch (error) {
             toast.error('Error submitting profile');
-            console.error('API Error:', error); // Log error for debugging
         }
     };
 
@@ -73,13 +76,11 @@ const Modal = () => {
                             mb: 3
                         }}
                     >
-                        Lorem Ipsum is simply dummy text of the printing and
+                        Lorem Ipsum is simply dummy text of the printing and
                         <br />
                     </Typography>
 
-                    {/* Form using react-hook-form */}
                     <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        {/* Full Name Field */}
                         <TextField
                             label="Full Name"
                             variant="outlined"
@@ -89,7 +90,6 @@ const Modal = () => {
                             helperText={errors.name ? errors.name.message : ''}
                         />
 
-                        {/* Email Field */}
                         <TextField
                             label="Email Id"
                             variant="outlined"
@@ -105,7 +105,6 @@ const Modal = () => {
                             helperText={errors.email ? errors.email.message : ''}
                         />
 
-                        {/* Phone Number Field */}
                         <TextField
                             label="Phone Number"
                             variant="outlined"
@@ -121,10 +120,9 @@ const Modal = () => {
                             helperText={errors.phone ? errors.phone.message : ''}
                         />
 
-                        {/* Submit Button */}
                         <DialogActions sx={{ justifyContent: 'center', pb: 3 }}>
                             <Button
-                                type="submit" // Form submission
+                                type="submit"
                                 variant="contained"
                                 color="warning"
                                 sx={{ width: '100%', maxWidth: '200px', fontWeight: 'bold' }}
@@ -134,8 +132,6 @@ const Modal = () => {
                         </DialogActions>
                     </Box>
                 </DialogContent>
-
-
             </Dialog>
         </>
     );

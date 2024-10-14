@@ -29,3 +29,12 @@ body {
   opacity: 1;
   color: #000;
 }
+
+.pin {
+  transition: transform 0.3s ease;
+}
+
+.pin:hover {
+  transform: scale(1.2);
+}
+

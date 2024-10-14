@@ -24,6 +24,7 @@ const AboutUs = () => {
     const baseUrl = 'https://dc.damio.in/'
 
     const [AboutUs, setAboutUs] = useState('');
+    const [mainImage, setmainImage] = useState('')
     const [coreMember, setcoreMember] = useState([])
 
     useEffect(() => {
@@ -38,6 +39,16 @@ const AboutUs = () => {
             if (response?.status === 200) {
                 toast.success("Get About Page Content");
                 setAboutUs(response?.data?.data[0]);
+
+                // Get the image URL from the response
+                const image = response?.data?.data[0]?.section_one_image;
+
+                // Construct the full URL and encode any spaces
+                const fullImageUrl = image.startsWith('http') ? image : `${baseUrl}${image}`;
+                const encodedImageUrl = fullImageUrl.replace(/ /g, '%20'); // Encode spaces
+
+                // Set the encoded image URL
+                setmainImage(encodedImageUrl);
             } else {
                 toast.error("Failed to fetch categories");
             }
@@ -45,6 +56,7 @@ const AboutUs = () => {
             toast.error(err?.message);
         }
     };
+
 
     const getTeam = async () => {
         try {
@@ -111,7 +123,7 @@ const AboutUs = () => {
                         <Box
                             sx={{
                                 position: 'relative',
-                                backgroundImage: `url(${baseUrl + AboutUs?.section_one_image})`, // Corrected background image syntax
+                                backgroundImage: `url(./about_us_main.svg)`, // Corrected background image syntax
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
                                 height: { xs: '300px', sm: '350px', md: '400px' }, // Responsive height
@@ -192,7 +204,6 @@ const AboutUs = () => {
                                         fontWeight: 600,
                                         lineHeight: '20px',
                                         color: "#2c2c2c",
-                                        letterSpacing: "3px",
                                         mb: 2,
                                     }}
                                 >
@@ -204,7 +215,6 @@ const AboutUs = () => {
                                         fontWeight: 700,
                                         lineHeight: '40px',
                                         color: "#232536",
-                                        letterSpacing: "-1px",
                                         mb: 2,
                                     }}
                                 >
@@ -216,7 +226,6 @@ const AboutUs = () => {
                                         fontWeight: 400,
                                         lineHeight: '28px',
                                         color: "#6d6e76",
-                                        letterSpacing: "3px",
                                         mb: 2,
                                     }}
                                 >
@@ -230,11 +239,10 @@ const AboutUs = () => {
                                         fontWeight: 600,
                                         lineHeight: '20px',
                                         color: "#2c2c2c",
-                                        letterSpacing: "3px",
                                         mb: 2,
                                     }}
                                 >
-                                   {AboutUs?.section_two_heading_part_two}
+                                    {AboutUs?.section_two_heading_part_two}
                                 </Typography>
                                 <Typography
                                     sx={{
@@ -242,7 +250,6 @@ const AboutUs = () => {
                                         fontWeight: 700,
                                         lineHeight: '40px',
                                         color: "#232536",
-                                        letterSpacing: "-1px",
                                         mb: 2,
                                     }}
                                 >
@@ -254,7 +261,6 @@ const AboutUs = () => {
                                         fontWeight: 400,
                                         lineHeight: '28px',
                                         color: "#6d6e76",
-                                        letterSpacing: "3px",
                                         mb: 2,
                                     }}
                                 >
@@ -274,11 +280,10 @@ const AboutUs = () => {
                                         fontWeight: 700,
                                         lineHeight: '48px',
                                         color: "#232536",
-                                        letterSpacing: "-2px",
                                         mb: 2,
                                     }}
                                 >
-                                   {AboutUs?.section_three_heading}
+                                    {AboutUs?.section_three_heading}
                                 </Typography>
                                 <Typography
                                     sx={{
@@ -290,7 +295,7 @@ const AboutUs = () => {
                                         mb: 2,
                                     }}
                                 >
-                                     {AboutUs?.section_three_subheading}
+                                    {AboutUs?.section_three_subheading}
                                 </Typography>
                                 <Typography
                                     sx={{
@@ -338,7 +343,7 @@ const AboutUs = () => {
                                         mb: 2,
                                     }}
                                 >
-                                     {AboutUs?.section_four_heading}
+                                    {AboutUs?.section_four_heading}
                                 </Typography>
                                 <Typography
                                     sx={{
@@ -351,7 +356,7 @@ const AboutUs = () => {
                                     }}
                                 >
                                     {AboutUs?.section_four_subheading}
-\                                </Typography>
+                                    \                                </Typography>
                                 <Typography
                                     sx={{
                                         fontSize: '16px',

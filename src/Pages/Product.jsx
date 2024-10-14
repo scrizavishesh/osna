@@ -15,6 +15,9 @@ const Product = () => {
     const [selectedSubCategory, setSelectedSubCategory] = useState(null);
     const [selectedType, setSelectedType] = useState(null);
     const [response, setResponse] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    // Add current page state
+    const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
         getEmployess();
@@ -63,22 +66,28 @@ const Product = () => {
     const baseUrl = 'https://dc.damio.in/'
 
     useEffect(() => {
-        getProduct();
-    }, []);
+        getProduct(currentPage);
+    }, [currentPage]);
 
-    const getProduct = async () => {
+    const getProduct = async (page) => {
         try {
-            const response = await GetProduct();
-            console.log(response, "get product");
+            const response = await GetProduct(page);
+            console.log(response, "get All product");
             if (response?.status === 200) {
                 toast.success("Got Product successfully");
-                setcardDetails(response?.data?.data);
+                setcardDetails(response?.data?.data?.data);
+                setTotalPages(response?.data?.data?.total);
             } else {
                 toast.error("Failed to fetch categories");
             }
         } catch (err) {
             toast.error(err?.message);
         }
+    };
+
+    // Updated pagination handler
+    const handlePageChange = (event, value) => {
+        setCurrentPage(value); // Correctly update the page number
     };
 
     return (
@@ -266,7 +275,6 @@ const Product = () => {
                                 <InputLabel>Sort by</InputLabel>
                                 <Select defaultValue="Most Popular" label="Sort by">
                                     <MenuItem value="Most Popular">Most Popular</MenuItem>
-                                    <MenuItem value="Price">Price</MenuItem>
                                     <MenuItem value="Latest">Latest</MenuItem>
                                 </Select>
                             </FormControl>
@@ -315,9 +323,7 @@ const Product = () => {
                                                 </Button>
                                             </Card>
                                         </Grid>
-                                        <Stack spacing={2}>
-                                            <Pagination count={10} showFirstButton showLastButton />
-                                        </Stack>
+
                                     </>
                                 ))
 
@@ -327,28 +333,85 @@ const Product = () => {
                                 </Typography>
                             ) : cardDetails.length > 0 ? (
                                 cardDetails.map((item, index) => (
-                                    <Grid item xs={12} sm={6} md={4} key={item.id}>
-                                        <Card sx={{ p: 2, textAlign: 'center' }}>
-                                            <Box sx={{ mb: 2 }}>
-                                                <img src="./Product_Main_Image.png" alt={item.title} style={{ width: '100%', objectFit: 'cover' }} />
-                                            </Box>
-                                            <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                                                {item.product_name}
-                                            </Typography>
-                                            <Typography variant="body2" sx={{ mb: 2 }}>
-                                                {item.short_description}
-                                            </Typography>
-                                            <Button
-                                                to={`/products_Detail/${item.id}`}
-                                                component={Link}
-                                                variant="contained"
-                                                sx={{ backgroundColor: '#FA8232', color: '#FFF' }}
-                                            >
-                                                View All
-                                            </Button>
-                                        </Card>
+                                    <>
 
-                                    </Grid>
+                                        <Grid
+                                            item
+                                            xs={12} sm={6} md={4} lg={4} mb={4}  // Responsive card sizes
+                                            key={index}
+                                            display="flex"
+                                            justifyContent="center"
+                                        >
+                                            <Card
+                                                sx={{
+                                                    width: '100%',
+                                                    border: '1px solid #E4E7E9',
+                                                    borderRadius: '8px',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'space-between',
+                                                    p: 2,
+                                                    height: '100%',
+                                                    mb: 2,
+                                                }}
+                                            >
+                                                {/* Header Section: Image */}
+                                                <Box sx={{ width: '100%', height: 'auto', mb: 2 }}>
+                                                    <img
+                                                        src={baseUrl + item?.product_image[0]?.image}
+                                                        alt="Product Image"
+                                                        style={{ width: '100%', objectFit: 'cover', height: 'auto' }}
+                                                    />
+                                                </Box>
+
+                                                {/* Middle Section: Product Name & Description */}
+                                                <Box sx={{ flexGrow: 1, textAlign: 'center', mb: 2 }}>
+                                                    <Typography
+                                                        sx={{
+                                                            fontSize: '16px',
+                                                            fontWeight: 400,
+                                                            lineHeight: '20px',
+                                                            textAlign: 'center',
+                                                            color: "#191C1F",
+                                                            mb: 2,
+                                                        }}
+                                                    >
+                                                        {item?.product_name}
+                                                    </Typography>
+                                                    <Typography variant="body2" sx={{ mb: 2 }}>
+                                                        {item.short_description}
+                                                    </Typography>
+                                                </Box>
+
+                                                {/* Footer Section: Button */}
+                                                <Box
+                                                    sx={{
+                                                        display: 'flex',  // Use colon instead of "="
+                                                        justifyContent: 'center',
+                                                        mb: 4 // Corrected syntax
+                                                    }}
+                                                >
+                                                    <Button
+                                                        to={`/products_Detail/${item.id}`}
+                                                        component={Link}
+                                                        variant="contained"
+                                                        sx={{
+                                                            textTransform: 'none',
+                                                            padding: '5px 15px',
+                                                            fontSize: '14px',
+                                                            backgroundColor: '#FA8232',
+                                                            color: '#FFFFFF',
+
+                                                        }}
+                                                    >
+                                                        View All
+                                                    </Button>
+                                                </Box>
+
+                                            </Card>
+                                        </Grid>
+                                    </>
+
                                 ))
                             ) : (
                                 <Typography variant="h6" sx={{ color: 'red', mt: 2 }}>
@@ -356,11 +419,28 @@ const Product = () => {
                                 </Typography>
                             )}
                         </Grid>
+                        <Grid sx={{
+
+                            display: "flex",
+                            justifyContent: "end",
+                        }}>
+                            <Stack spacing={2} sx={{ mt: 4 }}>
+                                <Pagination
+                                    count={totalPages}
+                                    page={currentPage}
+                                    onChange={handlePageChange}
+                                    color="primary"
+                                />
+                            </Stack>
+                        </Grid>
                     </Grid>
 
                 </Grid>
             </Container>
             <Footer />
+
+
+
         </>
     );
 };

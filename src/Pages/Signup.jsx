@@ -7,15 +7,52 @@ import {
     TextField,
     Typography,
     MenuItem,
-    Checkbox,
-    FormControlLabel,
-    Link,
 } from '@mui/material';
+import { useForm } from 'react-hook-form'; // Import useForm
 import Header from '../Layouts/Header';
 import Navbar from '../Layouts/Navbar';
 import Footer from '../Layouts/Footer';
+import { userRegistration } from '../Utils/Apis';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
+
+    const navigate = useNavigate();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm(); // Initialize useForm
+
+    // Function to handle form submission
+    const onSubmit = async (data) => {
+        const payload = {
+            first_name: data.first_name,
+            last_name: data.last_name,
+            email: data.email,
+            salutation: data.salutation,
+            company: data.company,
+            position: data.position,
+            address: data.address,
+            zip: data.zip,
+            city: data.city,
+            country: data.country,
+        };
+
+        try {
+            // API call (replace `YourAPI` with the actual API function or axios call)
+            const response = await userRegistration(payload);
+            console.log(response, 'API Response');
+            if (response.status === 201) {
+                toast.success("Register Successfully");
+                navigate("/signin");
+                reset();
+            } else {
+                alert('Signup failed');
+            }
+        } catch (error) {
+            console.error('API Error:', error);
+            alert('Error during signup');
+        }
+    };
+
     return (
         <>
             <Grid sx={{ bgcolor: '#0462B6' }}>
@@ -23,7 +60,6 @@ const SignUp = () => {
             </Grid>
             <Navbar />
             <Container maxWidth="lg">
-                {/* Sign Up Heading */}
                 <Box sx={{ mb: 4, textAlign: 'center' }}>
                     <Grid sx={{
                         display: "flex",
@@ -53,266 +89,143 @@ const SignUp = () => {
                 </Box>
 
                 {/* Personal Data Section */}
-                <Box sx={{ backgroundColor: '#FDFDFD', padding: '16px', borderRadius: '8px', mb: 4, border: "1px solid #DBDBDB80" }}>
-                    <Typography
-                        variant="h4"
-                        sx={{
-                            fontSize: '20px',
-                            fontWeight: '500',
-                            lineHeight: '32px',
-                            textAlign: 'left',
-                            color: '#2C2C2C',
-                            mb: 2,
-                        }}
-                    >
-                        Personal Data
-                    </Typography>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <Box sx={{ backgroundColor: '#FDFDFD', padding: '16px', borderRadius: '8px', mb: 4, border: "1px solid #DBDBDB80" }}>
+                        <Typography variant="h4" sx={{ fontSize: '20px', fontWeight: '500', lineHeight: '32px', mb: 2 }}>
+                            Personal Data
+                        </Typography>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Salutation"
+                                    select
+                                    {...register("salutation", { required: "Salutation is required" })}
+                                    variant="outlined"
+                                    size="small"
+                                >
+                                    <MenuItem value="mr">Mr</MenuItem>
+                                    <MenuItem value="ms">Ms</MenuItem>
+                                    <MenuItem value="dr">Dr</MenuItem>
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    label="First Name"
+                                    {...register("first_name", { required: "First name is required" })}
+                                    error={!!errors.first_name}
+                                    helperText={errors.first_name?.message}
+                                    variant="outlined"
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Last Name"
+                                    {...register("last_name", { required: "Last name is required" })}
+                                    error={!!errors.last_name}
+                                    helperText={errors.last_name?.message}
+                                    variant="outlined"
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Email"
+                                    {...register("email", { required: "Email is required", pattern: /^\S+@\S+$/i })}
+                                    error={!!errors.email}
+                                    helperText={errors.email ? "Invalid email" : ""}
+                                    variant="outlined"
+                                    size="small"
+                                />
+                            </Grid>
+                        </Grid>
+                    </Box>
 
-                    {/* Form Fields */}
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <Typography
-                                sx={{
-                                    fontSize: '14px',
-                                    fontWeight: '400',
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
-                                    color: '#191C1F',
-                                    mb: 1,
-                                }}
-                            >
-                                Username
-                                <span style={{ color: '#E02F2F' }}>*</span>
-                            </Typography>
-                            <TextField
-                                fullWidth
-                                size="small"
-                                placeholder="Enter Username"
-                                variant="outlined"
-                            />
+                    {/* Contact Data Section */}
+                    <Box sx={{ backgroundColor: '#FDFDFD', padding: '16px', borderRadius: '8px', mb: 4, border: "1px solid #DBDBDB80" }}>
+                        <Typography variant="h4" sx={{ fontSize: '20px', fontWeight: '500', lineHeight: '32px', mb: 2 }}>
+                            Contact Data
+                        </Typography>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Company"
+                                    {...register("company", { required: "Company name is required" })}
+                                    error={!!errors.company}
+                                    helperText={errors.company?.message}
+                                    variant="outlined"
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Position"
+                                    {...register("position", { required: "Position is required" })}
+                                    error={!!errors.position}
+                                    helperText={errors.position?.message}
+                                    variant="outlined"
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Address"
+                                    {...register("address", { required: "Address is required" })}
+                                    error={!!errors.address}
+                                    helperText={errors.address?.message}
+                                    variant="outlined"
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Zip"
+                                    {...register("zip", { required: "Zip code is required" })}
+                                    error={!!errors.zip}
+                                    helperText={errors.zip?.message}
+                                    variant="outlined"
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    label="City"
+                                    {...register("city", { required: "City is required" })}
+                                    error={!!errors.city}
+                                    helperText={errors.city?.message}
+                                    variant="outlined"
+                                    size="small"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Country"
+                                    {...register("country", { required: "Country is required" })}
+                                    error={!!errors.country}
+                                    helperText={errors.country?.message}
+                                    variant="outlined"
+                                    size="small"
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Typography
-                                sx={{
-                                    fontSize: '14px',
-                                    fontWeight: '400',
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
-                                    color: '#191C1F',
-                                    mb: 1,
-                                }}
-                            >
-                                Salutation
-                                <span style={{ color: '#E02F2F' }}>*</span>
-                            </Typography>
-                            <TextField fullWidth size="small" select variant="outlined" defaultValue="">
-                                <MenuItem value="Mr" sx={{ fontSize: '14px' }}>Mr</MenuItem>
-                                <MenuItem value="Ms" sx={{ fontSize: '14px' }}>Ms</MenuItem>
-                                <MenuItem value="Dr" sx={{ fontSize: '14px' }}>Dr</MenuItem>
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Typography
-                                sx={{
-                                    fontSize: '14px',
-                                    fontWeight: '400',
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
-                                    color: '#191C1F',
-                                    mb: 1,
-                                }}
-                            >
-                                First Name
-                                <span style={{ color: '#E02F2F' }}>*</span>
-                            </Typography>
-                            <TextField fullWidth size="small" placeholder="Enter First Name" variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Typography
-                                sx={{
-                                    fontSize: '14px',
-                                    fontWeight: '400',
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
-                                    color: '#191C1F',
-                                    mb: 1,
-                                }}
-                            >
-                                Last Name
-                                <span style={{ color: '#E02F2F' }}>*</span>
-                            </Typography>
-                            <TextField fullWidth size="small" placeholder="Enter Last Name" variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Typography
-                                sx={{
-                                    fontSize: '14px',
-                                    fontWeight: '400',
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
-                                    color: '#191C1F',
-                                    mb: 1,
-                                }}
-                            >
-                                Password
-                                <span style={{ color: '#E02F2F' }}>*</span>
-                            </Typography>
-                            <TextField type="password" fullWidth size="small" placeholder="Enter Password" variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Typography
-                                sx={{
-                                    fontSize: '14px',
-                                    fontWeight: '400',
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
-                                    color: '#191C1F',
-                                    mb: 1,
-                                }}
-                            >
-                                Confirm Password
-                                <span style={{ color: '#E02F2F' }}>*</span>
-                            </Typography>
-                            <TextField type="password" fullWidth size="small" placeholder="Enter Confirm Password" variant="outlined" />
-                        </Grid>
+                    </Box>
+
+                    <Grid item xs={12} sx={{ textAlign: 'center', mt: 3 }}>
+                        <Button type="submit" variant="contained" sx={{ backgroundColor: '#FA8232', color: '#fff', padding: '10px 20px' }}>
+                            Submit
+                        </Button>
                     </Grid>
-                </Box>
-
-                {/* Contact Data Section */}
-                <Box sx={{ backgroundColor: '#FDFDFD', padding: '16px', borderRadius: '8px', mb: 4, border: "1px solid #DBDBDB80" }}>
-                    <Typography
-                        variant="h4"
-                        sx={{
-                            fontSize: '20px',
-                            fontWeight: '500',
-                            lineHeight: '32px',
-                            textAlign: 'left',
-                            color: '#2C2C2C',
-                            mb: 2,
-                        }}
-                    >
-                        Contact Data
-                    </Typography>
-
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <Typography
-                                sx={{
-                                    fontSize: '14px',
-                                    fontWeight: '400',
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
-                                    color: '#191C1F',
-                                    mb: 1,
-                                }}
-                            >
-                                Company
-                                <span style={{ color: '#E02F2F' }}>*</span>
-                            </Typography>
-                            <TextField fullWidth size="small" placeholder="Enter Company Name" variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Typography
-                                sx={{
-                                    fontSize: '14px',
-                                    fontWeight: '400',
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
-                                    color: '#191C1F',
-                                    mb: 1,
-                                }}
-                            >
-                                Position
-                                <span style={{ color: '#E02F2F' }}>*</span>
-                            </Typography>
-                            <TextField fullWidth size="small" placeholder="Enter Position" variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Typography
-                                sx={{
-                                    fontSize: '14px',
-                                    fontWeight: '400',
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
-                                    color: '#191C1F',
-                                    mb: 1,
-                                }}
-                            >
-                                Address
-                                <span style={{ color: '#E02F2F' }}>*</span>
-                            </Typography>
-                            <TextField fullWidth size="small" placeholder="Enter Address" variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Typography
-                                sx={{
-                                    fontSize: '14px',
-                                    fontWeight: '400',
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
-                                    color: '#191C1F',
-                                    mb: 1,
-                                }}
-                            >
-                                Zip
-                                <span style={{ color: '#E02F2F' }}>*</span>
-                            </Typography>
-                            <TextField fullWidth size="small" placeholder="Enter Zip Code" variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Typography
-                                sx={{
-                                    fontSize: '14px',
-                                    fontWeight: '400',
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
-                                    color: '#191C1F',
-                                    mb: 1,
-                                }}
-                            >
-                                City
-                                <span style={{ color: '#E02F2F' }}>*</span>
-                            </Typography>
-                            <TextField fullWidth size="small" placeholder="Enter City Name" variant="outlined" />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Typography
-                                sx={{
-                                    fontSize: '14px',
-                                    fontWeight: '400',
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
-                                    color: '#191C1F',
-                                    mb: 1,
-                                }}
-                            >
-                                Country
-                                <span style={{ color: '#E02F2F' }}>*</span>
-                            </Typography>
-                            <TextField fullWidth size="small" placeholder="Enter Country Name" variant="outlined" />
-                        </Grid>
-                    </Grid>
-                </Box>
-
-                <Grid item xs={12} sx={{ textAlign: 'center', mt: 3 }}>
-                    <Button variant="contained" sx={{
-                        backgroundColor: '#FA8232',
-                        color: '#fff',
-                        padding: '10px 20px',
-                        marginRight: '15px',
-                        '&:hover': { backgroundColor: '#E57A2D' }
-                    }}>
-                        Submit
-                    </Button>
-                    <Button variant="outlined" sx={{
-                        color: '#FA8232',
-                        borderColor: '#FA8232',
-                        padding: '10px 20px',
-                        '&:hover': { borderColor: '#E57A2D', color: '#E57A2D' }
-                    }}>
-                        Cancel
-                    </Button>
-                </Grid>
+                </form>
             </Container>
             <Footer />
         </>

@@ -3,17 +3,21 @@ import { Box, Button, Container, Divider, IconButton, OutlinedInput, Stack, Typo
 import { SearchOffOutlined, Person, PersonAdd } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import MainSVG from '../SVG/MainSVG';
-import { getContacts } from '../Utils/Apis';
+import { getContacts, userLog_out } from '../Utils/Apis'; // Assuming you have a logoutAPI function in your Utils/Apis file
 import { toast } from 'react-hot-toast';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import YouTubeIcon from '@mui/icons-material/YouTube';
+import Logout from '../SVG/Logout';
+import Swal from "sweetalert2";
 
 const Header = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [activeButton, setActiveButton] = useState(null);
+
+    const token = localStorage.getItem('osna_token');
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
@@ -25,6 +29,33 @@ const Header = () => {
         Contact();
     }, []);
 
+    const Log_out = async () => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Do you want to log out?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await userLog_out();
+                    if (response?.status === 200) {
+                        toast.success("Logged out successfully");
+                        localStorage.removeItem("osna_token");
+                        window.location.reload();
+                    } else {
+                        toast.error("Failed to log out");
+                    }
+                } catch (error) {
+                    toast.error("Error logging out. Please try again.");
+                }
+            }
+        });
+    };
+
     const Contact = async () => {
         try {
             const response = await getContacts();
@@ -33,7 +64,7 @@ const Header = () => {
                 toast.success("Get Contact");
                 setContact(response?.data?.data[0]);
             } else {
-                toast.error("Failed to fetch categories");
+                toast.error("Failed to fetch contact details");
             }
         } catch (err) {
             toast.error(err?.message);
@@ -71,9 +102,8 @@ const Header = () => {
                                     key={index}
                                     href={social.href}
                                     sx={{
-                                        // backgroundColor: '#FFFFFF',
+                                        marginRight: "0px",
                                         color: '#fff',
-                                        // borderRadius: '50%',
                                         width: '40px',
                                         height: '40px',
                                         mr: 1,
@@ -141,36 +171,56 @@ const Header = () => {
                 </Box>
 
                 {/* Log In and Sign Up Buttons with Icons */}
-                <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
-                    <Button
-                        onClick={() => handleActiveButton('login')}
-                        sx={{
-                            backgroundColor: activeButton === 'login' ? '#FA8232' : 'transparent',
-                            color: activeButton === 'login' ? '#fff' : '#fff',
-                            '&:hover': { backgroundColor: '#FA8232', color: '#fff' },
-                            borderRadius: '20px',
-                            textTransform: 'none',
-                        }}
-                        startIcon={<Person />}
-                    >
-                        Log In
-                    </Button>
-                    <Button
-                        to='/signup'
-                        component={Link}
-                        onClick={() => handleActiveButton('signup')}
-                        sx={{
-                            backgroundColor: activeButton === 'signup' ? '#FA8232' : 'transparent',
-                            color: activeButton === 'signup' ? '#fff' : '#fff',
-                            '&:hover': { backgroundColor: '#FA8232', color: '#fff' },
-                            borderRadius: '20px',
-                            textTransform: 'none',
-                        }}
-                        startIcon={<PersonAdd />}
-                    >
-                        Sign Up
-                    </Button>
-                </Stack>
+                {
+                    !token ?
+                        <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
+                            <Button
+                                to='/signin'
+                                component={Link}
+                                onClick={() => handleActiveButton('login')}
+                                sx={{
+                                    backgroundColor: activeButton === 'login' ? '#FA8232' : 'transparent',
+                                    color: activeButton === 'login' ? '#fff' : '#fff',
+                                    '&:hover': { backgroundColor: '#FA8232', color: '#fff' },
+                                    borderRadius: '20px',
+                                    textTransform: 'none',
+                                }}
+                                startIcon={<Person />}
+                            >
+                                Log In
+                            </Button>
+                            <Button
+                                to='/signup'
+                                component={Link}
+                                onClick={() => handleActiveButton('signup')}
+                                sx={{
+                                    backgroundColor: activeButton === 'signup' ? '#FA8232' : 'transparent',
+                                    color: activeButton === 'signup' ? '#fff' : '#fff',
+                                    '&:hover': { backgroundColor: '#FA8232', color: '#fff' },
+                                    borderRadius: '20px',
+                                    textTransform: 'none',
+                                }}
+                                startIcon={<PersonAdd />}
+                            >
+                                Sign Up
+                            </Button>
+                        </Stack> :
+                        <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
+                            <Button
+                                onClick={Log_out}
+                                sx={{
+                                    backgroundColor: activeButton === 'signup' ? '#FA8232' : 'transparent',
+                                    color: activeButton === 'signup' ? '#fff' : '#fff',
+                                    '&:hover': { backgroundColor: '#fff', color: '#000' },
+                                    borderRadius: '20px',
+                                    textTransform: 'none',
+                                }}
+                                startIcon={<Logout />}
+                            >
+                                Log Out
+                            </Button>
+                        </Stack>
+                }
             </Box>
         </Container>
     );

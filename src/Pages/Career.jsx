@@ -8,26 +8,36 @@ import { CareerAPI } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 
 const Career = () => {
-    const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    const { register, handleSubmit, formState: { errors }, setValue, reset, watch } = useForm({
+        mode: 'onChange'
+    });
 
     const handleClose = () => {
         // Logic to close the modal or reset state
     };
 
+    const from = watch("applying_for");
+    console.log(from)
+
     // Function to handle form submission
     const onSubmit = async (data) => {
         try {
-            const formData = {
-                name: data.name,
-                company: data.company,
-                email: data.email,
-                phone: data.phone,
-                applying_for: data.applying_for,
-                time_to_reach: data.time_to_reach,
-                hear_about_us: data.hear_about_us,
-                resume: data.resume[0], // Assuming a file input
-            };
-            const response = await CareerAPI(formData); // Send formData
+            const formData = new FormData(); // Create a new FormData object
+
+            // Append all fields to the FormData object
+            formData.append('name', data.name);
+            formData.append('company', data.company);
+            formData.append('email', data.email);
+            formData.append('phone', data.phone);
+            formData.append('applying_for', data.applying_for); // Convert array to JSON string
+            formData.append('time_to_reach', data.time_to_reach);
+            formData.append('hear_about_us', data.hear_about_us);
+
+            if (data.resume && data.resume.length > 0) {
+                formData.append('resume', data.resume[0]); // Append the actual file
+            }
+
+            const response = await CareerAPI(formData); // Send FormData
 
             console.log(response, "API Response");
 
@@ -44,6 +54,7 @@ const Career = () => {
             console.error('API Error:', error); // Log error for debugging
         }
     };
+
 
     return (
         <>
@@ -292,17 +303,22 @@ const Career = () => {
                                 >
                                     Attach Resume
                                 </Typography>
-                                <input
-                                    type="file"
-                                    accept=".pdf, .doc, .docx"
+
+                                {/* <TextField
+                                    fullWidth
+                                    size="small"
+                                    type='file'
+                                    variant="outlined"
+                                    accept=".jpg, .doc, .docx , .pdf"
                                     {...register('resume', { required: 'Resume is required' })}
-                                />
+                                /> */}
+                                <TextField fullWidth size="small" id="resume" type="file" className={`form-control font14 ${errors.resume ? 'border-danger' : ''}`} accept='.jpg, .jpeg, .png., pdf' {...register('resume', { required: 'Resume is required *' })} />
                                 {errors.resume && <p style={{ color: 'red' }}>{errors.resume.message}</p>}
                             </Grid>
 
                             {/* Submit Button */}
                             <Grid item xs={12} sx={{ textAlign: 'center', mt: 3 }}>
-                                <Button  type="submit" variant="contained" sx={{
+                                <Button type="submit" variant="contained" sx={{
                                     backgroundColor: '#FA8232',
                                     color: '#fff',
                                     padding: '10px 20px',

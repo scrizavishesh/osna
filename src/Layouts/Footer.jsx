@@ -6,9 +6,10 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { getContacts } from '../Utils/Apis';
+import { getCategoryNames, getContacts } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import MainSVG from '../SVG/MainSVG';
 
 const Footer = () => {
 
@@ -22,11 +23,27 @@ const Footer = () => {
     ];
 
 
-    const [contact, setContact] = useState('')
+    const [contact, setContact] = useState('');
+    const [categoryNames, setCategoryNames] = useState([]);
+
 
     useEffect(() => {
         Contact();
+        CategoryByNames();
     }, [])
+
+    const CategoryByNames = async () => {
+        try {
+            const response = await getCategoryNames();
+            if (response?.status === 200) {
+                setCategoryNames(response?.data?.data);
+            } else {
+                toast.error("Failed to fetch categories");
+            }
+        } catch (err) {
+            toast.error(err?.message);
+        }
+    };
 
 
     const Contact = async () => {
@@ -52,7 +69,7 @@ const Footer = () => {
                     {/* Logo and Contact Information */}
                     <Grid item xs={12} md={3}>
                         <Grid sx={{ flexGrow: 1 }}>
-                            <img src={'./logo-white 1.svg'} loading="lazy" alt="Company Logo" />
+                            <MainSVG sx={{ maxWidth: '150px' }} />
                         </Grid>
                         <Box mt={2}>
                             <Typography
@@ -121,22 +138,28 @@ const Footer = () => {
                         >
                             Top Category
                         </Typography>
-                        {['Computer & Laptop', 'SmartPhone', 'Headphone', 'Camera & Photo', 'TV & Homes'].map((category, index) => (
+                        {categoryNames.map((cat) => (
                             <Typography
-                                key={index}
+                                component={Link}
+                                to={`/categories?category_name=${encodeURIComponent(cat.category_name)}`}
+                               
                                 sx={{
+                                    display: "flex",
                                     fontSize: '14px',
                                     fontWeight: 500,
                                     lineHeight: '20px',
                                     textAlign: 'left',
-                                    color: index === 3 ? '#FFA163' : '#FFFFFF', // Highlight 'Accessories' category
+                                    textDecoration: "none",
+                                    color: '#FFFFFF', // Highlight 'Accessories' category
                                     mb: 1,
                                 }}
                             >
-                                {category}
+                                {cat.category_name}
                             </Typography>
                         ))}
                         <Typography
+                            component={Link}
+                            to='/products'
                             sx={{
                                 fontSize: '14px',
                                 fontWeight: 500,
@@ -145,6 +168,7 @@ const Footer = () => {
                                 color: "#FFA163",
                                 display: 'flex',
                                 alignItems: 'center',
+                                textDecoration: "none",
                             }}
                         >
                             Browse All Products

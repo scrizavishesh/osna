@@ -13,6 +13,8 @@ import TawkTo from './Layouts/ChatBot';
 import AccessoriesDetail from './Pages/AccessoriesDetail';
 import SignUp from './Pages/Signup';
 import Career from './Pages/Career';
+import SignIn from './Pages/Login';
+import SubmitOTP from './Pages/SubmitOTP';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/login" element={<SubmitOTP />} />
         <Route path="/career" element={<Career />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/products" element={<Product />} />
