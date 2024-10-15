@@ -14,6 +14,8 @@ const Product = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+    const [latest, setLatest] = useState('');
+    console.log(latest, "latest")
 
     // Intersection observer to trigger loading more products
     const { ref, inView } = useInView({
@@ -68,15 +70,14 @@ const Product = () => {
 
 
     useEffect(() => {
-        if (inView && !isLoading && hasMore) {
-            getProduct(currentPage);
-        }
-    }, [inView, currentPage]);
+            getProduct(currentPage, latest);
+    }, [inView, currentPage, latest]);
 
-    const getProduct = async (page) => {
+    const getProduct = async (page, latest) => {
         setIsLoading(true);
         try {
-            const response = await GetProduct(page);
+            const response = await GetProduct(page, latest);
+            console.log(response, "all products")
             if (response?.status === 200) {
                 const newProducts = response?.data?.data?.data;
                 if (newProducts.length === 0) {
@@ -253,7 +254,7 @@ const Product = () => {
                                     <InputLabel>Sort by</InputLabel>
                                     <Select defaultValue="Most Popular" label="Sort by">
                                         <MenuItem value="Most Popular">Most Popular</MenuItem>
-                                        <MenuItem value="Latest">Latest</MenuItem>
+                                        <MenuItem onClick={(e) => setLatest(1)} value="Latest">Latest</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Box>

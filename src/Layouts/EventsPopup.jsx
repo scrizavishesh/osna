@@ -10,7 +10,11 @@ const EventsPopup = () => {
     const [todayEvents, setTodayEvents] = useState([]);
 
     useEffect(() => {
-        getEve();
+        const hasSeenPopup = localStorage.getItem('hasSeenEventsPopup');
+
+        if (!hasSeenPopup) { // Only call getEve if the user hasn't seen the popup
+            getEve();
+        }
     }, []);
 
     const getEve = async () => {
@@ -38,6 +42,7 @@ const EventsPopup = () => {
             setTodayEvents(eventsToday);
             setTimeout(() => {
                 setOpen(true);
+                localStorage.setItem('hasSeenEventsPopup', 'true'); // Set flag in localStorage
             }, 3000);
         }
     };

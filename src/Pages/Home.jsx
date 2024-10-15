@@ -35,6 +35,7 @@ const MyComponent = () => {
     const getProduct = async () => {
         try {
             const response = await GetProduct();
+            console.log(response, 'hello')
             if (response?.status === 200) {
                 toast.success("Got Product successfully");
                 setcardDetails(response?.data?.data?.data);
@@ -535,7 +536,7 @@ const MyComponent = () => {
                                     {/* Header Section: Image */}
                                     <Box sx={{ width: '100%', height: 'auto', mb: 2 }}>
                                         <img
-                                            src="./first_main.svg"
+                                            src={baseUrl + item?.product_image[0]?.image}
                                             alt="Product Image"
                                             style={{ width: '100%', objectFit: 'cover', height: 'auto' }}
                                         />

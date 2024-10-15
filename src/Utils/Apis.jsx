@@ -42,9 +42,9 @@ export const GetBanner = async () => {
 
 
 
-export const GetProduct = async (page) => {
+export const GetProduct = async (page, pop) => {
   axios.defaults.headers.common["Authorization"] = '';
-  var response = await axios.get(`${API_URL}/products?page=${page}&product_number=10`,);
+  var response = await axios.get(`${API_URL}/products?page=${page}&product_number=10&popular=${pop}`,);
   if (response) {
     return response;
   } else {

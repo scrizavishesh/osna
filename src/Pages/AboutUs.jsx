@@ -11,7 +11,8 @@ const AboutUs = () => {
     const baseUrl = 'https://dc.damio.in/'
 
     const [AboutUs, setAboutUs] = useState('');
-    const [mainImage, setmainImage] = useState('')
+    const [mainImage, setmainImage] = useState('');
+    console.log(mainImage, "MAin imahe")
     const [coreMember, setcoreMember] = useState([])
 
     useEffect(() => {
@@ -105,7 +106,7 @@ const AboutUs = () => {
                         <Box
                             sx={{
                                 position: 'relative',
-                                backgroundImage: `url(./about_us_main.svg)`, // Background image
+                                backgroundImage: `url('${mainImage}')`,
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
                                 height: { xs: '300px', sm: '350px', md: '400px' }, // Responsive height
