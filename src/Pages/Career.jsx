@@ -1,9 +1,6 @@
 import React from 'react';
 import { Container, Box, Typography, TextField, Button, Grid, Checkbox, FormControlLabel, MenuItem, InputLabel, Select } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import Footer from '../Layouts/Footer';
-import Header from '../Layouts/Header';
-import Navbar from '../Layouts/Navbar';
 import { CareerAPI } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 

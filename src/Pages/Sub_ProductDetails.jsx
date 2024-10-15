@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Typography, Button, Box, Card, CardMedia, CardContent } from '@mui/material';
-import YouTube from 'react-youtube';
-import Header from '../Layouts/Header';
-import Navbar from '../Layouts/Navbar';
 import { Container } from '@mui/system';
-import Footer from '../Layouts/Footer';
 import { Link, useLocation } from 'react-router-dom';
 import { getCategoryDetails } from '../Utils/Apis';
 

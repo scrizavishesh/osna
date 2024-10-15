@@ -2,13 +2,8 @@ import { useState, useEffect } from 'react';
 import { Grid, Container, Typography, RadioGroup, FormControlLabel, Radio, Card, Box, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Footer from '../Layouts/Footer';
-import Header from '../Layouts/Header';
-import Navbar from '../Layouts/Navbar';
 import { GetCategorySubcategory, GetProduct } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
 import { useInView } from 'react-intersection-observer';
 
 const Product = () => {

@@ -9,7 +9,7 @@ import { toast } from "react-hot-toast";
 const ResponsiveCarousel = () => {
     const settings = {
         dots: true,
-        infinite: true, // Enable continuous autoplay
+        infinite: true,
         speed: 300,
         autoplay: true,
         autoplaySpeed: 3000,
@@ -55,7 +55,7 @@ const ResponsiveCarousel = () => {
             const response = await GetLogo();
             if (response?.status === 200) {
                 toast.success("Get client Logo");
-                setBanner(response?.data?.data); // Save the data from the response
+                setBanner(response?.data?.data);
             } else {
                 toast.error("Failed to fetch categories");
             }
@@ -69,14 +69,14 @@ const ResponsiveCarousel = () => {
             <Slider {...settings}>
                 {banner.map((item, index) => (
                     <Grid key={index} item>
-                        <Box
+                        <Grid
                             sx={{
-                                height: 200,
+                                width: 150,  // Set a fixed width for the logo container
+                                height: 150, // Set a fixed height for the logo container
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
-                                borderRadius: "4px",
-                                padding: 2, // Space around logos
+                                padding: 2,
                                 backgroundColor: "transparent" // Transparent background
                             }}
                         >
@@ -84,14 +84,14 @@ const ResponsiveCarousel = () => {
                                 src={baseUrl + item?.client_logo}
                                 alt=""
                                 style={{
-                                    maxWidth: "100%",
-                                    maxHeight: "100%",
-                                    objectFit: "contain", // Maintain logo aspect ratio
-                                    backgroundColor: "transparent", // Ensure image background is transparent
-                                    filter: "drop-shadow(0 0 3px rgba(0,0,0,0.1))" // Light shadow for visibility
+                                    width: "100%", // Ensure logos fit within the container
+                                    height: "100%", // Maintain consistent height
+                                    objectFit: "contain", // Maintain aspect ratio
+                                    backgroundColor: "transparent", // Ensure the logo background is transparent
+                                    filter: "none", // Remove any additional filters like shadows
                                 }}
                             />
-                        </Box>
+                        </Grid>
                     </Grid>
                 ))}
             </Slider>

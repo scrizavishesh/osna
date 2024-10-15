@@ -19,10 +19,13 @@ import Header from './Layouts/Header'; // Import Header
 import Footer from './Layouts/Footer'; // Import Footer
 import { Grid } from '@mui/system';
 import Navbar from './Layouts/Navbar';
+import ErrorPage from './Pages/ErrorPage';
+import EventsPopup from './Layouts/EventsPopup';
 
 function App() {
   return (
     <Router>
+      <EventsPopup />
       <TawkTo />
       <Grid sx={{ bgcolor: '#0462B6' }}>
         <Header />
@@ -42,6 +45,7 @@ function App() {
         <Route path="/events" element={<EventsPage />} />
         <Route path="/search_result" element={<SearchResult />} />
         <Route path="/accessories-detail/:id" element={<AccessoriesDetail />} />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
       <Footer /> {/* Render Footer */}
     </Router>

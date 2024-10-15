@@ -1,22 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Grid, Typography, Card, Avatar, Container, IconButton } from '@mui/material';
 import { Facebook, Twitter, LinkedIn, Instagram } from '@mui/icons-material';
-import Header from '../Layouts/Header';
-import Navbar from '../Layouts/Navbar';
-import Footer from '../Layouts/Footer';
 import { getAboutPageContent, getCoreMembers } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
-
-const teamMembers = [
-    { name: 'Floyd Miles', role: 'Marketing Director', image: 'link-to-image', social: { fb: '#', tw: '#', ln: '#', ig: '#' } },
-    { name: 'Dianne Russell', role: 'Customer Writer', image: 'link-to-image', social: { fb: '#', tw: '#', ln: '#', ig: '#' } },
-    { name: 'Jenny Wilson', role: 'Web Developer', image: 'link-to-image', social: { fb: '#', tw: '#', ln: '#', ig: '#' } },
-    { name: 'Leslie Alexander', role: 'Web Developer', image: 'link-to-image', social: { fb: '#', tw: '#', ln: '#', ig: '#' } },
-    { name: 'Guy Hawkins', role: 'SEO Expert', image: 'link-to-image', social: { fb: '#', tw: '#', ln: '#', ig: '#' } },
-    { name: 'Eleanor Pena', role: 'Customer Writer', image: 'link-to-image', social: { fb: '#', tw: '#', ln: '#', ig: '#' } },
-    { name: 'Robert Fox', role: 'Business Development Executive', image: 'link-to-image', social: { fb: '#', tw: '#', ln: '#', ig: '#' } },
-    { name: 'Jacob Jones', role: 'Principal', image: 'link-to-image', social: { fb: '#', tw: '#', ln: '#', ig: '#' } },
-];
+import CountUp from 'react-countup';
 
 
 
@@ -72,7 +59,7 @@ const AboutUs = () => {
     };
     return (
         <>
-         
+
             <Container maxWidth="lg" sx={{ mt: 2 }}>
                 <Box>
                     <Box sx={{ position: 'relative' }}>
@@ -118,48 +105,73 @@ const AboutUs = () => {
                         <Box
                             sx={{
                                 position: 'relative',
-                                backgroundImage: `url(./about_us_main.svg)`, // Corrected background image syntax
+                                backgroundImage: `url(./about_us_main.svg)`, // Background image
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
                                 height: { xs: '300px', sm: '350px', md: '400px' }, // Responsive height
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'flex-start',
-                                paddingTop: { xs: '50px', sm: '60px', md: '80px' }, // Adjust padding for smaller screens
+                                paddingTop: { xs: '50px', sm: '60px', md: '80px' }, // Adjust padding
                             }}
                         >
-
                             {/* Statistics Section */}
                             <Box
                                 sx={{
                                     position: 'relative',
-                                    backgroundColor: '#FFD2B5', // Light transparent background for readability
+                                    backgroundColor: 'rgba(255, 210, 181, 10)', // Semi-transparent background
                                     padding: '20px',
                                     textAlign: 'left',
                                     display: 'flex',
                                     flexDirection: { sm: 'row' }, // Stack items on smaller screens
-                                    top: { xs: '180px', sm: '240px', md: '280px' },  // Responsive top positioning
+                                    top: { xs: '180px', sm: '240px', md: '280px' }, // Responsive top positioning
                                     gap: 5,
                                     right: { xs: '10px', sm: '90px', md: '190px' },
                                 }}
                             >
+                                {/* Counter: Founding Year */}
                                 <Grid item xs={12} sm={4} textAlign="center">
-                                    <Typography variant="h4" sx={{ fontWeight: 'bold', fontSize: { xs: '24px', md: '36px' } }}>
-                                        1998
+                                    <Typography
+                                        variant="h4"
+                                        sx={{ fontWeight: 'bold', fontSize: { xs: '24px', md: '36px' } }}
+                                    >
+                                        <CountUp start={0} end={1998} duration={5} />
                                     </Typography>
-                                    <Typography sx={{ fontSize: { xs: '14px', md: '16px' }, color: '#555' }}>Founding year</Typography>
+                                    <Typography
+                                        sx={{ fontSize: { xs: '14px', md: '16px' }, color: '#555' }}
+                                    >
+                                        Founding year
+                                    </Typography>
                                 </Grid>
+
+                                {/* Counter: Employees */}
                                 <Grid item xs={12} sm={4} textAlign="center">
-                                    <Typography variant="h4" sx={{ fontWeight: 'bold', fontSize: { xs: '24px', md: '36px' } }}>
-                                        585+
+                                    <Typography
+                                        variant="h4"
+                                        sx={{ fontWeight: 'bold', fontSize: { xs: '24px', md: '36px' } }}
+                                    >
+                                        <CountUp start={0} end={585} duration={5} suffix="+" />
                                     </Typography>
-                                    <Typography sx={{ fontSize: { xs: '14px', md: '16px' }, color: '#555' }}>Employees worldwide</Typography>
+                                    <Typography
+                                        sx={{ fontSize: { xs: '14px', md: '16px' }, color: '#555' }}
+                                    >
+                                        Employees worldwide
+                                    </Typography>
                                 </Grid>
+
+                                {/* Counter: Distributors */}
                                 <Grid item xs={12} sm={4} textAlign="center">
-                                    <Typography variant="h4" sx={{ fontWeight: 'bold', fontSize: { xs: '24px', md: '36px' } }}>
-                                        30+
+                                    <Typography
+                                        variant="h4"
+                                        sx={{ fontWeight: 'bold', fontSize: { xs: '24px', md: '36px' } }}
+                                    >
+                                        <CountUp start={0} end={30} duration={5} suffix="+" />
                                     </Typography>
-                                    <Typography sx={{ fontSize: { xs: '14px', md: '16px' }, color: '#555' }}>Distributors worldwide</Typography>
+                                    <Typography
+                                        sx={{ fontSize: { xs: '14px', md: '16px' }, color: '#555' }}
+                                    >
+                                        Distributors worldwide
+                                    </Typography>
                                 </Grid>
                             </Box>
                         </Box>

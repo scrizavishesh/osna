@@ -156,7 +156,7 @@ const Footer = () => {
                         >
                             Top Category
                         </Typography>
-                        {categoryNames.map((cat) => (
+                        {categoryNames?.slice(0, 5)?.map((cat) => (
                             <Typography
                                 component={Link}
                                 to={`/categories?category_name=${encodeURIComponent(cat.category_name)}`}

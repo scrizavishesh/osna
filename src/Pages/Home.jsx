@@ -6,20 +6,17 @@ import Card from '@mui/material/Card'; // Replaced Paper with Card
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import Header from '../Layouts/Header'
-import Navbar from "../Layouts/Navbar"
 import { Divider, Icon } from '@mui/material';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
-import Footer from '../Layouts/Footer';
 import { Link } from 'react-router-dom';
 import ChatBot from '../Layouts/ChatBot';
 import Modal from '../Layouts/Modal';
 import Carousel from '../SubPages/Carousel';
 import CompanyCarousel from '../SubPages/CompanyCarousel';
-import { GetBanner, getContacts, getHomePageContent, GetProduct } from '../Utils/Apis';
+import { getHomePageContent, GetProduct } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 import WorldMap from './WorldMap';
 
@@ -67,7 +64,7 @@ const MyComponent = () => {
 
     return (
         <>
-            
+
 
             <Carousel />
 

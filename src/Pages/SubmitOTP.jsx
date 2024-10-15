@@ -1,8 +1,5 @@
 import React from 'react';
 import { Container, Box, Typography, TextField, Button, Grid, Divider } from '@mui/material';
-import Footer from '../Layouts/Footer';
-import Header from '../Layouts/Header';
-import Navbar from '../Layouts/Navbar';
 import { useForm } from 'react-hook-form';
 import { userSubmitOTP } from '../Utils/Apis';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -22,18 +19,14 @@ const SubmitOTP = () => {
             otp: data.otp,
             type: "login",
         };
-
         try {
             const response = await userSubmitOTP(payload);
             if (response.status === 200) {
                 toast.success("OTP verified successfully");
-
-                // Save token with "Bearer" space token
                 localStorage.setItem('osna_token', `Bearer ${response?.data?.token}`);
-
-                // Navigate to the home page or desired route
+                window.location.reload();
                 navigate("/");
-                reset(); // Reset form after successful submission
+                reset();
             } else {
                 toast.error('OTP verification failed');
             }
@@ -45,8 +38,6 @@ const SubmitOTP = () => {
 
     return (
         <>
-            
-
             {/* Main Section */}
             <Container sx={{ mt: 5, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Grid container justifyContent="center" alignItems="center" spacing={2}>

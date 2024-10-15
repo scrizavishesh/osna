@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button, Card, Typography, Container, Grid } from '@mui/material';
 import { Box } from '@mui/system';
-import Header from '../Layouts/Header';
-import Navbar from '../Layouts/Navbar';
 import { Search } from '../Utils/Apis';
-import Footer from '../Layouts/Footer';
 
 const SearchResult = () => {
   const location = useLocation();

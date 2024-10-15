@@ -1,11 +1,7 @@
 import React from 'react';
 import { Container, Box, Typography, TextField, Button, Grid, Divider } from '@mui/material';
-import Footer from '../Layouts/Footer';
-import Header from '../Layouts/Header';
-import Navbar from '../Layouts/Navbar';
 import { useForm } from 'react-hook-form'; // Import useForm
 import { userGenerateOTP } from '../Utils/Apis';
-import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {

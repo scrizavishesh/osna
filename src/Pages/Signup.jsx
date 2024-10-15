@@ -8,10 +8,7 @@ import {
     Typography,
     MenuItem,
 } from '@mui/material';
-import { useForm } from 'react-hook-form'; // Import useForm
-import Header from '../Layouts/Header';
-import Navbar from '../Layouts/Navbar';
-import Footer from '../Layouts/Footer';
+import { useForm } from 'react-hook-form'; 
 import { userRegistration } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';

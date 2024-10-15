@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Container, Grid, Box, TextField, Button, MenuItem, Typography, Paper, Card, Select, Divider } from '@mui/material';
 import { Phone, Email, LocationOn } from '@mui/icons-material';
-import Footer from '../Layouts/Footer';
-import Header from '../Layouts/Header';
-import Navbar from '../Layouts/Navbar';
 import { getBranches, getContacts, handleContact } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 

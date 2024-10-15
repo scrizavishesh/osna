@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Grid, Box, Button, Typography, Container, CardMedia, CardContent, Card } from "@mui/material";
-import Header from "../Layouts/Header";
-import Navbar from "../Layouts/Navbar";
-import Footer from "../Layouts/Footer";
-import { getProductAccessories, getSingleAccessories, getSingleProduct } from '../Utils/Apis';
+import { Grid, Box, Button, Typography, Container} from "@mui/material";
+import { getSingleAccessories } from '../Utils/Apis';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DownloadPDF from '../Layouts/DownloadPDF';
-import Modal from '../Layouts/Modal';
 import ReactPlayer from 'react-player';
 
 const AccessoriesDetail = () => {
