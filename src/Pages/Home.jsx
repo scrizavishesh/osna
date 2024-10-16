@@ -290,9 +290,20 @@ const MyComponent = () => {
                         padding: '16px',
                         display: 'flex',
                         justifyContent: 'space-between',
+                        gap: 2, // Adds space between grid items
                     }}
                 >
-                    <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Grid
+                        item
+                        xs={12}
+                        sm={2}
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 2, // Space between icon and text box
+                        }}
+                    >
                         <LocalOfferIcon />
                         <Box>
                             <Typography
@@ -302,7 +313,7 @@ const MyComponent = () => {
                                     lineHeight: '20px',
                                     textAlign: 'left',
                                     color: '#191C1F',
-                                    padding: '4px 8px',
+                                    marginBottom: '8px',
                                 }}
                             >
                                 Get Great Deals!
@@ -314,15 +325,27 @@ const MyComponent = () => {
                                     lineHeight: '20px',
                                     textAlign: 'left',
                                     color: '#5F6C72',
-                                    marginTop: '4px',
+                                    mt: 1,
                                 }}
                             >
                                 Sample Text
                             </Typography>
                         </Box>
                     </Grid>
+
                     <Divider orientation="vertical" variant="middle" flexItem />
-                    <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+
+                    <Grid
+                        item
+                        xs={12}
+                        sm={2}
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 1,
+                        }}
+                    >
                         <EmojiEventsIcon />
                         <Box>
                             <Typography
@@ -332,7 +355,7 @@ const MyComponent = () => {
                                     lineHeight: '20px',
                                     textAlign: 'left',
                                     color: '#191C1F',
-                                    padding: '4px 8px',
+                                    marginBottom: '8px',
                                 }}
                             >
                                 Our achievement
@@ -344,17 +367,30 @@ const MyComponent = () => {
                                     lineHeight: '20px',
                                     textAlign: 'left',
                                     color: '#5F6C72',
-                                    marginTop: '4px',
+                                    mt: 1,
                                 }}
                             >
                                 Sustained Growth.
                             </Typography>
                         </Box>
                     </Grid>
+
                     <Divider orientation="vertical" variant="middle" flexItem />
-                    <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+
+                    <Grid
+                        item
+                        xs={12}
+                        sm={2}
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 1,
+                        }}
+                    >
                         <PictureAsPdfIcon />
-                        <Box>
+                        <Box
+                        >
                             <Typography
                                 sx={{
                                     fontSize: '14px',
@@ -362,7 +398,7 @@ const MyComponent = () => {
                                     lineHeight: '20px',
                                     textAlign: 'left',
                                     color: '#191C1F',
-                                    padding: '4px 8px',
+                                    marginBottom: '8px',
                                 }}
                             >
                                 Download Pdf
@@ -374,14 +410,28 @@ const MyComponent = () => {
                                     lineHeight: '20px',
                                     textAlign: 'left',
                                     color: '#5F6C72',
+
+                                    mt: 1,
                                 }}
                             >
                                 More Information!
                             </Typography>
                         </Box>
                     </Grid>
+
                     <Divider orientation="vertical" variant="middle" flexItem />
-                    <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+
+                    <Grid
+                        item
+                        xs={12}
+                        sm={2}
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 1,
+                        }}
+                    >
                         <SupportAgentIcon />
                         <Box>
                             <Typography
@@ -391,7 +441,7 @@ const MyComponent = () => {
                                     lineHeight: '20px',
                                     textAlign: 'left',
                                     color: '#191C1F',
-                                    padding: '4px 8px',
+                                    marginBottom: '8px', // Using margin for consistent alignment
                                 }}
                             >
                                 Support 24/7
@@ -408,9 +458,11 @@ const MyComponent = () => {
                                 Live contact/message
                             </Typography>
                         </Box>
+
                     </Grid>
                 </Grid>
             </Container>
+
 
             <Container maxWidth="lg" sx={{ mt: 4 }} spacing={2}>
                 <Grid container >
@@ -490,11 +542,12 @@ const MyComponent = () => {
                     </Grid>
                 </Grid>
             </Container>
-            {/* Product  */}
 
+
+            {/* Product Section */}
             <Grid sx={{ background: "#FAFAFA", py: 2 }}>
                 <Container maxWidth="lg">
-                    <Grid container spacing={2}> {/* Adjusted spacing to 4 for proper gaps */}
+                    <Grid container spacing={2}>
                         {/* Title */}
                         <Grid item xs={12} sx={{ p: 2 }}>
                             <Typography
@@ -511,14 +564,15 @@ const MyComponent = () => {
                             </Typography>
                         </Grid>
 
-                        {/* Cards */}
+                        {/* Product Cards */}
                         {cardDetails.slice(0, 8).map((item, index) => (
                             <Grid
                                 item
-                                xs={12} sm={6} md={4} lg={3} mb={4}  // Responsive card sizes
+                                xs={12} sm={6} md={4} lg={3} mb={4}
                                 key={index}
                                 display="flex"
                                 justifyContent="center"
+
                             >
                                 <Card
                                     sx={{
@@ -527,46 +581,59 @@ const MyComponent = () => {
                                         borderRadius: '8px',
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        justifyContent: 'space-between',  // Ensure content is spaced correctly
+                                        justifyContent: 'space-between',
                                         p: 2,
                                         height: '100%',
-                                        mb: 2,
                                     }}
                                 >
-                                    {/* Header Section: Image */}
-                                    <Box sx={{ width: '100%', height: 'auto', mb: 2 }}>
-                                        <img
-                                            src={baseUrl + item?.product_image[0]?.image}
-                                            alt="Product Image"
-                                            style={{ width: '100%', objectFit: 'cover', height: 'auto' }}
-                                        />
+                                    {/* Image Section (Clickable) */}
+                                    <Box sx={{
+                                        width: '100%', height: 'auto', mb: 2, overflow: 'hidden',  // Ensure the image doesn't overflow the container
+                                        '&:hover img': {
+                                            transform: 'scale(1.1)',  // Zoom on hover
+                                        },
+                                    }}>
+                                        <Link to={`/products_Detail/${item.id}`}>
+                                            <img
+                                                src={baseUrl + item?.product_image[0]?.image}
+                                                alt="Product Image"
+                                                style={{
+                                                    width: '100%', objectFit: 'cover', height: '150px', transition: 'transform 0.3s ease',  // Smooth transition for zoom
+                                                    '&:hover': {
+                                                        transform: 'scale(1.1)',  // Zoom on hover
+                                                    },
+                                                }}
+                                            />
+                                        </Link>
                                     </Box>
 
                                     {/* Middle Section: Product Name & Description */}
-                                    <Box sx={{ flexGrow: 1, textAlign: 'center', mb: 2 }}>
+                                    <Box sx={{ flexGrow: 1, textAlign: 'center', mb: 1 }}>
                                         <Typography
                                             sx={{
                                                 fontSize: '16px',
                                                 fontWeight: 400,
                                                 lineHeight: '20px',
-                                                textAlign: 'center',
                                                 color: "#191C1F",
                                                 mb: 2,
                                             }}
                                         >
                                             {item?.product_name}
                                         </Typography>
-                                        <Typography variant="body2" sx={{ mb: 2 }}>
-                                            {item.short_description}
+                                        <Typography variant="body2">
+                                            {item.short_description.length > 150
+                                                ? `${item.short_description.slice(0, 150)}...`
+                                                : item.short_description}
                                         </Typography>
+
                                     </Box>
 
                                     {/* Footer Section: Button */}
                                     <Box
                                         sx={{
-                                            display: 'flex',  // Use colon instead of "="
+                                            display: 'flex',
                                             justifyContent: 'center',
-                                            mb: 4 // Corrected syntax
+                                            mb: 1,
                                         }}
                                     >
                                         <Button
@@ -579,7 +646,6 @@ const MyComponent = () => {
                                                 fontSize: '14px',
                                                 backgroundColor: '#FA8232',
                                                 color: '#FFFFFF',
-
                                             }}
                                         >
                                             View All
@@ -589,10 +655,10 @@ const MyComponent = () => {
                                 </Card>
                             </Grid>
                         ))}
-
                     </Grid>
                 </Container>
             </Grid>
+
 
 
             <Grid sx={{ background: "#FFF", py: 2 }}>
