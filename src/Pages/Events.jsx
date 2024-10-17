@@ -10,7 +10,7 @@ const EventsPage = () => {
     const [pastEvents, setPastEvents] = useState([]);
     const [presentEvents, setPresentEvents] = useState([]);
     const [todayEvents, setTodayEvents] = useState([]);
-    const [selectedTab, setSelectedTab] = useState(0); // Control which tab is selected
+    const [selectedTab, setSelectedTab] = useState(1); // Control which tab is selected
 
     useEffect(() => {
         getEve();
@@ -80,7 +80,7 @@ const EventsPage = () => {
                                 <Typography variant="h6" sx={{ fontWeight: 'bold', margin: '0.5rem 0' }}>
                                     {event.event_name}
                                 </Typography>
-                                <Typography variant="h6" sx={{ fontWeight: 'bold', margin: '0.5rem 0' }}>
+                                <Typography variant="p" sx={{ margin: '0.5rem 0' }}>
                                     {event.description}
                                 </Typography>
                             </CardContent>

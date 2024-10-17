@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Grid, Box, Button, Typography, Container} from "@mui/material";
+import { Navigate, useParams } from 'react-router-dom';
+import { Grid, Box, Button, Typography, Container } from "@mui/material";
 import { getSingleAccessories } from '../Utils/Apis';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DownloadPDF from '../Layouts/DownloadPDF';
 import ReactPlayer from 'react-player';
+import { Fancybox as NativeFancybox } from "@fancyapps/ui";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 const AccessoriesDetail = () => {
 
@@ -16,6 +18,7 @@ const AccessoriesDetail = () => {
     const [selectedImage, setSelectedImage] = useState(''); // Holds the currently selected main image
     const [product, setProduct] = useState({});
     const [productDescription, setProductDescription] = useState('');
+    const [redirectToSignIn, setRedirectToSignIn] = useState(false);
     const [open, setOpen] = useState(false);
     const [PDFData, setPDFData] = useState('');
 
@@ -47,25 +50,36 @@ const AccessoriesDetail = () => {
         }
     };
 
-    const handleOpen = (pdf) => {
+    const handleOpenPDF = (pdf) => {
+        if (!token) {
+            setRedirectToSignIn(true);
+            return;
+        }
         setOpen(true);
         setPDFData(pdf);
     };
 
-    const handleClose = () => {
+    if (redirectToSignIn) {
+        return <Navigate to="/signin" replace />;
+    }
+
+    const handleClosePDF = () => {
         setOpen(false);
+    };
+
+    const openFancybox = (src, title) => {
+        NativeFancybox.show([{ src, caption: title }]);
     };
 
     return (
         <>
-           
+
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 <Box sx={{ p: 3 }}>
                     {/* First Section: Image & Product Details */}
                     <Grid container spacing={3}>
                         <Grid item xs={12} md={6}>
                             <Box>
-                                {/* Main Product Image */}
                                 <Box
                                     component="img"
                                     src={baseUrl + selectedImage}
@@ -73,15 +87,14 @@ const AccessoriesDetail = () => {
                                     sx={{
                                         width: "100%",
                                         height: "500px",
-                                        objectFit: "cover",  // Fills the container, but may crop parts of the image
-                                        objectPosition: "center",
-                                        borderRadius: 2
+                                        objectFit: "cover",
+                                        borderRadius: 2,
+                                        cursor: "pointer",
                                     }}
+                                    onClick={() => openFancybox(baseUrl + selectedImage, product?.product_name)}
                                 />
-
                             </Box>
-                            <Box sx={{ display: "flex", mt: 2 }}>
-                                {/* Product Carousel */}
+                            <Box sx={{ display: "flex", mt: 2, gap: 2 }}>
                                 {mainImageList.map((image, index) => (
                                     <Box
                                         key={index}
@@ -89,52 +102,40 @@ const AccessoriesDetail = () => {
                                         src={baseUrl + image?.image}
                                         alt={`Product ${index + 1}`}
                                         sx={{
-                                            width: 60,
-                                            height: 60,
-                                            objectFit: "cover", // Makes sure the image covers the entire box, even if cropped slightly
-                                            mx: 1,
-                                            cursor: "pointer",
-                                            border: selectedImage === image?.image ? '2px solid orange' : 'none'
+                                            width: 70,
+                                            height: 70,
+                                            borderRadius: 2,
+                                            objectFit: "cover",
+                                            border: selectedImage === image?.image ? '2px solid #0462b6' : '1px solid #ddd',
+                                            cursor: 'pointer',
+                                            "&:hover": {
+                                                border: "2px solid #FA8232"
+                                            }
                                         }}
-                                        onClick={() => setSelectedImage(image?.image)} // Set the clicked image as the main image
+                                        onClick={() => setSelectedImage(image?.image)}
                                     />
-
                                 ))}
                             </Box>
                         </Grid>
 
                         {/* Product Name and Description */}
                         <Grid item xs={12} md={6}>
-                            <Typography
-                                sx={{
-                                    fontSize: '20px',
-                                    fontWeight: 600,
-                                    lineHeight: '28px',
-                                    textAlign: 'left',
-                                    color: '#0462b6',
-                                    mb: 1,
-                                }}
-                            >
-                                {product?.accessory_name || "Accessories Name"}
+                            <Typography variant="h5" fontWeight="bold" sx={{ color: '#0462b6', mb: 2 }}>
+                                {product?.accessory_name || "Product Name"}
                             </Typography>
 
+                            <Typography dangerouslySetInnerHTML={{ __html: productDescription }} />
 
-
-                            <Typography>
-                                <div
-                                    dangerouslySetInnerHTML={{ __html: productDescription }}
-                                />
-                            </Typography>
                             <Button
-                                onClick={(e) => handleOpen(product?.document)}
+                                onClick={() => handleOpenPDF(product?.accessory_document)}
                                 variant="contained"
                                 endIcon={<ArrowForwardIcon />}
                                 sx={{
-                                    textTransform: 'none',
+                                    mt: 3,
                                     padding: '10px 20px',
-                                    fontSize: { xs: '14px', md: '16px' },
+                                    fontSize: '16px',
                                     backgroundColor: '#FA8232',
-                                    color: '#FFFFFF',
+                                    "&:hover": { backgroundColor: '#e97327' }
                                 }}
                             >
                                 View All
@@ -154,20 +155,18 @@ const AccessoriesDetail = () => {
                             </ul>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Typography variant="h6" fontWeight="bold">Product Videos</Typography>
-                            <Box sx={{ mt: 2 }}>
-                                <ReactPlayer
-                                    url={baseUrl + product?.accessory_video}
-                                    width="100%"
-                                    controls
-                                    onContextMenu={(e) => e.preventDefault()}
-                                />
-                            </Box>
+                            <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>Product Videos</Typography>
+                            <ReactPlayer
+                                url={baseUrl + product?.accessory_video}
+                                width="100%"
+                                controls
+                                onContextMenu={(e) => e.preventDefault()}
+                            />
                         </Grid>
                     </Grid>
                 </Box>
             </Container>
-            <DownloadPDF open={open} onClose={handleClose} PDFData={PDFData} />
+            {token && <DownloadPDF open={open} onClose={handleClosePDF} pdfData={PDFData} />}
         </>
     );
 }

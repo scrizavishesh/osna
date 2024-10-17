@@ -5,66 +5,61 @@ import { getProductAccessories, getSingleProduct } from '../Utils/Apis';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DownloadPDF from '../Layouts/DownloadPDF';
 import ReactPlayer from 'react-player';
+import { Fancybox as NativeFancybox } from "@fancyapps/ui";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 const ProductDetail = () => {
-
     const baseUrl = 'https://dc.damio.in/';
     const token = localStorage.getItem('osna_token');
 
     const [mainImageList, setMainImageList] = useState([]);
     const [selectedImage, setSelectedImage] = useState('');
     const [product, setProduct] = useState({});
-    const [productDescription, setProductDescription] = useState('');
+    const [accessories, setAccessories] = useState([]);
+    const [redirectToSignIn, setRedirectToSignIn] = useState(false);
     const [open, setOpen] = useState(false);
     const [PDFData, setPDFData] = useState('');
-    const [accessories, setAccessories] = useState([]);
-    const [productAcccess, setproductAcccess] = useState('');
-    const [redirectToSignIn, setRedirectToSignIn] = useState(false);
 
     const { id } = useParams();
 
     useEffect(() => {
         if (id) {
-            fetchProductResults(id);
+            fetchProductDetails(id);
             fetchProductAccessories(id);
         }
     }, [id]);
 
-    const fetchProductResults = async (terms) => {
+    const fetchProductDetails = async (productId) => {
         try {
-            const response = await getSingleProduct(terms);
-            if (response?.status === 200) {
-                const productData = response?.data?.data;
+            const response = await getSingleProduct(productId);
+            if (response.status === 200) {
+                const productData = response.data.data;
                 setProduct(productData);
-                setProductDescription(productData.product_description || "");
-                const imageList = Array.isArray(productData?.product_image) ? productData?.product_image : [];
+                const imageList = productData.product_image || [];
                 setMainImageList(imageList);
-                if (imageList.length > 0) {
-                    setSelectedImage(imageList[0]?.image);
-                }
+                setSelectedImage(imageList[0]?.image || '');
             } else {
                 console.error('Failed to fetch product details');
             }
-        } catch (err) {
-            console.error(err.message);
+        } catch (error) {
+            console.error(error.message);
         }
     };
 
-    const fetchProductAccessories = async (terms) => {
+    const fetchProductAccessories = async (productId) => {
         try {
-            const response = await getProductAccessories(terms);
-            if (response?.status === 200) {
-                setAccessories(response?.data?.data);
-                setproductAcccess(response?.data?.data?.accessory_description);
+            const response = await getProductAccessories(productId);
+            if (response.status === 200) {
+                setAccessories(response.data.data);
             } else {
-                console.error('Failed to fetch product details');
+                console.error('Failed to fetch product accessories');
             }
-        } catch (err) {
-            console.error(err.message);
+        } catch (error) {
+            console.error(error.message);
         }
     };
 
-    const handleOpen = (pdf) => {
+    const handleOpenPDF = (pdf) => {
         if (!token) {
             setRedirectToSignIn(true);
             return;
@@ -76,35 +71,38 @@ const ProductDetail = () => {
     if (redirectToSignIn) {
         return <Navigate to="/signin" replace />;
     }
-    const handleClose = () => {
+
+    const handleClosePDF = () => {
         setOpen(false);
+    };
+
+    const openFancybox = (src, title) => {
+        NativeFancybox.show([{ src, caption: title }]);
     };
 
     return (
         <>
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 <Box sx={{ p: 3 }}>
-                    {/* First Section: Image & Product Details */}
+                    {/* Product Image and Details */}
                     <Grid container spacing={3}>
                         <Grid item xs={12} md={6}>
                             <Box>
-                                {/* Main Product Image */}
                                 <Box
                                     component="img"
                                     src={baseUrl + selectedImage}
                                     alt="Main Product"
                                     sx={{
                                         width: "100%",
-                                        height: "500px",
+                                        height: "400px",
                                         objectFit: "cover",
-                                        objectPosition: "center",
-                                        borderRadius: 2
+                                        borderRadius: 2,
+                                        cursor: "pointer",
                                     }}
+                                    onClick={() => openFancybox(baseUrl + selectedImage, product?.product_name)}
                                 />
-
                             </Box>
-                            <Box sx={{ display: "flex", mt: 2 }}>
-                                {/* Product Carousel */}
+                            <Box sx={{ display: "flex", mt: 2, gap: 2 }}>
                                 {mainImageList.map((image, index) => (
                                     <Box
                                         key={index}
@@ -112,102 +110,47 @@ const ProductDetail = () => {
                                         src={baseUrl + image?.image}
                                         alt={`Product ${index + 1}`}
                                         sx={{
-                                            width: 60,
-                                            height: 60,
-                                            objectFit: "cover", // Makes sure the image covers the entire box, even if cropped slightly
-                                            mx: 1,
-                                            cursor: "pointer",
-                                            border: selectedImage === image?.image ? '2px solid orange' : 'none'
+                                            width: 70,
+                                            height: 70,
+                                            borderRadius: 2,
+                                            objectFit: "cover",
+                                            border: selectedImage === image?.image ? '2px solid #0462b6' : '1px solid #ddd',
+                                            cursor: 'pointer',
+                                            "&:hover": {
+                                                border: "2px solid #FA8232"
+                                            }
                                         }}
-                                        onClick={() => setSelectedImage(image?.image)} // Set the clicked image as the main image
+                                        onClick={() => setSelectedImage(image?.image)}
                                     />
-
                                 ))}
                             </Box>
                         </Grid>
 
-                        {/* Product Name and Description */}
+                        {/* Product Details */}
                         <Grid item xs={12} md={6}>
-                            <Typography
-                                sx={{
-                                    fontSize: '20px',
-                                    fontWeight: 600,
-                                    lineHeight: '28px',
-                                    textAlign: 'left',
-                                    color: '#0462b6',
-                                    mb: 1,
-                                }}
-                            >
+                            <Typography variant="h5" fontWeight="bold" sx={{ color: '#0462b6', mb: 2 }}>
                                 {product?.product_name || "Product Name"}
                             </Typography>
-                            <Grid sx={{ display: "flex" }}>
-                                <Typography
-                                    sx={{
-                                        fontSize: '14px',
-                                        fontWeight: 600,
-                                        lineHeight: '20px',
-                                        textAlign: 'left',
-                                        color: '#5f6c72',
-                                        mb: 1,
-                                    }}
-                                >
-                                    Category name :
-                                </Typography>
-                                <Typography
-                                    sx={{
-                                        fontSize: '14px',
-                                        fontWeight: 600,
-                                        lineHeight: '20px',
-                                        textAlign: 'left',
-                                        color: '#191c1f',
-                                        mb: 1,
-                                    }}
-                                >
-                                    {' '} {product?.category_name || "Category Name"}
-                                </Typography>
-                            </Grid>
 
-                            <Grid sx={{ display: "flex" }}>
-                                <Typography
-                                    sx={{
-                                        fontSize: '14px',
-                                        fontWeight: 600,
-                                        lineHeight: '20px',
-                                        textAlign: 'left',
-                                        color: '#5f6c72',
-                                        mb: 1,
-                                    }}
-                                >
-                                    Sub Category :
-                                </Typography>
-                                <Typography
-                                    sx={{
-                                        fontSize: '14px',
-                                        fontWeight: 600,
-                                        lineHeight: '20px',
-                                        textAlign: 'left',
-                                        color: '#191c1f',
-                                        mb: 1,
-                                    }}
-                                >
-                                    {' '} {product?.sub_category || "Sub Category"}
-                                </Typography>
-                            </Grid>
-                            <Typography>
-                                <div
-                                    dangerouslySetInnerHTML={{ __html: productDescription }}
-                                />
+                            <Typography variant="body1" sx={{ mb: 2 }}>
+                                <strong>Category:</strong> {product?.category_name || "Category"}
                             </Typography>
+                            <Typography variant="body1" sx={{ mb: 2 }}>
+                                <strong>Sub Category:</strong> {product?.sub_category || "Sub Category"}
+                            </Typography>
+
+                            <Typography dangerouslySetInnerHTML={{ __html: product?.product_description }} />
+
                             <Button
-                                onClick={(e) => handleOpen(product?.document)}
+                                onClick={() => handleOpenPDF(product?.document)}
                                 variant="contained"
                                 endIcon={<ArrowForwardIcon />}
                                 sx={{
-                                    textTransform: 'none',
+                                    mt: 3,
                                     padding: '10px 20px',
-                                    fontSize: { xs: '14px', md: '16px' },
+                                    fontSize: '16px',
                                     backgroundColor: '#FA8232',
-                                    color: '#FFFFFF',
+                                    "&:hover": { backgroundColor: '#e97327' }
                                 }}
                             >
                                 View All
@@ -215,10 +158,10 @@ const ProductDetail = () => {
                         </Grid>
                     </Grid>
 
-                    {/* Second Section: Product Data & Videos */}
-                    <Grid container spacing={3} sx={{ mt: 4 }}>
+                    {/* Product Data & Videos */}
+                    <Grid container spacing={3} sx={{ mt: 5 }}>
                         <Grid item xs={12} md={6}>
-                            <Typography variant="h6" fontWeight="bold">Product Data</Typography>
+                            <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>Product Data</Typography>
                             <ul>
                                 <li>Resolution: 2560 x 1936</li>
                                 <li>Type: VISOR® Code Reader</li>
@@ -227,48 +170,40 @@ const ProductDetail = () => {
                             </ul>
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <Typography variant="h6" fontWeight="bold">Product Videos</Typography>
-                            <Box sx={{ mt: 2 }}>
-                                <ReactPlayer
-                                    url={baseUrl + product?.video}
-                                    width="100%"
-                                    controls
-                                    onContextMenu={(e) => e.preventDefault()}
-                                />
-                            </Box>
+                            <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>Product Videos</Typography>
+                            <ReactPlayer
+                                url={baseUrl + product?.video}
+                                width="100%"
+                                controls
+                                onContextMenu={(e) => e.preventDefault()}
+                            />
                         </Grid>
                     </Grid>
                 </Box>
 
-                {/* Third Container: Related Product Details */}
-                <Typography variant="h5" color="primary" align="center" sx={{ marginBottom: '2rem' }}>
-                    The VISOR® Vision Sensor Family Offers the Right Product for Every Application
+                {/* Related Products Section */}
+                <Typography variant="h5" align="center" sx={{ mt: 6, mb: 4, color: '#0462b6' }}>
+                    The VISOR® Vision Sensor Family
                 </Typography>
 
-
-                <Grid container spacing={2}>
+                <Grid container spacing={3}>
                     {accessories.map((item, index) => (
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={4} key={index}>
                             <Card>
+                                <CardMedia
+                                    component="img"
+                                    image={baseUrl + item?.accessory_image}
+                                    alt="Accessory Image"
+                                    sx={{ height: "auto" }}
+                                />
                                 <CardContent>
-                                    <CardMedia
-                                        component="img"
-                                        image={baseUrl + item?.accessory_image} // Replace with product image
-                                        alt="green iguana"
-                                    />
-                                    <Typography gutterBottom variant="h6" component="div">
+                                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
                                         {item?.accessory_name}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         {item?.accessory_short_description}
                                     </Typography>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',  // Use colon instead of "="
-                                            justifyContent: 'center',
-                                            mt: 3 // Corrected syntax
-                                        }}
-                                    >
+                                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
                                         <Button
                                             to={`/accessories-detail/${item.id}`}
                                             component={Link}
@@ -276,10 +211,8 @@ const ProductDetail = () => {
                                             sx={{
                                                 textTransform: 'none',
                                                 padding: '5px 15px',
-                                                fontSize: '14px',
                                                 backgroundColor: '#FA8232',
-                                                color: '#FFFFFF',
-
+                                                "&:hover": { backgroundColor: '#e97327' }
                                             }}
                                         >
                                             View Details
@@ -291,7 +224,8 @@ const ProductDetail = () => {
                     ))}
                 </Grid>
             </Container>
-            {token && <DownloadPDF open={open} onClose={handleClose} pdfData={PDFData} />}
+
+            {token && <DownloadPDF open={open} onClose={handleClosePDF} pdfData={PDFData} />}
         </>
     );
 }
