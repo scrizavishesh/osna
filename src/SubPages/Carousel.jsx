@@ -136,10 +136,10 @@ const CarouselSlider = () => {
                                     to={`/about`}
                                     component={Link}
                                     sx={{
-                                        backgroundColor: '#3f51b5',
+                                        backgroundColor: '0462B6',
                                         color: '#fff',
                                         '&:hover': {
-                                            backgroundColor: '#2f41a5',
+                                            backgroundColor: '#087ce1',
                                         },
                                     }}
                                 >

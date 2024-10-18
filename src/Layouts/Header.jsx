@@ -76,7 +76,7 @@ const Header = () => {
 
     return (
         <Container maxWidth="lg">
-            <Box sx={{ p: 2 }}>
+            <Box sx={{p : 1}}>
                 <Stack
                     direction={{ xs: 'column', sm: 'row' }}
                     sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: { xs: 'center', sm: 'left' } }}
@@ -91,11 +91,11 @@ const Header = () => {
                         </Typography>
                         <Box>
                             {[
-                                { icon: <FacebookIcon />, href: `${contact?.facebook_url}` },
-                                { icon: <TwitterIcon />, href: `${contact?.twitter_url}` },
-                                { icon: <InstagramIcon />, href: `${contact?.instagram_url}` },
-                                { icon: <LinkedInIcon />, href: `${contact?.linkedin_url}` },
-                                { icon: <YouTubeIcon />, href: `${contact?.youtube_url}` },
+                                { icon: <FacebookIcon  sx={{ fontSize: "1.3rem" }} />, href: `${contact?.facebook_url}` },
+                                { icon: <TwitterIcon sx={{ fontSize: "1.3rem" }}  />, href: `${contact?.twitter_url}` },
+                                { icon: <InstagramIcon sx={{ fontSize: "1.3rem" }} />, href: `${contact?.instagram_url}` },
+                                { icon: <LinkedInIcon sx={{ fontSize: "1.3rem" }} />, href: `${contact?.linkedin_url}` },
+                                { icon: <YouTubeIcon sx={{ fontSize: "1.3rem" }}  />, href: `${contact?.youtube_url}` },
                             ].map((social, index) => (
                                 <IconButton
                                     key={index}
@@ -103,8 +103,8 @@ const Header = () => {
                                     sx={{
                                         marginRight: "0px",
                                         color: '#fff',
-                                        width: '40px',
-                                        height: '40px',
+                                        width: '30px',
+                                        height: '30px',
                                         mr: 1,
                                         '&:hover': {
                                             backgroundColor: '#FFA163',

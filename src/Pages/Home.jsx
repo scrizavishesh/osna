@@ -22,7 +22,6 @@ import WorldMap from './WorldMap';
 
 
 const MyComponent = () => {
-
     const [cardDetails, setcardDetails] = useState([]);
     const [pageHome, setpageHome] = useState('')
     const baseUrl = 'https://dc.damio.in/'
@@ -68,8 +67,7 @@ const MyComponent = () => {
 
 
             <Carousel />
-
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Container maxWidth="lg" sx={{ mt: 3, mb: 3 }}>
                 <Box sx={{ padding: '20px' }}>
                     <Grid container spacing={4}>
                         {/* Left Section */}
@@ -78,13 +76,13 @@ const MyComponent = () => {
                                 elevation={3}
                                 sx={{
                                     backgroundColor: '#F2F4F5',
-                                    border: '1px solid #E4E7E9',
                                     borderRadius: '6px',
                                     display: 'flex',
                                     flexDirection: 'column',
                                     justifyContent: 'space-between',
-                                    p: 4,
+                                    p: 3,
                                     flexGrow: 1,
+                                    boxShadow: '0px 4px 12px 0px rgba(0,0,0,0.1)', // Adjusted shadow
                                 }}
                             >
                                 <Box
@@ -99,8 +97,8 @@ const MyComponent = () => {
                                         <Typography
                                             variant="h4"
                                             fontWeight={600}
-                                            fontSize={{ xs: '24px', md: '43px' }}
-                                            lineHeight="56px"
+                                            fontSize={{ xs: '24px', md: '32px' }} // Adjusted font size
+                                            lineHeight={{ xs: '32px', md: '40px' }} // Adjusted line height
                                             gutterBottom
                                         >
                                             {pageHome?.section_one_heading}
@@ -114,8 +112,8 @@ const MyComponent = () => {
                                             {pageHome?.section_one_description}
                                         </Typography>
                                         <Button
-                                            component={Link}
-                                            to="/products"
+                                            component="a"
+                                            href="/products"
                                             variant="contained"
                                             endIcon={<ArrowForwardIcon />}
                                             sx={{
@@ -124,6 +122,12 @@ const MyComponent = () => {
                                                 fontSize: { xs: '14px', md: '16px' },
                                                 backgroundColor: '#FA8232',
                                                 color: '#FFFFFF',
+                                                mt: '8px',
+                                                mb: '8px',
+                                                '&:hover': {
+                                                    backgroundColor: '#FF974A',
+                                                    transform: 'scale(1.05)', // Hover effect: zoom
+                                                },
                                             }}
                                         >
                                             View All
@@ -134,12 +138,13 @@ const MyComponent = () => {
                                         <img
                                             src={baseUrl + pageHome?.section_one_image}
                                             alt="Placeholder"
-                                            style={{ width: '100%', objectFit: 'cover', height: 'auto' }}
+                                            style={{ width: '100%', height: 'auto', borderRadius: '6px', objectFit: 'cover' }}
                                         />
                                     </Box>
                                 </Box>
                             </Card>
                         </Grid>
+
                         {/* Right Section */}
                         <Grid item xs={12} md={4}>
                             {/* Upper Section */}
@@ -150,70 +155,71 @@ const MyComponent = () => {
                                     borderRadius: '6px',
                                     display: 'flex',
                                     alignItems: 'center',
-                                    padding: '16px',
-                                    position: 'relative',
-                                    flexGrow: 1,
-                                    p: 4
+                                    p: 3,
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                    boxShadow: '0px 4px 12px 0px rgba(0,0,0,0.1)', // Adjusted shadow
+                                    mb: 3, // Added margin bottom
+                                    textAlign: 'center',
                                 }}
                             >
+                                {/* Image Section */}
                                 <Box
-                                    display="flex"
-                                    flexDirection={{ xs: 'column', md: 'row' }}
-                                    alignItems="center"
-                                    justifyContent="space-between"
-                                    width="100%"
+                                    position="relative"
+                                    width={{ xs: '100%', md: '30%' }}
+                                    height="auto"
+                                    overflow="hidden"
+                                    mb={{ xs: 2, md: 0 }} // Margin bottom for small screens
                                 >
-                                    {/* Text Section */}
-                                    <Box width={{ xs: '100%', md: '60%' }}>
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                fontSize: { xs: '20px', md: '30px' },
-                                                fontWeight: 600,
-                                                lineHeight: '39px',
-                                                color: '#FFFFFF',
-                                                padding: '8px',
-                                                mb: '16px',
-                                            }}
-                                        >
-                                            Meeting All Needs
-                                        </Typography>
-                                        <Button
-                                            component={Link}
-                                            to="/products"
-                                            variant="contained"
-                                            endIcon={<ArrowForwardIcon />}
-                                            sx={{
-                                                color: '#0462B6',
-                                                backgroundColor: '#FFFFFF',
-                                                textTransform: 'none',
-                                                padding: '10px 20px',
-                                                mt: '16px',
-                                            }}
-                                        >
-                                            View All
-                                        </Button>
-                                    </Box>
-                                    {/* Image Section */}
-                                    <Box
-                                        position="relative"
-                                        width={{ xs: '100%', md: '30%' }}
-                                        height="auto"
-                                        overflow="hidden"
+                                    <img
+                                        src="./optical_Image.svg"
+                                        alt="Optical Image"
+                                        style={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            objectFit: 'container',
+                                            borderRadius: '6px',
+                                        }}
+                                    />
+                                </Box>
+                                {/* Text Section */}
+                                <Box width="100%">
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            fontSize: { xs: '16px', md: '20px' }, // Adjusted font size
+                                            fontWeight: 600,
+                                            lineHeight: { xs: '24px', md: '28px' }, // Adjusted line height
+                                            color: '#FFFFFF',
+                                            mb: '8px',
+                                            textAlign: 'center', // Center text
+                                        }}
                                     >
-                                        <img
-                                            src="./optical_Image.svg"
-                                            alt="Optical Image"
-                                            style={{
-                                                width: '100%',
-                                                height: 'auto',
-                                                objectFit: 'cover',
-                                                boxShadow: '0px 4px 12px 0px #00000033',
-                                            }}
-                                        />
-                                    </Box>
+                                        Meeting All Needs
+                                    </Typography>
+                                    <Button
+                                        component="a"
+                                        href="/products"
+                                        variant="contained"
+                                        endIcon={<ArrowForwardIcon />}
+                                        sx={{
+                                            color: '#0462B6',
+                                            backgroundColor: '#FFFFFF',
+                                            textTransform: 'none',
+                                            padding: '5px 10px',
+                                            fontSize: { xs: '12px', md: '14px' },
+                                            mt: '16px',
+                                            '&:hover': {
+                                                backgroundColor: '#E4E7E9',
+                                                transform: 'scale(1.05)', // Hover effect: zoom
+                                            },
+                                        }}
+                                    >
+                                        View All
+                                    </Button>
                                 </Box>
                             </Card>
+
                             {/* Lower Section */}
                             <Card
                                 elevation={3}
@@ -222,57 +228,66 @@ const MyComponent = () => {
                                     borderRadius: '6px',
                                     display: 'flex',
                                     alignItems: 'center',
-                                    padding: '16px',
-                                    flexGrow: 1,
-                                    mt: 4, // Add spacing between cards
+                                    p: 3,
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                    boxShadow: '0px 4px 12px 0px rgba(0,0,0,0.1)', // Adjusted shadow
                                 }}
                             >
-                                {/* Image Section */}
                                 <Box
-                                    width={{ xs: '30%', md: '30%' }}
-                                    height="auto"
-                                    mr={2}
-                                    position="relative"
+                                    display="flex"
+                                    flexDirection={{ xs: 'column', md: 'row' }}
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                    width="100%"
                                 >
-                                    <img
-                                        src="./lenses_Cover.png"
-                                        alt="Lenses"
-                                        style={{
-                                            width: '100%',
-                                            height: 'auto',
-                                            objectFit: 'cover',
-                                            boxShadow: '0px 4px 8px 0px #00000040',
-                                        }}
-                                    />
-                                </Box>
-                                {/* Text Section */}
-                                <Box width={{ xs: '70%', md: '70%' }}>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            fontSize: { xs: '20px', md: '30px' },
-                                            fontWeight: 600,
-                                            lineHeight: '39px',
-                                            color: '#191C1F',
-                                            padding: '8px',
-                                            mb: '16px',
-                                        }}
-                                    >
-                                        Optical Accessories
-                                    </Typography>
-                                    <Button
-                                        variant="contained"
-                                        endIcon={<ArrowForwardIcon />}
-                                        sx={{
-                                            textTransform: 'none',
-                                            padding: '10px 20px',
-                                            fontSize: { xs: '14px', md: '16px' },
-                                            backgroundColor: '#FA8232',
-                                            color: '#FFFFFF',
-                                        }}
-                                    >
-                                        View All
-                                    </Button>
+                                    {/* Image Section */}
+                                    <Box width={{ xs: '30%', md: '30%' }} height="auto" mr={2} mb={{ xs: 2, md: 0 }}>
+                                        <img
+                                            src="./lenses_Cover.png"
+                                            alt="Lenses"
+                                            style={{
+                                                width: '100%',
+                                                height: 'auto',
+                                                objectFit: 'cover',
+                                                borderRadius: '6px',
+                                            }}
+                                        />
+                                    </Box>
+                                    {/* Text Section */}
+                                    <Box width={{ xs: '70%', md: '70%' }}>
+                                        <Typography
+                                            variant="h6"
+                                            sx={{
+                                                fontSize: { xs: '16px', md: '20px' }, // Adjusted font size
+                                                fontWeight: 600,
+                                                lineHeight: { xs: '24px', md: '38px' }, // Adjusted line height
+                                                color: '#191C1F',
+                                                mb: '16px',
+                                                textAlign: { xs: 'center', md: 'left' }, // Adjusted text alignment
+                                            }}
+                                        >
+                                            Optical Accessories
+                                        </Typography>
+                                        <Button
+                                            variant="contained"
+                                            endIcon={<ArrowForwardIcon />}
+                                            sx={{
+                                                textAlign: "left",
+                                                textTransform: 'none',
+                                                padding: '6px 14px',
+                                                fontSize: { xs: '14px', md: '16px' },
+                                                backgroundColor: '#FA8232',
+                                                color: '#FFFFFF',
+                                                '&:hover': {
+                                                    backgroundColor: '#FF974A',
+                                                    transform: 'scale(1.05)', // Hover effect: zoom
+                                                },
+                                            }}
+                                        >
+                                            View All
+                                        </Button>
+                                    </Box>
                                 </Box>
                             </Card>
                         </Grid>
@@ -280,19 +295,24 @@ const MyComponent = () => {
                 </Box>
             </Container>
 
-            <Container maxWidth="lg" sx={{ mt: 4 }}>
+
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 2 }}>
                 <Grid
                     container
                     sx={{
                         backgroundColor: '#FFFFFF',
                         border: '1px solid #E4E7E9',
-                        borderRadius: '6px',
-                        padding: '16px',
+                        borderRadius: '8px',
+                        padding: { xs: '12px', md: '22px' }, // Adjusted padding for responsiveness
                         display: 'flex',
-                        justifyContent: 'space-between',
-                        gap: 2, // Adds space between grid items
+                        justifyContent: { xs: 'center', md: 'space-between' }, // Center on small screens, space-between on larger
+                        alignItems: 'center', // Vertically center the items
+                        gap: { xs: 2, md: 4 }, // Added space between items
+                        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                        flexWrap: { xs: 'wrap', md: 'nowrap' }, // Wrap on small screens, no wrap on large
                     }}
                 >
+                    {/* Section 1: Deals */}
                     <Grid
                         item
                         xs={12}
@@ -300,20 +320,20 @@ const MyComponent = () => {
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: 2, // Space between icon and text box
+                            gap: 2, // Space between icon and text
+                            justifyContent: { xs: 'center', md: 'flex-start' }, // Center on small, left-align on large
+                            textAlign: { xs: 'center', md: 'left' }, // Center text on small screens
                         }}
                     >
-                        <LocalOfferIcon />
+                        <LocalOfferIcon sx={{ color: '#0462B6', fontSize: '30px' }} />
                         <Box>
                             <Typography
                                 sx={{
-                                    fontSize: '14px',
-                                    fontWeight: 500,
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
+                                    fontSize: { xs: '14px', md: '16px' },
+                                    fontWeight: 600,
+                                    lineHeight: '22px',
                                     color: '#191C1F',
-                                    marginBottom: '8px',
+                                    mb: '4px',
                                 }}
                             >
                                 Get Great Deals!
@@ -322,10 +342,7 @@ const MyComponent = () => {
                                 sx={{
                                     fontSize: '14px',
                                     fontWeight: 400,
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
                                     color: '#5F6C72',
-                                    mt: 1,
                                 }}
                             >
                                 Sample Text
@@ -333,8 +350,10 @@ const MyComponent = () => {
                         </Box>
                     </Grid>
 
-                    <Divider orientation="vertical" variant="middle" flexItem />
+                    {/* Vertical Divider */}
+                    <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', md: 'block' }, mx: 2 }} />
 
+                    {/* Section 2: Achievements */}
                     <Grid
                         item
                         xs={12}
@@ -342,41 +361,39 @@ const MyComponent = () => {
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: 1,
+                            gap: 2,
+                            justifyContent: { xs: 'center', md: 'flex-start' },
+                            textAlign: { xs: 'center', md: 'left' },
                         }}
                     >
-                        <EmojiEventsIcon />
+                        <EmojiEventsIcon sx={{ color: '#FF974A', fontSize: '30px' }} />
                         <Box>
                             <Typography
                                 sx={{
-                                    fontSize: '14px',
-                                    fontWeight: 500,
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
+                                    fontSize: { xs: '14px', md: '16px' },
+                                    fontWeight: 600,
+                                    lineHeight: '22px',
                                     color: '#191C1F',
-                                    marginBottom: '8px',
+                                    mb: '4px',
                                 }}
                             >
-                                Our achievement
+                                Our Achievement
                             </Typography>
                             <Typography
                                 sx={{
                                     fontSize: '14px',
                                     fontWeight: 400,
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
                                     color: '#5F6C72',
-                                    mt: 1,
                                 }}
                             >
-                                Sustained Growth.
+                                Sustained Growth
                             </Typography>
                         </Box>
                     </Grid>
 
-                    <Divider orientation="vertical" variant="middle" flexItem />
+                    <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', md: 'block' }, mx: 2 }} />
 
+                    {/* Section 3: Download PDF */}
                     <Grid
                         item
                         xs={12}
@@ -384,34 +401,29 @@ const MyComponent = () => {
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: 1,
+                            gap: 2,
+                            justifyContent: { xs: 'center', md: 'flex-start' },
+                            textAlign: { xs: 'center', md: 'left' },
                         }}
                     >
-                        <PictureAsPdfIcon />
-                        <Box
-                        >
+                        <PictureAsPdfIcon sx={{ color: '#D32F2F', fontSize: '30px' }} />
+                        <Box>
                             <Typography
                                 sx={{
-                                    fontSize: '14px',
-                                    fontWeight: 500,
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
+                                    fontSize: { xs: '14px', md: '16px' },
+                                    fontWeight: 600,
+                                    lineHeight: '22px',
                                     color: '#191C1F',
-                                    marginBottom: '8px',
+                                    mb: '4px',
                                 }}
                             >
-                                Download Pdf
+                                Download PDF
                             </Typography>
                             <Typography
                                 sx={{
                                     fontSize: '14px',
                                     fontWeight: 400,
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
                                     color: '#5F6C72',
-
-                                    mt: 1,
                                 }}
                             >
                                 More Information!
@@ -419,8 +431,9 @@ const MyComponent = () => {
                         </Box>
                     </Grid>
 
-                    <Divider orientation="vertical" variant="middle" flexItem />
+                    <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', md: 'block' }, mx: 2 }} />
 
+                    {/* Section 4: Support */}
                     <Grid
                         item
                         xs={12}
@@ -428,20 +441,20 @@ const MyComponent = () => {
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: 1,
+                            gap: 2,
+                            justifyContent: { xs: 'center', md: 'flex-start' },
+                            textAlign: { xs: 'center', md: 'left' },
                         }}
                     >
-                        <SupportAgentIcon />
+                        <SupportAgentIcon sx={{ color: '#4CAF50', fontSize: '30px' }} />
                         <Box>
                             <Typography
                                 sx={{
-                                    fontSize: '14px',
-                                    fontWeight: 500,
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
+                                    fontSize: { xs: '14px', md: '16px' },
+                                    fontWeight: 600,
+                                    lineHeight: '22px',
                                     color: '#191C1F',
-                                    marginBottom: '8px', // Using margin for consistent alignment
+                                    mb: '4px',
                                 }}
                             >
                                 Support 24/7
@@ -450,61 +463,71 @@ const MyComponent = () => {
                                 sx={{
                                     fontSize: '14px',
                                     fontWeight: 400,
-                                    lineHeight: '20px',
-                                    textAlign: 'left',
                                     color: '#5F6C72',
                                 }}
                             >
                                 Live contact/message
                             </Typography>
                         </Box>
-
                     </Grid>
                 </Grid>
             </Container>
 
 
-            <Container maxWidth="lg" sx={{ mt: 4 }} spacing={2}>
-                <Grid container >
-                    <Grid xs={12} md={6} sx={{ p: 5 }}>
-                        <Box>
-                            <Typography
 
+
+
+            <Container maxWidth="lg" sx={{ mt: 5, p: 2 }}>
+                <Grid container spacing={4} alignItems="center">
+                    {/* Text Content Section */}
+                    <Grid item xs={12} md={6} sx={{ px: { xs: 2, md: 5 }, py: { xs: 4, md: 6 } }}>
+                        <Box>
+                            {/* Heading */}
+                            <Typography
+                                variant="h1"
+                                component="h1"
                                 sx={{
-                                    fontSize: { xs: '36px', md: '48px' },
+                                    fontSize: { xs: '32px', md: '48px' },
                                     fontWeight: 700,
-                                    lineHeight: { xs: '48px', md: '64px' },
-                                    color: '#191C1F',
-                                    mb: 2,
+                                    lineHeight: { xs: '35px', md: '55px' },
+                                    color: '#2C2C2C',
+                                    mb: { xs: 1.5, md: 2 },
                                 }}
                             >
                                 {pageHome?.section_two_heading}
                             </Typography>
 
+                            {/* Subheading */}
                             <Typography
+                                variant="h2"
+                                component="h2"
                                 sx={{
-                                    fontSize: { xs: '18px', md: '24px' },
-                                    fontWeight: 700,
-                                    lineHeight: { xs: '24px', md: '32px' },
-                                    color: '#191C1F',
-                                    mb: 2,
+                                    fontSize: { xs: '20px', md: '24px' },
+                                    fontWeight: 600,
+                                    lineHeight: { xs: '28px', md: '32px' },
+                                    color: '#232536',
+                                    mb: { xs: 1.5, md: 2 },
                                 }}
                             >
                                 {pageHome?.section_two_subheading}
                             </Typography>
 
+                            {/* Paragraph */}
                             <Typography
+                                variant="body1"
+                                component="p"
                                 sx={{
                                     fontSize: { xs: '14px', md: '16px' },
                                     fontWeight: 400,
-                                    lineHeight: { xs: '24px', md: '28px' },
-                                    color: '#191C1F',
+                                    lineHeight: { xs: '22px', md: '28px' },
+                                    color: '#5F6C72',
                                     mb: 3,
                                 }}
                             >
-                                {pageHome?.section_two_description}
+                                {pageHome?.section_two_description?.slice(0, 596)}....
                             </Typography>
 
+                            {/* CTA Button */}
                             <Button
                                 component={Link}
                                 to="/about"
@@ -512,37 +535,43 @@ const MyComponent = () => {
                                 endIcon={<ArrowForwardIcon />}
                                 sx={{
                                     textTransform: 'none',
-                                    padding: '10px 20px',
+                                    padding: { xs: '8px 16px', md: '10px 20px' },
                                     fontSize: { xs: '14px', md: '16px' },
                                     backgroundColor: '#FA8232',
                                     color: '#FFFFFF',
+                                    '&:hover': { backgroundColor: '#e67a2a' },
                                 }}
-
                             >
                                 View All
                             </Button>
                         </Box>
                     </Grid>
-                    <Grid item xs={12} md={6} sx={{ p: 5 }}>
+
+                    {/* Image Section */}
+                    <Grid item xs={12} md={6} sx={{ px: { xs: 2, md: 5 }, py: { xs: 4, md: 6 } }}>
                         <Box
                             sx={{
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 height: '100%',
-                                mb: 4
                             }}
                         >
                             <img
                                 src={baseUrl + pageHome?.section_two_image}
                                 alt="Placeholder"
-                                style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                                style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    objectFit: 'cover',
+                                    borderRadius: '8px',
+                                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                                }}
                             />
                         </Box>
                     </Grid>
                 </Grid>
             </Container>
-
 
             {/* Product Section */}
             <Grid sx={{ background: "#FAFAFA", py: 2 }}>
@@ -658,8 +687,6 @@ const MyComponent = () => {
                     </Grid>
                 </Container>
             </Grid>
-
-
 
             <Grid sx={{ background: "#FFF", py: 2 }}>
                 <Container maxWidth="lg">

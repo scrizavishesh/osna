@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const API_URL = "https://dc.damio.in/api";
 
-var bearerToken = localStorage.getItem("osna_token")
+var bearerToken = `Bearer ${localStorage.getItem("osna_token")}`
 
 
 export const Loginuse = async (requestData) => {
