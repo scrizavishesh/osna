@@ -710,8 +710,9 @@ const MyComponent = () => {
                 </Container>
 
             </Grid>
-            <WorldMap />
-
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <WorldMap />
+            </Container>
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                 <CompanyCarousel />
             </Container>
