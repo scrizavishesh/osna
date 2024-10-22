@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Container, Grid, Box, TextField, Button, MenuItem, Typography, Paper, Card, Select, Divider } from '@mui/material';
+import { Container, Grid, Box, TextField, Button, MenuItem, Typography, Paper, Card, Select, Divider, Modal } from '@mui/material';
 import { Phone, Email, LocationOn } from '@mui/icons-material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { getBranches, getContacts, handleContact } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 
 const ContactUs = () => {
 
     const [branches, setBranches] = useState([]);
-    const [contact, setContact] = useState('')
+    const [contact, setContact] = useState('');
+    const [showModal, setShowModal] = useState(false); // State for the confirmation modal
     const { register, handleSubmit, reset, formState: { errors }, } = useForm();
 
 
@@ -28,6 +30,7 @@ const ContactUs = () => {
             if (response.status === 201) {
                 toast.success("Contact Information Save Successfully!");
                 reset();
+                setShowModal(true);
             } else {
                 toast.error("Error adding user");
             }
@@ -72,7 +75,6 @@ const ContactUs = () => {
 
     return (
         <>
-         
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 {/* Heading and Subheading */}
                 <Box mb={4} textAlign="center">
@@ -217,31 +219,33 @@ const ContactUs = () => {
                                         Branch Office
                                     </Typography>
                                 </Box>
-                                {branches?.map((item) => (
-                                    <Box alignItems="center" mb={2}>
-                                        <Typography
-                                            sx={{
-                                                fontSize: '14px',
-                                                fontWeight: 400,
-                                                lineHeight: '20px',
-                                                color: "#2c2c2c",
-                                            }}
-                                        >
-                                            {item?.branch_name}
-                                        </Typography>
-                                        <Typography
-                                            sx={{
-                                                fontSize: '14px',
-                                                fontWeight: 400,
-                                                lineHeight: '20px',
-                                                color: "#999999",
-                                            }}
-                                        >
-                                            Mobile No - {item?.email}
-                                            Email Id - {item?.mobile}
-                                        </Typography>
-                                    </Box>
-                                ))}
+                                <Box sx={{ maxHeight: branches.length > 5 ? '460px' : 'auto', overflowY: branches.length > 5 ? 'scroll' : 'visible' }}>
+                                    {branches?.map((item) => (
+                                        <Box alignItems="center" mb={2}>
+                                            <Typography
+                                                sx={{
+                                                    fontSize: '14px',
+                                                    fontWeight: 400,
+                                                    lineHeight: '20px',
+                                                    color: "#2c2c2c",
+                                                }}
+                                            >
+                                                {item?.branch_name}
+                                            </Typography>
+                                            <Typography
+                                                sx={{
+                                                    fontSize: '14px',
+                                                    fontWeight: 400,
+                                                    lineHeight: '20px',
+                                                    color: "#999999",
+                                                }}
+                                            >
+                                                Mobile No - {item?.email}
+                                                Email Id - {item?.mobile}
+                                            </Typography>
+                                        </Box>
+                                    ))}
+                                </Box>
                                 <Divider variant="middle" />
                             </Paper>
                         </Grid>
@@ -363,6 +367,70 @@ const ContactUs = () => {
                     </Grid>
                 </Paper>
             </Container>
+
+            {/* Confirmation Modal */}
+
+            <Modal
+                open={showModal}
+                onClose={() => setShowModal(false)}
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
+            >
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: 400,
+                        bgcolor: '#0462B6',
+                        borderRadius: 3,
+                        p: 4,
+                        boxShadow: 5,
+                        textAlign: 'center',
+                        animation: 'fadeIn 0.3s ease-in-out'
+                    }}
+                >
+                    {/* Animated Icon */}
+                    <CheckCircleIcon sx={{ fontSize: 50, color: '#FA8232', mb: 2, animation: 'bounce 1s infinite' }} />
+
+                    {/* Title */}
+                    <Typography
+                        id="modal-title"
+                        variant="h5"
+                        component="h2"
+                        sx={{ fontWeight: 'bold', color: '#FFFFFF' }}
+                    >
+                        🎉 Submission Successful!
+                    </Typography>
+
+                    {/* Description */}
+                    <Typography
+                        id="modal-description"
+                        sx={{ mt: 2, color: '#F9FAFB' }}
+                    >
+                        Your message has been successfully submitted. We will get back to you shortly. 😊
+                    </Typography>
+
+                    {/* Close Button */}
+                    <Button
+                        onClick={() => setShowModal(false)}
+                        sx={{
+                            mt: 3,
+                            bgcolor: '#FA8232',
+                            color: '#FFFFFF',
+                            '&:hover': { bgcolor: '#bd7748' },
+                            borderRadius: 20,
+                            px: 3,
+                            py: 1,
+                            textTransform: 'none',
+                            fontSize: '16px'
+                        }}
+                    >
+                        Close
+                    </Button>
+                </Box>
+            </Modal>
         </>
     );
 };
