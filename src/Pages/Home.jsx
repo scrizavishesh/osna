@@ -627,7 +627,7 @@ const MyComponent = () => {
                                                 src={baseUrl + item?.product_image[0]?.image}
                                                 alt="Product Image"
                                                 style={{
-                                                    width: '100%', objectFit: 'cover', height: '150px', transition: 'transform 0.3s ease',  // Smooth transition for zoom
+                                                    width: '250px', objectFit: 'cover', height: '150px', transition: 'transform 0.3s ease',  // Smooth transition for zoom
                                                     '&:hover': {
                                                         transform: 'scale(1.1)',  // Zoom on hover
                                                     },
@@ -698,9 +698,10 @@ const MyComponent = () => {
                                     fontSize: '24px',
                                     fontWeight: 600,
                                     lineHeight: '32px',
-                                    textAlign: 'left',
+                                    textAlign: 'center',
                                     color: "#0462B6",
                                     mb: 3,
+                                    mt: 2,
                                 }}
                             >
                                 Worldwide Office
@@ -710,9 +711,7 @@ const MyComponent = () => {
                 </Container>
 
             </Grid>
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                <WorldMap />
-            </Container>
+            <WorldMap />
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                 <CompanyCarousel />
             </Container>

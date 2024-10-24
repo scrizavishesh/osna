@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Container, Divider, IconButton, OutlinedInput, Stack, Typography } from '@mui/material';
-import { SearchOffOutlined, Person, PersonAdd } from '@mui/icons-material';
+import { Person, PersonAdd } from '@mui/icons-material';
+import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
 import MainSVG from '../SVG/MainSVG';
 import { getContacts, userLog_out } from '../Utils/Apis'; // Assuming you have a logoutAPI function in your Utils/Apis file
@@ -76,7 +77,7 @@ const Header = () => {
 
     return (
         <Container maxWidth="lg">
-            <Box sx={{p : 1}}>
+            <Box sx={{ p: 1 }}>
                 <Stack
                     direction={{ xs: 'column', sm: 'row' }}
                     sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: { xs: 'center', sm: 'left' } }}
@@ -91,11 +92,11 @@ const Header = () => {
                         </Typography>
                         <Box>
                             {[
-                                { icon: <FacebookIcon  sx={{ fontSize: "1.3rem" }} />, href: `${contact?.facebook_url}` },
-                                { icon: <TwitterIcon sx={{ fontSize: "1.3rem" }}  />, href: `${contact?.twitter_url}` },
+                                { icon: <FacebookIcon sx={{ fontSize: "1.3rem" }} />, href: `${contact?.facebook_url}` },
+                                { icon: <TwitterIcon sx={{ fontSize: "1.3rem" }} />, href: `${contact?.twitter_url}` },
                                 { icon: <InstagramIcon sx={{ fontSize: "1.3rem" }} />, href: `${contact?.instagram_url}` },
                                 { icon: <LinkedInIcon sx={{ fontSize: "1.3rem" }} />, href: `${contact?.linkedin_url}` },
-                                { icon: <YouTubeIcon sx={{ fontSize: "1.3rem" }}  />, href: `${contact?.youtube_url}` },
+                                { icon: <YouTubeIcon sx={{ fontSize: "1.3rem" }} />, href: `${contact?.youtube_url}` },
                             ].map((social, index) => (
                                 <IconButton
                                     key={index}
@@ -166,13 +167,13 @@ const Header = () => {
                             '&:hover': { backgroundColor: '#fff' },
                         }}
                     >
-                        <SearchOffOutlined sx={{ color: '#0462B6' }} />
+                        <SearchIcon sx={{ color: '#0462B6' }} />
                     </Button>
                 </Box>
 
                 {/* Log In and Sign Up Buttons with Icons */}
                 {
-                    !token ?
+                    !token || typeof token === 'undefined' ? (
                         <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
                             <Button
                                 to='/signin'
@@ -204,7 +205,8 @@ const Header = () => {
                             >
                                 Sign Up
                             </Button>
-                        </Stack> :
+                        </Stack>
+                    ) : (
                         <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
                             <Button
                                 onClick={Log_out}
@@ -220,9 +222,11 @@ const Header = () => {
                                 Log Out
                             </Button>
                         </Stack>
+                    )
                 }
+
             </Box>
-        </Container>
+        </Container >
     );
 };
 

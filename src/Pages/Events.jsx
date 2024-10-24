@@ -10,7 +10,7 @@ const EventsPage = () => {
     const [pastEvents, setPastEvents] = useState([]);
     const [presentEvents, setPresentEvents] = useState([]);
     const [todayEvents, setTodayEvents] = useState([]);
-    const [selectedTab, setSelectedTab] = useState(1); // Control which tab is selected
+    const [selectedTab, setSelectedTab] = useState(1);
 
     useEffect(() => {
         getEve();
@@ -23,7 +23,7 @@ const EventsPage = () => {
                 toast.success("Events retrieved successfully");
                 const events = response?.data?.data || [];
                 setEvents(events);
-                categorizeEvents(events); // Categorize events
+                categorizeEvents(events);
             } else {
                 toast.error("Failed to fetch events");
             }
@@ -36,7 +36,6 @@ const EventsPage = () => {
         const today = moment().startOf('day');
         const past = [];
         const present = [];
-        const todayE = [];
 
         events.forEach((event) => {
             const eventStart = moment(event.start_date);
@@ -44,20 +43,18 @@ const EventsPage = () => {
 
             if (eventEnd.isBefore(today, 'day')) {
                 past.push(event); // Event has ended
-            } else if (eventStart.isSame(today, 'day')) {
-                todayE.push(event); // Event starts today
-            } else if (eventStart.isAfter(today)) {
-                present.push(event); // Upcoming events
+            } else {
+                present.push(event); // Today's and future events will go to "Upcoming"
             }
         });
 
         setPastEvents(past);
         setPresentEvents(present);
-        setTodayEvents(todayE);
     };
 
+
     const handleTabChange = (event, newValue) => {
-        setSelectedTab(newValue); // Change selected tab
+        setSelectedTab(newValue);
     };
 
     const renderEventCards = (events) => (
@@ -113,16 +110,16 @@ const EventsPage = () => {
                     centered
                 >
                     <Tab label="Past" />
-                    <Tab label="Today" />
                     <Tab label="Upcoming" />
                 </Tabs>
+
 
                 <Box sx={{ marginTop: '2rem' }}>
                     {/* Conditionally render events based on selected tab */}
                     {selectedTab === 0 && renderEventCards(pastEvents)}
-                    {selectedTab === 1 && renderEventCards(todayEvents)}
-                    {selectedTab === 2 && renderEventCards(presentEvents)}
+                    {selectedTab === 1 && renderEventCards(presentEvents)} {/* Today's events are now part of Upcoming */}
                 </Box>
+
             </Box>
         </Container>
     );

@@ -18,9 +18,19 @@ export const Loginuse = async (requestData) => {
 
 
 
-export const GetCategorySubcategory = async () => {
+export const GetPreCategory = async () => {
   axios.defaults.headers.common["Authorization"] = bearerToken;
-  var response = await axios.get(`${API_URL}/get-product-by-category`,);
+  var response = await axios.get(`${API_URL}/get-category-name`,);
+  if (response) {
+    return response;
+  } else {
+    return [];
+  }
+}
+
+export const GetPostCategory = async (id) => {
+  axios.defaults.headers.common["Authorization"] = bearerToken;
+  var response = await axios.get(`${API_URL}/get-product-by-category?category_id=${id}`,);
   if (response) {
     return response;
   } else {
@@ -40,11 +50,21 @@ export const GetBanner = async () => {
   }
 }
 
-
-
 export const GetProduct = async (page, pop) => {
   axios.defaults.headers.common["Authorization"] = '';
   var response = await axios.get(`${API_URL}/products?page=${page}&product_number=10&popular=${pop}`,);
+  if (response) {
+    return response;
+  } else {
+    return [];
+  }
+}
+
+
+
+export const GetCategoryProduct = async (id) => {
+  axios.defaults.headers.common["Authorization"] = '';
+  var response = await axios.get(`${API_URL}/get-product-by-category-id?category_id=${id}`,);
   if (response) {
     return response;
   } else {

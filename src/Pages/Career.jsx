@@ -1,49 +1,48 @@
-import React from 'react';
-import { Container, Box, Typography, TextField, Button, Grid, Checkbox, FormControlLabel, MenuItem, InputLabel, Select } from '@mui/material';
+import React, { useState } from 'react';
+import { Container, Box, Typography, TextField, Button, Grid, Checkbox, FormControlLabel, MenuItem, InputLabel, Select, Modal } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useForm } from 'react-hook-form';
 import { CareerAPI } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 
 const Career = () => {
-    const { register, handleSubmit, formState: { errors }, setValue, reset, watch } = useForm({
+    const { register, handleSubmit, formState: { errors }, reset } = useForm({
         mode: 'onChange'
     });
 
-    const handleClose = () => {
-        // Logic to close the modal or reset state
-    };
+    const [showModal, setShowModal] = useState(false); // State for the confirmation modal
 
-    const from = watch("applying_for");
 
-    // Function to handle form submission
+
     const onSubmit = async (data) => {
         try {
-            const formData = new FormData(); // Create a new FormData object
-
-            // Append all fields to the FormData object
+            const formData = new FormData();
             formData.append('name', data.name);
             formData.append('company', data.company);
             formData.append('email', data.email);
             formData.append('phone', data.phone);
-            formData.append('applying_for', data.applying_for); // Convert array to JSON string
-            formData.append('time_to_reach', data.time_to_reach);
-            formData.append('hear_about_us', data.hear_about_us);
-
-            if (data.resume && data.resume.length > 0) {
-                formData.append('resume', data.resume[0]); // Append the actual file
+            if (data.applying_for && data.applying_for.length > 0) {
+                data.applying_for.forEach((item, index) => {
+                    formData.append(`applying_for[${index}]`, item);
+                });
             }
-            const response = await CareerAPI(formData); // Send FormData
+            formData.append('time_to_reach', data.time_to_reach);
+            formData.append('here_about_us', data.here_about_us);
+            if (data.resume && data.resume.length > 0) {
+                formData.append('resume', data.resume[0]);
+            }
+            const response = await CareerAPI(formData);
             if (response.status === 201) {
                 toast.success('Profile submitted successfully!');
                 localStorage.setItem('osna_token', response?.data?.token);
                 reset();
-                handleClose();
+                setShowModal(true);
             } else {
                 toast.error('Failed to submit profile');
             }
         } catch (error) {
             toast.error('Error submitting profile');
-            console.error('API Error:', error); // Log error for debugging
+            console.error('API Error:', error);
         }
     };
 
@@ -56,8 +55,6 @@ const Career = () => {
                     Career
                 </Typography>
             </Container>
-
-            {/* Apply Now Form */}
             <Container maxWidth="lg" sx={{ mt: 5 }}>
                 <Box sx={{ backgroundColor: '#FDFDFD', padding: '16px', borderRadius: '8px', mb: 4, border: "1px solid #DBDBDB80" }}>
                     <Typography
@@ -76,8 +73,6 @@ const Career = () => {
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Grid container spacing={2}>
-
-                            {/* Name */}
                             <Grid item xs={12} sm={6}>
                                 <Typography
                                     sx={{
@@ -102,8 +97,6 @@ const Career = () => {
                                     helperText={errors.name ? errors.name.message : ''}
                                 />
                             </Grid>
-
-                            {/* Company */}
                             <Grid item xs={12} sm={6}>
                                 <Typography
                                     sx={{
@@ -266,7 +259,7 @@ const Career = () => {
                                 <Select
                                     fullWidth
                                     size="small"
-                                    {...register('hear_about_us')}
+                                    {...register('here_about_us')}
                                 >
                                     <MenuItem value="friend">Friend</MenuItem>
                                     <MenuItem value="facebook">Facebook</MenuItem>
@@ -329,6 +322,70 @@ const Career = () => {
                     </form>
                 </Box>
             </Container>
+
+            {/* Confirmation Modal */}
+
+            <Modal
+                open={showModal}
+                onClose={() => setShowModal(false)}
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
+            >
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: 400,
+                        bgcolor: '#0462B6',
+                        borderRadius: 3,
+                        p: 4,
+                        boxShadow: 5,
+                        textAlign: 'center',
+                        animation: 'fadeIn 0.3s ease-in-out'
+                    }}
+                >
+                    {/* Animated Icon */}
+                    <CheckCircleIcon sx={{ fontSize: 50, color: '#FA8232', mb: 2, animation: 'bounce 1s infinite' }} />
+
+                    {/* Title */}
+                    <Typography
+                        id="modal-title"
+                        variant="h5"
+                        component="h2"
+                        sx={{ fontWeight: 'bold', color: '#FFFFFF' }}
+                    >
+                        🎉 Submission Successful!
+                    </Typography>
+
+                    {/* Description */}
+                    <Typography
+                        id="modal-description"
+                        sx={{ mt: 2, color: '#F9FAFB' }}
+                    >
+                        Your message has been successfully submitted. We will get back to you shortly. 😊
+                    </Typography>
+
+                    {/* Close Button */}
+                    <Button
+                        onClick={() => setShowModal(false)}
+                        sx={{
+                            mt: 3,
+                            bgcolor: '#FA8232',
+                            color: '#FFFFFF',
+                            '&:hover': { bgcolor: '#bd7748' },
+                            borderRadius: 20,
+                            px: 3,
+                            py: 1,
+                            textTransform: 'none',
+                            fontSize: '16px'
+                        }}
+                    >
+                        Close
+                    </Button>
+                </Box>
+            </Modal>
         </>
     );
 };

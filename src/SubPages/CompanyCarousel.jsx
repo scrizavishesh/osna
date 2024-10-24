@@ -71,8 +71,6 @@ const ResponsiveCarousel = () => {
                     <Grid key={index} item>
                         <Grid
                             sx={{
-                                width: 150,  // Set a fixed width for the logo container
-                                height: 150, // Set a fixed height for the logo container
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
@@ -84,11 +82,10 @@ const ResponsiveCarousel = () => {
                                 src={baseUrl + item?.client_logo}
                                 alt=""
                                 style={{
-                                    width: "100%", // Ensure logos fit within the container
-                                    height: "100%", // Maintain consistent height
-                                    objectFit: "contain", // Maintain aspect ratio
-                                    backgroundColor: "transparent", // Ensure the logo background is transparent
-                                    filter: "none", // Remove any additional filters like shadows
+                                    width: "55%", 
+                                    aspectRatio: 3/2,
+                                    mixBlendMode: "color-burn",
+                                    objectFit: "contain",
                                 }}
                             />
                         </Grid>

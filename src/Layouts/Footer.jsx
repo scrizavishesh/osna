@@ -36,7 +36,7 @@ const Footer = () => {
         try {
             const response = await getCategoryNames();
             if (response?.status === 200) {
-                setCategoryNames(response?.data?.data);
+                setCategoryNames(response?.data?.data?.category_list);
             } else {
                 toast.error("Failed to fetch categories");
             }
@@ -49,6 +49,7 @@ const Footer = () => {
     const Contact = async () => {
         try {
             const response = await getContacts();
+            console.log(response, 'Hello')
             if (response?.status === 200) {
                 toast.success("Get Contact");
                 setContact(response?.data?.data[0]);
@@ -89,7 +90,7 @@ const Footer = () => {
                             {/* Phone Number */}
                             <Typography
                                 component="a" // Makes it clickable
-                                href={`tel:${contact?.contact_phone_number}`} // Opens phone dialer
+                                href={`tel:${contact?.support_phone_number}`} // Opens phone dialer
                                 sx={{
                                     fontSize: '18px',
                                     fontWeight: 500,
@@ -100,14 +101,14 @@ const Footer = () => {
                                     textDecoration: 'none', // Remove underline from link
                                 }}
                             >
-                                {contact?.contact_phone_number}
+                                {contact?.support_phone_number}
                             </Typography>
                             <Divider sx={{ backgroundColor: '#FFFFFF', my: 1 }} />
 
                             {/* Address */}
                             <Typography
                                 component="a" // Makes it clickable
-                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact?.contact_address)}`} // Opens Google Maps
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact?.support_address)}`} // Opens Google Maps
                                 target="_blank" // Opens in a new tab
                                 rel="noopener noreferrer" // Ensures security when opening a new tab
                                 sx={{
@@ -120,14 +121,14 @@ const Footer = () => {
                                     textDecoration: 'none', // Remove underline from link
                                 }}
                             >
-                                {contact?.contact_address}
+                                {contact?.support_address}
                             </Typography>
                             <Divider sx={{ backgroundColor: '#FFFFFF', my: 1 }} />
 
                             {/* Email */}
                             <Typography
                                 component="a" // Makes it clickable
-                                href={`mailto:${contact?.contact_email}`} // Opens email client
+                                href={`mailto:${contact?.support_email}`} // Opens email client
                                 sx={{
                                     fontSize: '16px',
                                     fontWeight: 500,
@@ -137,7 +138,7 @@ const Footer = () => {
                                     textDecoration: 'none', // Remove underline from link
                                 }}
                             >
-                                {contact?.contact_email}
+                                {contact?.support_email}
                             </Typography>
                         </Box>
                     </Grid>

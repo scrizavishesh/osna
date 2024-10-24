@@ -8,14 +8,15 @@ const SearchResult = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const search_term = searchParams.get('search_term');
-
   const [events, setEvents] = useState([]);
+
 
   useEffect(() => {
     if (search_term) {
       fetchSearchResults(search_term);
     }
   }, [search_term]);
+
 
   const fetchSearchResults = async (terms) => {
     try {
@@ -32,7 +33,6 @@ const SearchResult = () => {
 
   return (
     <>
-
       <Grid sx={{ background: '#FAFAFA', py: 2 }}>
         <Container maxWidth="lg">
           <Grid container spacing={2} mb={5}>
@@ -133,7 +133,6 @@ const SearchResult = () => {
                 Product not found
               </Typography>
             )}
-
           </Grid>
         </Container>
       </Grid>

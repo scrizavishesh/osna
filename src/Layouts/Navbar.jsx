@@ -41,7 +41,7 @@ const Navbar = () => {
         try {
             const response = await getCategoryNames();
             if (response?.status === 200) {
-                setCategoryNames(response?.data?.data);
+                setCategoryNames(response?.data?.data?.category_list);
             } else {
                 toast.error("Failed to fetch categories");
             }
