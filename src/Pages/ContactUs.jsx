@@ -240,9 +240,15 @@ const ContactUs = () => {
                                                     color: "#999999",
                                                 }}
                                             >
+                                                Email - {item?.email}
+                                                <br />
                                                 Mobile No -  {item?.mobile}
                                                 <br />
                                                 Email Id - {item?.email}
+                                                <br />
+                                                Telephone - {item?.telephone}
+                                                <br />
+                                                Address - {item?.address}
                                             </Typography>
                                         </Box>
                                     ))}
