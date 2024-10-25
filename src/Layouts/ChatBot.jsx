@@ -1,6 +1,33 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { toast } from "react-hot-toast";
+import { chatBot } from "../Utils/Apis";
 
 const TawkTo = () => {
+
+  useEffect(() => {
+    getChat();
+
+  }, []);
+
+  const [chatURL, setchatURL] = useState()
+  
+
+  const getChat = async () => {
+    try {
+        const response = await chatBot();
+        console.log(response, "chat")
+        if (response?.status === 200) {
+            toast.success("Got Product successfully");
+            setchatURL(response?.data?.data?.chat_url);
+        } else {
+            toast.error("Failed to fetch categories");
+        }
+    } catch (err) {
+        toast.error(err?.message);
+    }
+};
+
+
   useEffect(() => {
     // Create a new script element
     var Tawk_API = Tawk_API || {};
@@ -11,7 +38,7 @@ const TawkTo = () => {
 
     // Set the script attributes
     s1.async = true;
-    s1.src = 'https://embed.tawk.to/66ffd16637379df10df1c16d/1i9bkju95';
+    s1.src = chatURL;
     s1.charset = 'UTF-8';
     s1.setAttribute('crossorigin', '*');
 
@@ -35,7 +62,7 @@ const TawkTo = () => {
       s1.remove();
       observer.disconnect();
     };
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+  }, [chatURL]); // Empty dependency array ensures this runs only once when the component mounts
 
   return null; // No UI, the script just runs in the background
 };

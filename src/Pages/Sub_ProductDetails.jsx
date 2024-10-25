@@ -97,54 +97,6 @@ const Sub_ProductDetails = () => {
                             />
                         </Grid>
                     </Grid>
-
-                    {/* Second Container: Description and YouTube Video */}
-                    <Grid container spacing={4} sx={{ marginBottom: '4rem' }}>
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="h5" color="primary">
-                                HARDWARE + SOFTWARE = VISOR®
-                            </Typography>
-                            <Typography variant="body1" sx={{ marginTop: '1rem' }}>
-                                With our portfolio of vision sensors, we cover a wide spectrum of industrial image processing. A high-performance
-                                smart camera fitted in a compact and lightweight housing forms the heart of our VISOR® vision sensors.
-                            </Typography>
-                            <Typography variant="body1" sx={{ marginTop: '1rem' }}>
-                                The hardware is optimized by the VISOR® software, which enables the set-up of applications in a few simple steps and
-                                the adjustment of process parameters.
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <YouTube videoId="R1L7ftv2qhw" opts={{ height: '250', width: '100%' }} />
-                        </Grid>
-                    </Grid>
-
-                    {/* Third Container: Related Product Details */}
-                    <Typography variant="h5" color="primary" align="center" sx={{ marginBottom: '2rem' }}>
-                        The OSNA Family Offers the Right Product for Every Application
-                    </Typography>
-
-                    <Grid container spacing={4}>
-                        {subCategoryDetails.map((subCategory, index) => (
-                            <Grid item xs={12} sm={6} md={4} key={index}>
-                                <Card sx={{ height: '100%' }}>
-                                    <CardMedia
-                                        component="img"
-                                        image={baseUrl + subCategory?.product_image}
-                                        alt={subCategory?.sub_category}
-                                        sx={{ height: '250px', objectFit: 'contain' }}
-                                        data-fancybox="gallery"
-                                        onClick={() => openFancybox(baseUrl + subCategory?.product_image, subCategory?.sub_category)}
-                                    />
-                                    <CardContent>
-                                        <Typography variant="h6">{subCategory?.sub_category}</Typography>
-                                        <Typography variant="body2" sx={{ marginTop: '0.5rem' }}>
-                                            {subCategory?.short_description}
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                        ))}
-                    </Grid>
                 </Box>
             </Container>
         </>

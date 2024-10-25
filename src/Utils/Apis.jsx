@@ -243,6 +243,17 @@ export const getCoreMembers = async () => {
 }
 
 
+export const chatBot = async () => {
+  axios.defaults.headers.common["Authorization"] = bearerToken;
+  var response = await axios.get(`${API_URL}/get-chat-url`,);
+  if (response) {
+    return response;
+  } else {
+    return [];
+  }
+}
+
+
 
 export const CareerAPI = async (data) => {
   axios.defaults.headers.common["Authorization"] = bearerToken;
