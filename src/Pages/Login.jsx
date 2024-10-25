@@ -13,6 +13,7 @@ const SignIn = () => {
     const onSubmit = async (data) => {
         const payload = {
             email: data.email,
+            type: 'login'
         };
 
         try {
@@ -27,7 +28,8 @@ const SignIn = () => {
             }
         } catch (error) {
             console.error('API Error:', error);
-            alert('Error during signup');
+            alert(error?.response?.data?.message);
+            navigate("/signup"); 
         }
     };
     return (

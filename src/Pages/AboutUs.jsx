@@ -136,7 +136,7 @@ const AboutUs = () => {
                                         variant="h4"
                                         sx={{ fontWeight: 'bold', fontSize: { xs: '24px', md: '36px' } }}
                                     >
-                                        <CountUp start={0} end={1998} duration={5} />
+                                        <CountUp start={0} end={AboutUs?.founding_year} duration={5} />
                                     </Typography>
                                     <Typography
                                         sx={{ fontSize: { xs: '14px', md: '16px' }, color: '#555' }}
@@ -151,7 +151,7 @@ const AboutUs = () => {
                                         variant="h4"
                                         sx={{ fontWeight: 'bold', fontSize: { xs: '24px', md: '36px' } }}
                                     >
-                                        <CountUp start={0} end={585} duration={5} suffix="+" />
+                                        <CountUp start={0} end={AboutUs?.employees_worldwide} duration={5} suffix="+" />
                                     </Typography>
                                     <Typography
                                         sx={{ fontSize: { xs: '14px', md: '16px' }, color: '#555' }}
@@ -166,7 +166,7 @@ const AboutUs = () => {
                                         variant="h4"
                                         sx={{ fontWeight: 'bold', fontSize: { xs: '24px', md: '36px' } }}
                                     >
-                                        <CountUp start={0} end={30} duration={5} suffix="+" />
+                                        <CountUp start={0} end={AboutUs?.distributor_worldwide} duration={5} suffix="+" />
                                     </Typography>
                                     <Typography
                                         sx={{ fontSize: { xs: '14px', md: '16px' }, color: '#555' }}

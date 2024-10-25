@@ -40,6 +40,7 @@ const Navbar = () => {
     const CategoryByNames = async () => {
         try {
             const response = await getCategoryNames();
+            console.log(response, "names")
             if (response?.status === 200) {
                 setCategoryNames(response?.data?.data?.category_list);
             } else {
@@ -107,7 +108,7 @@ const Navbar = () => {
                                         <MenuItem key={cat.id} value={cat.category_name}>
                                             <Button
                                                 component={Link}
-                                                to={`/categories?category_name=${encodeURIComponent(cat.category_name)}`}
+                                                to={`/categories?category_id=${encodeURIComponent(cat.id)}`}
                                                 sx={{
                                                     color: '#0462B6',
                                                     textTransform: 'none',

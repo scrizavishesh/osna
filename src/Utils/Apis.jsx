@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const API_URL = "https://dc.damio.in/api";
 
-var bearerToken = `Bearer ${localStorage.getItem("osna_token")}`
+var bearerToken = localStorage.getItem("osna_token")
 
 
 export const Loginuse = async (requestData) => {
@@ -168,7 +168,7 @@ export const getProductAccessories = async (data) => {
 
 export const getCategoryDetails = async (data) => {
   axios.defaults.headers.common["Authorization"] = bearerToken;
-  var response = await axios.get(`${API_URL}/get-category-details?category_name=${data}`,);
+  var response = await axios.get(`${API_URL}/get-category-details?category_id=${data}`,);
   if (response) {
     return response;
   } else {

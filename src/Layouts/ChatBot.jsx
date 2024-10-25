@@ -18,9 +18,22 @@ const TawkTo = () => {
     // Append the script to the DOM
     s0.parentNode.insertBefore(s1, s0);
 
-    // Cleanup the script when the component unmounts
+    // MutationObserver to hide Tawk branding
+    const observer = new MutationObserver(() => {
+      const branding = document.querySelector('.tawk-branding');
+      if (branding) {
+        branding.style.display = 'none';  // Hide the branding element
+        observer.disconnect();  // Stop observing once it's found and hidden
+      }
+    });
+
+    // Start observing changes in the document body
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Cleanup the script and observer when the component unmounts
     return () => {
       s1.remove();
+      observer.disconnect();
     };
   }, []); // Empty dependency array ensures this runs only once when the component mounts
 

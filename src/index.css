@@ -56,3 +56,26 @@ body {
   scrollbar-color: #0462b6 #f0f0f0; /* Scrollbar color and track color */
 }
 
+
+.tawk-branding {
+  display: none !important;
+}
+
+
+/* Add this to your CSS file */
+.custom-slick-dots .slick-dots {
+  position: absolute;
+  bottom: 0px;
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-align: center;
+}
+
+.custom-slick-dots .slick-dots li button:before {
+  color: #FA8232; /* Customize dot color */
+  font-size: 10px; /* Adjust dot size if needed */
+}
+

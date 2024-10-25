@@ -10,7 +10,7 @@ import "@fancyapps/ui/dist/fancybox/fancybox.css";
 const Sub_ProductDetails = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const category_name = searchParams.get('category_name');
+    const category_name = searchParams.get('category_id');
 
     const [category, setCategory] = useState([]);
     const [description, setDescription] = useState('');
