@@ -34,6 +34,7 @@ const MyComponent = () => {
     const getProduct = async () => {
         try {
             const response = await GetProduct();
+            console.log(response, "product")
             if (response?.status === 200) {
                 toast.success("Got Product successfully");
                 setcardDetails(response?.data?.data?.data);
@@ -48,7 +49,7 @@ const MyComponent = () => {
     const getHome = async () => {
         try {
             const response = await getHomePageContent();
-            console.log(response, "home")
+
             if (response?.status === 200) {
                 toast.success("Get Home Page Content");
                 setpageHome(response?.data?.data[0]);
@@ -151,7 +152,7 @@ const MyComponent = () => {
                                                 src={baseUrl + pageHome?.section_three_image}
                                                 alt="Optical Image"
                                                 style={{
-                                                    width: '100%',
+                                                    width: '120px',
                                                     height: 'auto',
                                                     objectFit: 'cover',
                                                     borderRadius: '6px',
@@ -213,20 +214,20 @@ const MyComponent = () => {
                                         flexGrow: 1,
                                     }}
                                 >
-                                    <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} justifyContent="space-between" alignItems="center" width="100%">
-                                        <Box width={{ xs: '30%', md: '30%' }} height="auto" mr={2} mb={{ xs: 2, md: 0 }}>
+                                    <Box display="flex" flexDirection={{ xs: 'column', md: 'row', }} justifyContent="space-between" alignItems="center" width="100%">
+                                        <Box width={{ xs: '30%', md: '30%' }} height="auto" mr={5} mb={{ xs: 2, md: 0 }}>
                                             <img
                                                 src={baseUrl + pageHome?.section_four_image}
                                                 alt="Lenses"
                                                 style={{
-                                                    width: '100%',
+                                                    width: '150px',
                                                     height: 'auto',
                                                     objectFit: 'cover',
                                                     borderRadius: '6px',
                                                 }}
                                             />
                                         </Box>
-                                        <Box width={{ xs: '70%', md: '70%' }}>
+                                        <Box width={{ xs: '70%', md: '70%' }} sx={{ marginLeft: '40px'}}>
                                             <Typography
                                                 variant="h6"
                                                 sx={{
@@ -563,98 +564,100 @@ const MyComponent = () => {
                                 Our Products
                             </Typography>
                         </Grid>
-
                         {/* Product Cards */}
-                        {cardDetails.slice(0, 8).map((item, index) => (
-                            <Grid
-                                item
-                                xs={12} sm={6} md={4} lg={3} mb={4}
-                                key={index}
-                                display="flex"
-                                justifyContent="center"
-
-                            >
-                                <Card
-                                    sx={{
-                                        width: '100%',
-                                        border: '1px solid #E4E7E9',
-                                        borderRadius: '8px',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'space-between',
-                                        p: 2,
-                                        height: '100%',
-                                    }}
+                        {cardDetails.length > 0 ? (
+                            cardDetails.slice(0, 8).map((item, index) => (
+                                <Grid
+                                    item
+                                    xs={12} sm={6} md={4} lg={3} mb={4}
+                                    key={index}
+                                    display="flex"
+                                    justifyContent="center"
                                 >
-                                    {/* Image Section (Clickable) */}
-                                    <Box sx={{
-                                        width: '100%', height: 'auto', mb: 2, overflow: 'hidden',  // Ensure the image doesn't overflow the container
-                                        '&:hover img': {
-                                            transform: 'scale(1.1)',  // Zoom on hover
-                                        },
-                                    }}>
-                                        <Link to={`/products_Detail/${item.id}`}>
-                                            <img
-                                                src={baseUrl + item?.product_image[0]?.image}
-                                                alt="Product Image"
-                                                style={{
-                                                    width: '250px', objectFit: 'cover', height: '150px', transition: 'transform 0.3s ease',  // Smooth transition for zoom
-                                                    '&:hover': {
-                                                        transform: 'scale(1.1)',  // Zoom on hover
-                                                    },
-                                                }}
-                                            />
-                                        </Link>
-                                    </Box>
-
-                                    {/* Middle Section: Product Name & Description */}
-                                    <Box sx={{ flexGrow: 1, textAlign: 'center', mb: 1 }}>
-                                        <Typography
-                                            sx={{
-                                                fontSize: '16px',
-                                                fontWeight: 400,
-                                                lineHeight: '20px',
-                                                color: "#191C1F",
-                                                mb: 2,
-                                            }}
-                                        >
-                                            {item?.product_name}
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            {item.short_description.length > 150
-                                                ? `${item.short_description.slice(0, 150)}...`
-                                                : item.short_description}
-                                        </Typography>
-
-                                    </Box>
-
-                                    {/* Footer Section: Button */}
-                                    <Box
+                                    <Card
                                         sx={{
+                                            width: '100%',
+                                            border: '1px solid #E4E7E9',
+                                            borderRadius: '8px',
                                             display: 'flex',
-                                            justifyContent: 'center',
-                                            mb: 1,
+                                            flexDirection: 'column',
+                                            justifyContent: 'space-between',
+                                            p: 2,
+                                            height: '100%',
                                         }}
                                     >
-                                        <Button
-                                            to={`/products_Detail/${item.id}`}
-                                            component={Link}
-                                            variant="contained"
+                                        {/* Image Section (Clickable) */}
+                                        <Box sx={{
+                                            width: '100%', height: 'auto', mb: 2, overflow: 'hidden',
+                                            '&:hover img': {
+                                                transform: 'scale(1.1)',
+                                            },
+                                        }}>
+                                            <Link to={`/products_Detail/${item.id}`}>
+                                                <img
+                                                    src={baseUrl + item?.product_image[0]?.image}
+                                                    alt="Product Image"
+                                                    style={{
+                                                        width: '250px', objectFit: 'cover', height: '150px', transition: 'transform 0.3s ease',
+                                                    }}
+                                                />
+                                            </Link>
+                                        </Box>
+
+                                        {/* Middle Section: Product Name & Description */}
+                                        <Box sx={{ flexGrow: 1, textAlign: 'center', mb: 1 }}>
+                                            <Typography
+                                                sx={{
+                                                    fontSize: '16px',
+                                                    fontWeight: 400,
+                                                    lineHeight: '20px',
+                                                    color: "#191C1F",
+                                                    mb: 2,
+                                                }}
+                                            >
+                                                {item?.product_name}
+                                            </Typography>
+                                            <Typography variant="body2">
+                                                {item.short_description.length > 150
+                                                    ? `${item.short_description.slice(0, 150)}...`
+                                                    : item.short_description}
+                                            </Typography>
+                                        </Box>
+
+                                        {/* Footer Section: Button */}
+                                        <Box
                                             sx={{
-                                                textTransform: 'none',
-                                                padding: '5px 15px',
-                                                fontSize: '14px',
-                                                backgroundColor: '#FA8232',
-                                                color: '#FFFFFF',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                mb: 1,
                                             }}
                                         >
-                                            View All
-                                        </Button>
-                                    </Box>
-
-                                </Card>
+                                            <Button
+                                                to={`/products_Detail/${item.id}`}
+                                                component={Link}
+                                                variant="contained"
+                                                sx={{
+                                                    textTransform: 'none',
+                                                    padding: '5px 15px',
+                                                    fontSize: '14px',
+                                                    backgroundColor: '#FA8232',
+                                                    color: '#FFFFFF',
+                                                }}
+                                            >
+                                                View All
+                                            </Button>
+                                        </Box>
+                                    </Card>
+                                </Grid>
+                            ))
+                        ) : (
+                            <Grid item xs={12}>
+                                <Typography variant="h6" textAlign="center" color="textSecondary">
+                                    No products found
+                                </Typography>
                             </Grid>
-                        ))}
+                        )}
+
                     </Grid>
                 </Container>
             </Grid>

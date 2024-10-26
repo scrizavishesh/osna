@@ -72,12 +72,12 @@ const Sub_ProductDetails = () => {
                             </Typography>
                             <Button
                                 component={Link}
-                                to="/products_Detail"
+                                to="/products"
                                 variant="contained"
                                 color="warning"
                                 sx={{ marginTop: '2rem' }}
                             >
-                                VISOR® Product Overview
+                                Product Overview
                             </Button>
                         </Grid>
                         <Grid item xs={12} md={6}>

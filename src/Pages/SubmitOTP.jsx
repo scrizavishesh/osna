@@ -33,6 +33,7 @@ const SubmitOTP = () => {
         } catch (error) {
             console.error('API Error:', error);
             toast.error('Error during OTP submission');
+            alert(error?.response?.data?.message)
         }
     };
 

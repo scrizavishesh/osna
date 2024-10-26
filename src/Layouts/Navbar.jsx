@@ -156,11 +156,14 @@ const Navbar = () => {
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <PhoneIcon sx={{ color: '#FA8232' }} />
                                 <Typography
+                                component={'a'}
+                                href='tel:+91-11-4102 3751'
                                     sx={{
                                         fontSize: { xs: '14px', sm: '16px' },
                                         fontWeight: 400,
                                         lineHeight: '24px',
                                         color: '#191C1F',
+                                        textDecoration: 'none'
                                     }}
                                 >
                                     +91-11-4102 3751

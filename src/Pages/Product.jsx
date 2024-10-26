@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { GetCategoryProduct, GetPostCategory, GetPreCategory } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 import { useInView } from 'react-intersection-observer';
+import Loader from '../Layouts/Loader';
+
 
 const Product = () => {
     const [category, setCategory] = useState([]);
@@ -15,6 +17,8 @@ const Product = () => {
     const [cardDetails, setCardDetails] = useState([]);
     const [parentCategory, setParentCategory] = useState('');
     const [navigationStack, setNavigationStack] = useState([]);
+    console.log(navigationStack);
+    const [LoaderState, setLoaderState] = useState(false);
     const [currentCategoryId, setCurrentCategoryId] = useState(null);
     const navigate = useNavigate();
     const [hide, setHide] = useState(false);
@@ -30,12 +34,14 @@ const Product = () => {
 
     const preCategory = async () => {
         try {
+            setLoaderState(true)
             const response = await GetPreCategory();
             if (response?.status === 200) {
                 toast.success("Got categories successfully");
                 setCategory(response?.data?.data?.category_list);
                 setCategoryData(response?.data?.data?.category_data);
                 setLoading(false);
+                setLoaderState(false);
             } else {
                 toast.error("Failed to fetch categories");
             }
@@ -45,16 +51,32 @@ const Product = () => {
     };
 
     const postCategory = async (id) => {
+        setLoaderState(true)
         try {
             const response = await GetPostCategory(id);
+            console.log(response, "hello")
+
             if (response?.status === 200) {
-                if (response.data.data.sub_category_list?.length > 0) {
-                    setCategory(response?.data?.data?.sub_category_list);
+                const subCategoryList = response.data.data.sub_category_list;
+
+                // Check if subCategoryList is valid and non-empty
+                if (Array.isArray(subCategoryList) && subCategoryList.length > 0) {
+                    // Update category data if subcategories exist
+                    setCategory(subCategoryList);
                     setCategoryData(response?.data?.data?.sub_category_data);
-                    setNavigationStack((prevStack) => [...prevStack, id]); // Push current category ID
+                    setParentCategory(response?.data?.data?.parent_category_data);
+
+                    // Add to stack if it's not a duplicate
+                    setNavigationStack((prevStack) =>
+                        (prevStack[prevStack.length - 1] !== id ? [...prevStack, id] : prevStack)
+                    );
                     setCurrentCategoryId(id);
+                    setLoaderState(false);
                 } else {
+                    // When no subcategories are found, load products but avoid updating the stack
+                    setHide(true);
                     getProduct(id);
+                    setLoaderState(false);
                 }
                 setLoading(false);
             } else {
@@ -64,12 +86,34 @@ const Product = () => {
             toast.error(err?.message);
         }
     };
+
+
+
+
+    const handleBack = () => {
+        if (navigationStack.length > 1) {
+            setHide(false)
+            const newStack = [...navigationStack];
+            newStack.pop();
+            const prevCategoryId = newStack[newStack.length - 1];
+            setNavigationStack(newStack);
+            setCurrentCategoryId(prevCategoryId);
+            postCategory(prevCategoryId);
+        } else {
+            setNavigationStack([]);
+            setCurrentCategoryId(null);
+            preCategory();
+        }
+    };
+
     const getProduct = async (id) => {
         setIsLoading(true);
         try {
             const response = await GetCategoryProduct(id);
+            setLoaderState(true)
             console.log(response, "product")
             if (response?.status === 200) {
+                setLoaderState(false)
                 const newProducts = response?.data?.data;
                 if (newProducts.length === 0) {
                     setHasMore(false);
@@ -86,23 +130,23 @@ const Product = () => {
         setIsLoading(false);
     };
 
-    const handleBack = () => {
-        if (navigationStack.length > 1) {
-            const newStack = [...navigationStack];
-            newStack.pop();
-            const prevCategoryId = newStack[newStack.length - 1];
-            setNavigationStack(newStack);
-            setCurrentCategoryId(prevCategoryId);
-            postCategory(prevCategoryId);
-        } else {
-            navigate(-1);  // fallback to the previous page
-        }
+
+    const handleCategoryClick = (id) => {
+        // Only call postCategory which now handles stack updates based on response data
+        postCategory(id);
     };
+
+
 
 
 
     return (
         <>
+            {LoaderState && (
+                <Loader />
+            )
+
+            }
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 <Grid container spacing={4}>
                     <Grid item xs={12} md={3}>
@@ -115,7 +159,7 @@ const Product = () => {
                             <RadioGroup name="category">
                                 {category.map((cat) => (
                                     <FormControlLabel
-                                        onClick={() => postCategory(cat.id)}
+                                        onClick={() => handleCategoryClick(cat.id)} // Use handleCategoryClick instead of postCategory directly
                                         key={cat.id}
                                         value={cat.id}
                                         control={<Radio />}
@@ -126,8 +170,8 @@ const Product = () => {
                         ) : (
                             <Typography>No categories available.</Typography>
                         )}
-                        <Button variant="contained" onClick={handleBack} disabled={navigationStack.length <= 1}>
-                            Back
+                        <Button variant="contained" onClick={handleBack} disabled={navigationStack.length < 1} sx={{ mt: 2 }}>
+                            Change Category
                         </Button>
                     </Grid>
                     {!hide ? (
@@ -146,14 +190,10 @@ const Product = () => {
                                         <Typography variant="h6" sx={{ fontWeight: 600 }}>
                                             {parentCategory?.category_name} Category
                                         </Typography>
-                                        <FormControl sx={{ minWidth: 120 }}>
-                                            <InputLabel>Sort by</InputLabel>
-                                            <Select defaultValue="Most Popular" label="Sort by">
-                                                <MenuItem value="Most Popular">Most Popular</MenuItem>
-                                                <MenuItem onClick={() => setLatest(1)} value="Latest">Latest</MenuItem>
-                                            </Select>
-                                        </FormControl>
                                     </Box>
+                                    <Grid>
+                                        <Typography dangerouslySetInnerHTML={{ __html: parentCategory?.description }}></Typography>
+                                    </Grid>
 
                                     <Grid container spacing={2} mb={4}>
                                         {categoryData.length > 0 ? (
@@ -183,7 +223,9 @@ const Product = () => {
                                                                 transform: 'scale(1.1)',
                                                             },
                                                         }}>
-                                                            <Link to={`/products_Detail/${item.id}`}>
+                                                            <Link
+                                                                onClick={(e) => postCategory(item?.id)}
+                                                            >
                                                                 <img
                                                                     src={`${baseUrl}${item?.category_image}`}
                                                                     alt="Product Image"
