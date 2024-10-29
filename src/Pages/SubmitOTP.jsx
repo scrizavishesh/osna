@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Box, Typography, TextField, Button, Grid, Divider } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { userSubmitOTP } from '../Utils/Apis';
@@ -11,6 +11,8 @@ const SubmitOTP = () => {
     const email = location.state?.email || ''; // Email passed from previous screen
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    const [timer, setTimer] = useState(180); // 3 minutes in seconds
+    const [canResend, setCanResend] = useState(false);
 
     // Function to handle form submission
     const onSubmit = async (data) => {
@@ -37,19 +39,36 @@ const SubmitOTP = () => {
         }
     };
 
+    // Timer countdown effect
+    useEffect(() => {
+        if (timer > 0) {
+            const countdown = setInterval(() => {
+                setTimer(prev => prev - 1);
+            }, 1000);
+            return () => clearInterval(countdown);
+        } else {
+            setCanResend(true);
+        }
+    }, [timer]);
+
+    // Handle Resend OTP click
+    const handleResendOTP = () => {
+        setTimer(180); // Reset timer to 3 minutes
+        setCanResend(false);
+        onSubmit();
+        toast.success('OTP resent successfully');
+    };
+
     return (
         <>
-            {/* Main Section */}
             <Container sx={{ mt: 5, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Grid container justifyContent="center" alignItems="center" spacing={2}>
-                    {/* Image Section */}
                     <Grid item xs={12} md={5} sx={{ display: 'flex', justifyContent: 'center' }}>
                         <Box>
                             <img src="/Character.svg" alt="Sign-in Icon" width="250" />
                         </Box>
                     </Grid>
 
-                    {/* OTP Form Section */}
                     <Grid item xs={12} md={5}>
                         <Box sx={{ textAlign: 'center' }}>
                             <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#FA8232', mb: 2 }}>
@@ -61,11 +80,9 @@ const SubmitOTP = () => {
                                 to your Email ({email})
                             </Typography>
 
-                            {/* OTP Form */}
                             <Box sx={{ backgroundColor: '#FDFDFD', padding: '24px', borderRadius: '8px', border: "1px solid #DBDBDB80" }}>
                                 <form onSubmit={handleSubmit(onSubmit)}>
                                     <Grid container spacing={2}>
-                                        {/* OTP Field */}
                                         <Grid item xs={12}>
                                             <Typography
                                                 sx={{
@@ -97,7 +114,6 @@ const SubmitOTP = () => {
                                             />
                                         </Grid>
 
-                                        {/* Submit and Resend Buttons */}
                                         <Grid item xs={12} sx={{ textAlign: 'center', mt: 3 }}>
                                             <Button type="submit" variant="contained" sx={{
                                                 backgroundColor: '#FA8232',
@@ -108,14 +124,20 @@ const SubmitOTP = () => {
                                             }}>
                                                 Submit OTP
                                             </Button>
-                                            <Button variant="outlined" sx={{
-                                                color: '#FA8232',
-                                                borderColor: '#FA8232',
-                                                padding: '10px 20px',
-                                                '&:hover': { borderColor: '#E57A2D', color: '#E57A2D' }
-                                            }}>
-                                                Resend OTP
-                                            </Button>
+                                            {canResend ? (
+                                                <Button onClick={handleResendOTP} variant="outlined" sx={{
+                                                    color: '#FA8232',
+                                                    borderColor: '#FA8232',
+                                                    padding: '10px 20px',
+                                                    '&:hover': { borderColor: '#E57A2D', color: '#E57A2D' }
+                                                }}>
+                                                    Resend OTP
+                                                </Button>
+                                            ) : (
+                                                <Typography sx={{ color: '#FA8232', paddingTop: '10px' }}>
+                                                    Resend OTP in {`${Math.floor(timer / 60)}:${(timer % 60).toString().padStart(2, '0')}`}
+                                                </Typography>
+                                            )}
                                         </Grid>
                                     </Grid>
                                 </form>
