@@ -107,9 +107,11 @@ const Product = () => {
             setCurrentCategoryId(prevCategoryId);
             postCategory(prevCategoryId);
         } else {
+
+            preCategory();
+            setParentCategory('');
             setNavigationStack([]);
             setCurrentCategoryId(null);
-            preCategory();
         }
     };
 

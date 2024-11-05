@@ -133,6 +133,7 @@ const MyComponent = () => {
                                         <Button
                                             component={Link}
                                             to="/products"
+                                            state={{id: 57}} 
                                             variant="contained"
                                             endIcon={<ArrowForwardIcon />}
                                             sx={{
