@@ -20,14 +20,14 @@ const PreviousArrow = (props) => {
                 left: 10,
                 top: '50%',
                 transform: 'translateY(-50%)',
-                backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.6)' },
                 zIndex: 2,
-                width: 30,
-                height: 30,
+                width: 35,
+                height: 35,
             }}
         >
-            <ArrowBackIosIcon sx={{ color: '#fff', fontSize: '1rem' }} />
+            <ArrowBackIosIcon sx={{ color: '#fff', fontSize: '1.2rem' }} />
         </IconButton>
     );
 };
@@ -42,14 +42,14 @@ const NextArrow = (props) => {
                 right: 10,
                 top: '50%',
                 transform: 'translateY(-50%)',
-                backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.6)' },
                 zIndex: 2,
-                width: 30,
-                height: 30,
+                width: 35,
+                height: 35,
             }}
         >
-            <ArrowForwardIosIcon sx={{ color: '#fff', fontSize: '1rem' }} />
+            <ArrowForwardIosIcon sx={{ color: '#fff', fontSize: '1.2rem' }} />
         </IconButton>
     );
 };
@@ -68,23 +68,22 @@ const CarouselSlider = () => {
         nextArrow: <NextArrow />,
     };
 
-    const baseUrl = 'https://dc.damio.in/'
+    const baseUrl = 'https://dc.damio.in/';
 
-    const [banner, setBanner] = useState([])
+    const [banner, setBanner] = useState([]);
 
     useEffect(() => {
         getBanner();
     }, []);
 
-
     const getBanner = async () => {
         try {
             const response = await GetBanner();
             if (response?.status === 200) {
-                toast.success("Got categories successfully");
-                setBanner(response?.data?.data); // Save the data from the response
+                toast.success("Banners fetched successfully");
+                setBanner(response?.data?.data);
             } else {
-                toast.error("Failed to fetch categories");
+                toast.error("Failed to fetch banners");
             }
         } catch (err) {
             toast.error(err?.message);
@@ -92,42 +91,47 @@ const CarouselSlider = () => {
     };
 
     return (
-        <Box sx={{ width: '100%', height: '70vh', overflow: 'hidden' }}>
+        <Box sx={{ width: '100%', height: { xs: '50vh', md: '70vh' }, overflow: 'hidden' }}>
             <Slider {...settings}>
                 {banner.map((item, index) => (
-
                     <Box
                         key={index}
                         sx={{
                             position: 'relative',
                             width: '100%',
-                            height: '70vh',
+                            height: { xs: '50vh', md: '70vh' },
                             backgroundImage: `url(${baseUrl + item.image})`,
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'flex-start',
-                            paddingLeft: '5%', // Align content to the left
+                            justifyContent: 'center',
                         }}
-
                     >
-                        {/* Content over the image */}
+                        {/* Responsive Content Overlay */}
                         <Box
                             sx={{
-                                position: 'absolute', // Make the content box absolute positioned
-                                top: '50%', // Center vertically
-                                left: '5%', // Align to the left side
-                                transform: 'translateY(-50%)', // Perfect centering
-                                color: '#000',
-                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                position: 'absolute',
+                                top: '50%',
+                                left: { xs: '5%', md: '10%' },
+                                transform: 'translateY(-50%)',
+                                color: '#fff',
+                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
                                 textAlign: 'left',
-                                maxWidth: '400px',
-                                padding: '1.5rem',
+                                maxWidth: { xs: '90%', sm: '70%', md: '400px' },
+                                padding: { xs: '1rem', md: '1.5rem' },
                                 borderRadius: '8px',
                             }}
                         >
-                            <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 2, fontSize: '2rem',  color: '#fff', }}>
+                            <Typography
+                                variant="h3"
+                                sx={{
+                                    fontWeight: 'bold',
+                                    fontSize: { xs: '1.5rem', md: '2rem' },
+                                    mb: 2,
+                                    color: '#fff',
+                                }}
+                            >
                                 {item.heading}
                             </Typography>
                             <Box sx={{ display: 'flex', gap: '1rem', mt: 2 }}>
@@ -136,7 +140,7 @@ const CarouselSlider = () => {
                                     to={`/about`}
                                     component={Link}
                                     sx={{
-                                        backgroundColor: '0462B6',
+                                        backgroundColor: '#0462B6',
                                         color: '#fff',
                                         '&:hover': {
                                             backgroundColor: '#087ce1',

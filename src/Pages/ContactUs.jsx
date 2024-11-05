@@ -137,11 +137,14 @@ const ContactUs = () => {
                                         <Phone />
                                     </Box>
                                     <Typography
+                                        component="a" // Makes it clickable
+                                        href={`tel:${contact?.contact_phone_number}`}
                                         sx={{
                                             fontSize: '14px',
                                             fontWeight: 400,
                                             lineHeight: '20px',
                                             color: "#999999",
+                                            textDecoration: 'none',
                                         }}
                                     >
                                         {contact?.contact_phone_number}
@@ -150,6 +153,7 @@ const ContactUs = () => {
                                 <Divider variant="middle" />
                                 <Box display="flex" alignItems="center" mb={2} mt={2}>
                                     <Box
+
                                         sx={{
                                             backgroundColor: '#0462B6',
                                             color: '#FFF',
@@ -165,11 +169,14 @@ const ContactUs = () => {
                                         <Email />
                                     </Box>
                                     <Typography
+                                        component="a" // Makes it clickable
+                                        href={`mailto:${contact?.contact_email}`}
                                         sx={{
                                             fontSize: '14px',
                                             fontWeight: 400,
                                             lineHeight: '20px',
                                             color: "#999999",
+                                            textDecoration: 'none',
                                         }}
                                     >
                                         {contact?.contact_email}
@@ -190,15 +197,20 @@ const ContactUs = () => {
                                             mr: 2,
                                         }}
                                     >
-                                        <LocationOn />
+                                        <LocationOn sx={{ fontSize: '2em', width: '2em', height: '1em' }} />
                                     </Box>
-                                    <Typography sx={{
-                                        fontSize: '14px',
-                                        fontWeight: 400,
-                                        lineHeight: '20px',
-                                        color: "#999999",
-                                        alignItems: 'center',
-                                    }}>
+                                    <Typography
+                                        component="a" // Makes it clickable
+                                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact?.contact_address)}`} // Opens Google Maps
+
+                                        sx={{
+                                            fontSize: '14px',
+                                            fontWeight: 400,
+                                            lineHeight: '20px',
+                                            color: "#999999",
+                                            alignItems: 'center',
+                                            textDecoration: 'none',
+                                        }}>
                                         {contact?.contact_address}
                                     </Typography>
                                 </Box>
@@ -220,8 +232,9 @@ const ContactUs = () => {
                                     </Typography>
                                 </Box>
                                 <Box sx={{ maxHeight: branches.length > 5 ? '460px' : 'auto', overflowY: branches.length > 5 ? 'scroll' : 'visible' }}>
-                                    {branches?.map((item) => (
-                                        <Box alignItems="center" mb={2}>
+                                    {branches?.map((item, index) => (
+                                        <Box key={index} alignItems="center" mb={2}>
+                                            {/* Branch Name */}
                                             <Typography
                                                 sx={{
                                                     fontSize: '14px',
@@ -232,6 +245,8 @@ const ContactUs = () => {
                                             >
                                                 {item?.branch_name}
                                             </Typography>
+
+                                            {/* Contact Information */}
                                             <Typography
                                                 sx={{
                                                     fontSize: '14px',
@@ -240,19 +255,83 @@ const ContactUs = () => {
                                                     color: "#999999",
                                                 }}
                                             >
-                                                Email - {item?.email}
-                                                <br />
-                                                Mobile No -  {item?.mobile}
-                                                <br />
-                                                Email Id - {item?.email}
-                                                <br />
-                                                Telephone - {item?.telephone}
-                                                <br />
-                                                Address - {item?.address}
+                                                {/* Email */}
+                                                {item?.email && (
+                                                    <Grid
+                                                        component="a"
+                                                        href={`mailto:${item.email}`}
+                                                        sx={{
+                                                            display: 'block',
+                                                            color: '#999999',
+                                                            textDecoration: 'none',
+                                                            '&:hover': {
+                                                                color: '#FA8232',
+                                                            },
+                                                        }}
+                                                    >
+                                                        Email - {item.email}
+                                                    </Grid>
+                                                )}
+
+                                                {/* Mobile Numbers */}
+                                                {item?.mobile && item.mobile.split(',').map((mobile, i) => (
+                                                    <Grid
+                                                        key={i}
+                                                        component="a"
+                                                        href={`tel:${mobile.trim()}`}
+                                                        sx={{
+                                                            display: 'block',
+                                                            color: '#999999',
+                                                            textDecoration: 'none',
+                                                            '&:hover': {
+                                                                color: '#FA8232',
+                                                            },
+                                                        }}
+                                                    >
+                                                        Mobile No - {mobile.trim()}
+                                                    </Grid>
+                                                ))}
+
+                                                {/* Telephone */}
+                                                {item?.telephone && (
+                                                    <Grid
+                                                        component="a"
+                                                        href={`tel:${item.telephone}`}
+                                                        sx={{
+                                                            display: 'block',
+                                                            color: '#999999',
+                                                            textDecoration: 'none',
+                                                            '&:hover': {
+                                                                color: '#FA8232',
+                                                            },
+                                                        }}
+                                                    >
+                                                        Telephone - {item.telephone}
+                                                    </Grid>
+                                                )}
+
+                                                {/* Address with Google Maps Link */}
+                                                <Grid
+                                                    component="a"
+                                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.address)}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    sx={{
+                                                        display: 'block',
+                                                        color: '#999999',
+                                                        textDecoration: 'none',
+                                                        '&:hover': {
+                                                            color: '#FA8232',
+                                                        },
+                                                    }}
+                                                >
+                                                    Address - {item.address}
+                                                </Grid>
                                             </Typography>
                                         </Box>
                                     ))}
                                 </Box>
+
                                 <Divider variant="middle" />
                             </Paper>
                         </Grid>

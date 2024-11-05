@@ -101,6 +101,8 @@ const Header = () => {
                                 <IconButton
                                     key={index}
                                     href={social.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     sx={{
                                         marginRight: "0px",
                                         color: '#fff',
@@ -117,6 +119,7 @@ const Header = () => {
                                 </IconButton>
                             ))}
                         </Box>
+
                     </Stack>
                 </Stack>
             </Box>

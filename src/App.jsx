@@ -17,7 +17,7 @@ import SignIn from './Pages/Login';
 import SubmitOTP from './Pages/SubmitOTP';
 import Header from './Layouts/Header'; // Import Header
 import Footer from './Layouts/Footer'; // Import Footer
-import { Grid } from '@mui/system';
+import { Box, Grid } from '@mui/system';
 import Navbar from './Layouts/Navbar';
 import ErrorPage from './Pages/ErrorPage';
 import EventsPopup from './Layouts/EventsPopup';
@@ -27,10 +27,13 @@ function App() {
     <Router>
       <EventsPopup />
       <TawkTo />
-      <Grid sx={{ bgcolor: '#0462B6' }}>
-        <Header />
-      </Grid>
-      <Navbar />{/* Render Header */}
+      <Box sx={{ position: 'fixed', top: 0, width: '100%', zIndex: 10 }}>
+        <Grid sx={{ bgcolor: '#0462B6' }}>
+          <Header />
+        </Grid>
+        <Navbar />
+      </Box>
+      {/* Render Header */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutUs />} />

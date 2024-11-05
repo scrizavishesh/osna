@@ -1,6 +1,13 @@
+/* Add this CSS in your global stylesheet */
 body {
-  font-family: public-sans !important;
-  margin: 0px !important;
+  font-family: 'Public Sans', sans-serif !important;
+  margin-top: 230px !important; /* Adjusts automatically for fixed header/navbar */
+}
+
+@media (max-width: 600px) {
+  body {
+    margin-top: 380px !important; /* Smaller margin for mobile screens */
+  }
 }
 
 .css-vm9lkw-MuiButtonBase-root-MuiButton-root {

@@ -73,6 +73,7 @@ const Sub_ProductDetails = () => {
                             <Button
                                 component={Link}
                                 to="/products"
+                                state={{ id: category?.id}} 
                                 variant="contained"
                                 color="warning"
                                 sx={{ marginTop: '2rem' }}

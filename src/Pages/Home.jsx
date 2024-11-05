@@ -19,6 +19,9 @@ import CompanyCarousel from '../SubPages/CompanyCarousel';
 import { getHomePageContent, GetProduct } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 import WorldMap from './WorldMap';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 
 const MyComponent = () => {
@@ -59,6 +62,40 @@ const MyComponent = () => {
         } catch (err) {
             toast.error(err?.message);
         }
+    };
+
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 300,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        slidesToShow: 4,
+        slidesToScroll: 4,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                },
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
+                },
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                },
+            },
+        ],
     };
 
 
@@ -227,7 +264,7 @@ const MyComponent = () => {
                                                 }}
                                             />
                                         </Box>
-                                        <Box width={{ xs: '70%', md: '70%' }} sx={{ marginLeft: '40px'}}>
+                                        <Box width={{ xs: '70%', md: '70%' }} sx={{ marginLeft: '40px' }}>
                                             <Typography
                                                 variant="h6"
                                                 sx={{
@@ -546,119 +583,121 @@ const MyComponent = () => {
             </Container>
 
             {/* Product Section */}
-            <Grid sx={{ background: "#FAFAFA", py: 2 }}>
+            <Grid sx={{ background: "#FAFAFA", py: 4 }}>
                 <Container maxWidth="lg">
-                    <Grid container spacing={2}>
-                        {/* Title */}
-                        <Grid item xs={12} sx={{ p: 2 }}>
-                            <Typography
-                                sx={{
-                                    fontSize: '24px',
-                                    fontWeight: 600,
-                                    lineHeight: '32px',
-                                    textAlign: 'left',
-                                    color: "#0462B6",
-                                    mb: 3,
-                                }}
-                            >
-                                Our Products
-                            </Typography>
-                        </Grid>
-                        {/* Product Cards */}
-                        {cardDetails.length > 0 ? (
-                            cardDetails.slice(0, 8).map((item, index) => (
-                                <Grid
-                                    item
-                                    xs={12} sm={6} md={4} lg={3} mb={4}
-                                    key={index}
-                                    display="flex"
-                                    justifyContent="center"
-                                >
-                                    <Card
+                    {/* Title */}
+                    <Typography
+                        sx={{
+                            fontSize: "24px",
+                            fontWeight: 600,
+                            lineHeight: "32px",
+                            textAlign: "left",
+                            color: "#0462B6",
+                            mb: 3,
+                        }}
+                    >
+                        Our Products
+                    </Typography>
+
+                    <Box sx={{ padding: 2 }}>
+                        <Slider {...settings}>
+                            {cardDetails.length > 0 ? (
+                                cardDetails.map((item, index) => (
+                                    <Grid
+                                        key={index}
                                         sx={{
-                                            width: '100%',
-                                            border: '1px solid #E4E7E9',
-                                            borderRadius: '8px',
                                             display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'space-between',
-                                            p: 2,
-                                            height: '100%',
+                                            justifyContent: 'center',
+                                            padding: 1,
                                         }}
                                     >
-                                        {/* Image Section (Clickable) */}
-                                        <Box sx={{
-                                            width: '100%', height: 'auto', mb: 2, overflow: 'hidden',
-                                            '&:hover img': {
-                                                transform: 'scale(1.1)',
-                                            },
-                                        }}>
-                                            <Link to={`/products_Detail/${item.id}`}>
-                                                <img
-                                                    src={baseUrl + item?.product_image[0]?.image}
-                                                    alt="Product Image"
-                                                    style={{
-                                                        width: '250px', objectFit: 'cover', height: '150px', transition: 'transform 0.3s ease',
-                                                    }}
-                                                />
-                                            </Link>
-                                        </Box>
-
-                                        {/* Middle Section: Product Name & Description */}
-                                        <Box sx={{ flexGrow: 1, textAlign: 'center', mb: 1 }}>
-                                            <Typography
-                                                sx={{
-                                                    fontSize: '16px',
-                                                    fontWeight: 400,
-                                                    lineHeight: '20px',
-                                                    color: "#191C1F",
-                                                    mb: 2,
-                                                }}
-                                            >
-                                                {item?.product_name}
-                                            </Typography>
-                                            <Typography variant="body2">
-                                                {item.short_description.length > 150
-                                                    ? `${item.short_description.slice(0, 150)}...`
-                                                    : item.short_description}
-                                            </Typography>
-                                        </Box>
-
-                                        {/* Footer Section: Button */}
-                                        <Box
+                                        <Card
                                             sx={{
+                                                width: { xs: '100%', md: '230px' },
+                                                border: '1px solid #E4E7E9',
+                                                borderRadius: '8px',
                                                 display: 'flex',
-                                                justifyContent: 'center',
-                                                mb: 1,
+                                                flexDirection: 'column',
+                                                justifyContent: 'space-between',
+                                                padding: 2,
+                                                height: '440px',
+                                                gap: 5,
                                             }}
                                         >
-                                            <Button
-                                                to={`/products_Detail/${item.id}`}
-                                                component={Link}
-                                                variant="contained"
+                                            {/* Image Section */}
+                                            <Box
                                                 sx={{
-                                                    textTransform: 'none',
-                                                    padding: '5px 15px',
-                                                    fontSize: '14px',
-                                                    backgroundColor: '#FA8232',
-                                                    color: '#FFFFFF',
+                                                    width: '100%',
+                                                    height: 'auto',
+                                                    mb: 2,
+                                                    overflow: 'hidden',
+                                                    '&:hover img': {
+                                                        transform: 'scale(1.1)',
+                                                    },
                                                 }}
                                             >
-                                                View All
-                                            </Button>
-                                        </Box>
-                                    </Card>
-                                </Grid>
-                            ))
-                        ) : (
-                            <Grid item xs={12}>
-                                <Typography variant="h6" textAlign="center" color="textSecondary">
-                                    No products found
-                                </Typography>
-                            </Grid>
-                        )}
+                                                <Link to={`/products_Detail/${item.id}`}>
+                                                    <img
+                                                        src={baseUrl + item?.product_image[0]?.image}
+                                                        alt="Product Image"
+                                                        style={{
+                                                            width: '100%',
+                                                            height: '140px',
+                                                            objectFit: 'cover',
+                                                            transition: 'transform 0.3s ease',
+                                                        }}
+                                                    />
+                                                </Link>
+                                            </Box>
 
-                    </Grid>
+                                            {/* Product Details */}
+                                            <Box sx={{ flexGrow: 1, textAlign: 'center', mb: 1 }}>
+                                                <Typography
+                                                    sx={{
+                                                        fontSize: '16px',
+                                                        fontWeight: 400,
+                                                        color: "#191C1F",
+                                                        mb: 1,
+                                                    }}
+                                                >
+                                                    {item?.product_name}
+                                                </Typography>
+                                                <Typography variant="body2" sx={{ color: "#646464" }}>
+                                                    {item.short_description.length > 100
+                                                        ? `${item.short_description.slice(0, 100)}...`
+                                                        : item.short_description}
+                                                </Typography>
+                                            </Box>
+
+                                            {/* View All Button */}
+                                            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                                                <Button
+                                                    to={`/products_Detail/${item.id}`}
+                                                    component={Link}
+                                                    variant="contained"
+                                                    sx={{
+                                                        textTransform: 'none',
+                                                        padding: '5px 15px',
+                                                        fontSize: '14px',
+                                                        backgroundColor: '#FA8232',
+                                                        color: '#FFFFFF',
+                                                    }}
+                                                >
+                                                    View All
+                                                </Button>
+                                            </Box>
+                                        </Card>
+                                    </Grid>
+                                ))
+                            ) : (
+                                <Grid item xs={12}>
+                                    <Typography variant="h6" textAlign="center" color="textSecondary">
+                                        No products found
+                                    </Typography>
+                                </Grid>
+                            )}
+                        </Slider>
+                    </Box>
                 </Container>
             </Grid>
 

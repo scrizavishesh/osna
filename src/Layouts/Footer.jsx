@@ -255,6 +255,8 @@ const Footer = () => {
                                 <IconButton
                                     key={index}
                                     href={social.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     sx={{
                                         backgroundColor: '#FFFFFF',
                                         color: '#0462B6',

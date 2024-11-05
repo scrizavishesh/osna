@@ -1,20 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Grid, Container, Typography, RadioGroup, FormControlLabel, Radio, Card, Box, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { GetCategoryProduct, GetPostCategory, GetPreCategory } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 import { useInView } from 'react-intersection-observer';
 import Loader from '../Layouts/Loader';
 
-
 const Product = () => {
+    const location = useLocation();
+    const { id } = location.state || {};
     const [category, setCategory] = useState([]);
     const [categoryData, setCategoryData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [cardDetails, setCardDetails] = useState([]);
+    console.log(cardDetails, "pro")
     const [parentCategory, setParentCategory] = useState('');
     const [navigationStack, setNavigationStack] = useState([]);
     console.log(navigationStack);
@@ -29,7 +31,12 @@ const Product = () => {
     });
 
     useEffect(() => {
-        preCategory();
+        if (id) {
+            postCategory(id)
+        } else {
+            preCategory();
+        }
+
     }, []);
 
     const preCategory = async () => {
@@ -115,12 +122,7 @@ const Product = () => {
             if (response?.status === 200) {
                 setLoaderState(false)
                 const newProducts = response?.data?.data;
-                if (newProducts.length === 0) {
-                    setHasMore(false);
-                } else {
-                    setCardDetails((prev) => [...prev, ...newProducts]);
-                    toast.success("Got Product successfully");
-                }
+                setCardDetails(response?.data?.data)
             } else {
                 toast.error("Failed to fetch products");
             }
@@ -135,6 +137,13 @@ const Product = () => {
         // Only call postCategory which now handles stack updates based on response data
         postCategory(id);
     };
+
+
+
+
+
+
+
 
 
 
