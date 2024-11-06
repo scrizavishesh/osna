@@ -1,5 +1,6 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useEffect, useState } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { Map } from '../Utils/Apis';
 
 const containerStyle = {
     width: '100%',
@@ -28,6 +29,34 @@ const locations = [
 ];
 
 const WorldMap = () => {
+
+    const [MapsCordinates, setMapsCordinates] = useState([]);
+    const [mapKey, setmapKey] = useState('');
+    console.log(mapKey, "helo")
+
+
+
+    const getEve = async () => {
+        try {
+            const response = await Map();
+            console.log(response, "AMps")
+            if (response?.status === 200) {
+                setmapKey(response?.data?.data?.map_api_key);
+                setMapsCordinates(response?.data?.data?.map_co_ordinates);
+            } else {
+                toast.error("Failed to fetch events");
+            }
+        } catch (err) {
+            toast.error(err?.message);
+        }
+    };
+
+   useEffect(() => {
+     getEve();
+   }, [])
+   
+
+
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: 'AIzaSyA9wQn1z5tIGKZXH6wpQUGQ0OIso5Cku_Y',
     });

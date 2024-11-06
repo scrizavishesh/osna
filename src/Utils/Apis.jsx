@@ -309,4 +309,15 @@ export const userLog_out = async () => {
 }
 
 
+export const Map = async () => {
+  axios.defaults.headers.common["Authorization"] = bearerToken;
+  var response = await axios.get(`${API_URL}/get-map-co-ordinate`)
+  if (response) {
+    return response;
+  } else {
+    return [];
+  }
+}
+
+
 

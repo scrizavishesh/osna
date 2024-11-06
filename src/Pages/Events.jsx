@@ -21,6 +21,7 @@ const EventsPage = () => {
     const getEve = async () => {
         try {
             const response = await GetEvents();
+            console.log(response, "Events");
             if (response?.status === 200) {
                 toast.success("Events retrieved successfully");
                 const events = response?.data?.data;
@@ -46,7 +47,7 @@ const EventsPage = () => {
             if (eventEnd.isBefore(today, 'day')) {
                 past.push(event); // Event has ended
             } else {
-                present.push(event); // Today's and future events will go to "Upcoming"
+                present.push(event); 
             }
         });
 
@@ -66,9 +67,8 @@ const EventsPage = () => {
             slidesToShow: 1,
             slidesToScroll: 1,
             arrows: true,
-            dotsClass: "slick-dots custom-slick-dots"  // Custom class for your slick dots
+            dotsClass: "slick-dots custom-slick-dots",
         };
-
 
         return (
             <Grid container spacing={3}>
@@ -77,35 +77,48 @@ const EventsPage = () => {
                         <Grid item xs={12} sm={6} md={4} lg={4} key={event.id}>
                             <Card sx={{ height: '100%', borderRadius: '16px', boxShadow: 3 }}>
                                 <Box className="custom-slick-dots">
-                                    <Slider {...settings}>
-                                        {event.event_image.map((image, index) => (
-                                            <div key={index} style={{ position: 'relative' }}>
-                                                <img
-                                                    src={baseUrl + image?.image}
-                                                    alt={event.event_name}
-                                                    style={{
-                                                        width: '100%',
-                                                        height: '300px',
-                                                        objectFit: 'cover',
-                                                        borderRadius: '16px 16px 0 0',
-                                                    }}
-                                                />
-                                                <Box
-                                                    sx={{
-                                                        position: 'absolute',
-                                                        bottom: 0,
-                                                        width: '100%',
-                                                        height: '40%',
-                                                        background: 'linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent)',
-                                                        borderRadius: '0 0 16px 16px',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                    }}
-                                                />
-                                            </div>
-                                        ))}
-                                    </Slider>
+                                    {event.event_image.length > 1 ? (
+                                        <Slider {...settings}>
+                                            {event.event_image.map((image, index) => (
+                                                <div key={index} style={{ position: 'relative' }}>
+                                                    <img
+                                                        src={baseUrl + image?.image}
+                                                        alt={event.event_name}
+                                                        style={{
+                                                            width: '100%',
+                                                            height: '300px',
+                                                            objectFit: 'cover',
+                                                            borderRadius: '16px 16px 0 0',
+                                                        }}
+                                                    />
+                                                    <Box
+                                                        sx={{
+                                                            position: 'absolute',
+                                                            bottom: 0,
+                                                            width: '100%',
+                                                            height: '40%',
+                                                            background: 'linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent)',
+                                                            borderRadius: '0 0 16px 16px',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                        }}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </Slider>
+                                    ) : (
+                                        <img
+                                            src={baseUrl + event.event_image[0]?.image}
+                                            alt={event.event_name}
+                                            style={{
+                                                width: '100%',
+                                                height: '300px',
+                                                objectFit: 'cover',
+                                                borderRadius: '16px 16px 0 0',
+                                            }}
+                                        />
+                                    )}
                                 </Box>
 
                                 <CardContent sx={{ textAlign: 'left', padding: '1.5rem' }}>

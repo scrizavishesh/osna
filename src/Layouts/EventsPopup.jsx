@@ -3,6 +3,9 @@ import { CardMedia, Typography, Button, Dialog, DialogTitle, DialogContent, Icon
 import CloseIcon from '@mui/icons-material/Close';
 import { GetEvents } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const EventsPopup = () => {
     const baseUrl = 'https://dc.damio.in/';
@@ -12,7 +15,7 @@ const EventsPopup = () => {
     useEffect(() => {
         const hasSeenPopup = localStorage.getItem('hasSeenEventsPopup');
 
-        if (!hasSeenPopup) { // Only call getEve if the user hasn't seen the popup
+        if (!hasSeenPopup) { 
             getEve();
         }
     }, []);
@@ -22,7 +25,7 @@ const EventsPopup = () => {
             const response = await GetEvents();
             if (response?.status === 200) {
                 toast.success("Events retrieved successfully");
-                findTodayEvents(response?.data?.data || []); // Call to find today's events
+                findTodayEvents(response?.data?.data || []);
             } else {
                 toast.error("Failed to fetch events");
             }
@@ -32,7 +35,7 @@ const EventsPopup = () => {
     };
 
     const findTodayEvents = (events) => {
-        const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+        const today = new Date().toISOString().split('T')[0];
         const eventsToday = events.filter(event => {
             const eventDate = new Date(event.start_date).toISOString().split('T')[0];
             return eventDate === today;
@@ -42,13 +45,22 @@ const EventsPopup = () => {
             setTodayEvents(eventsToday);
             setTimeout(() => {
                 setOpen(true);
-                localStorage.setItem('hasSeenEventsPopup', 'true'); // Set flag in localStorage
+                localStorage.setItem('hasSeenEventsPopup', 'true');
             }, 3000);
         }
     };
 
     const handleClose = () => {
         setOpen(false);
+    };
+
+    const sliderSettings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: true,
     };
 
     return (
@@ -77,13 +89,29 @@ const EventsPopup = () => {
                             >
                                 {event.event_name}
                             </Typography>
-                            <CardMedia
-                                component="img"
-                                height="200"
-                                image={baseUrl + event.event_image}
-                                alt={event.event_name}
-                                sx={{ objectFit: 'cover', mb: 2 }}
-                            />
+                            {/* Conditionally render a single image or a slider based on image count */}
+                            {event.event_image.length === 1 ? (
+                                <CardMedia
+                                    component="img"
+                                    height="200"
+                                    image={baseUrl + event.event_image[0].image}
+                                    alt={event.event_name}
+                                    sx={{ objectFit: 'cover', mb: 2 }}
+                                />
+                            ) : (
+                                <Slider {...sliderSettings}>
+                                    {event.event_image.map((imgObj, index) => (
+                                        <CardMedia
+                                            key={index}
+                                            component="img"
+                                            height="200"
+                                            image={baseUrl + imgObj.image}
+                                            alt={event.event_name}
+                                            sx={{ objectFit: 'cover', mb: 2 }}
+                                        />
+                                    ))}
+                                </Slider>
+                            )}
                             <Typography
                                 sx={{
                                     fontSize: '14px',
