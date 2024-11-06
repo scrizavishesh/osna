@@ -4,7 +4,7 @@ import { Person, PersonAdd } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
 import { Link, useNavigate } from 'react-router-dom';
 import MainSVG from '../SVG/MainSVG';
-import { getContacts, userLog_out } from '../Utils/Apis'; // Assuming you have a logoutAPI function in your Utils/Apis file
+import { getContacts, userLog_out } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
@@ -24,10 +24,19 @@ const Header = () => {
         setSearchTerm(e.target.value);
     };
 
+    const handleSearchSubmit = () => {
+        if (searchTerm.trim()) {
+            navigate(`/search_result?search_term=${encodeURIComponent(searchTerm)}`);
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleSearchSubmit();
+        }
+    };
+
     const [contact, setContact] = useState('');
-    
-
-
 
     useEffect(() => {
         Contact();
@@ -156,7 +165,9 @@ const Header = () => {
                     <OutlinedInput
                         type="text"
                         id="search"
+                        value={searchTerm}
                         onChange={handleSearchChange}
+                        onKeyDown={handleKeyDown}
                         placeholder="Search for anything..."
                         sx={{
                             flex: 1,
@@ -165,8 +176,7 @@ const Header = () => {
                         }}
                     />
                     <Button
-                        to={`/search_result?search_term=${encodeURIComponent(searchTerm)}`}
-                        component={Link}
+                        onClick={handleSearchSubmit}
                         sx={{
                             backgroundColor: '#fff',
                             borderRadius: '0 1px 1px 0',

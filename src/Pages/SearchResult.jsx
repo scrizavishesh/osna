@@ -54,87 +54,95 @@ const SearchResult = () => {
               </Typography>
             </Grid>
 
-            {/* Cards */}
-            {/* Cards */}
-            {events.length > 0 ? (
-              events.map((item, index) => (
-                <Grid
-                  item
-                  mt={5}
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  lg={2.4} // Responsive card sizes
-                  key={index}
-                  display="flex"
-                  justifyContent="center"
-                >
-                  <Card
-                    sx={{
-                      width: '100%',
-                      border: '1px solid #E4E7E9',
-                      borderRadius: '8px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      p: 2,
-                      height: '100%',
-                      mb: 2,
-                    }}
+            <Grid container spacing={2} mb={4}>
+              {events.length > 0 ? (
+                events.map((item, index) => (
+                  <Grid
+                    item
+                    xs={12} sm={6} md={3} lg={3} mb={4}
+                    key={index}
+                    display="flex"
+                    justifyContent="center"
                   >
-                    <Box sx={{ width: '100%', height: 'auto', mb: 2 }}>
-                      <img
-                        src={baseUrl + item?.product_image} // Adjust according to actual data
-                        alt="Product Image"
-                        style={{ width: '100%', objectFit: 'cover', height: 'auto' }}
-                      />
-                    </Box>
-                    <Typography
+                    <Card
                       sx={{
-                        fontSize: '16px',
-                        fontWeight: 400,
-                        lineHeight: '20px',
-                        textAlign: 'center',
-                        color: '#191C1F',
-                        mb: 2,
+                        width: '100%',
+                        border: '1px solid #E4E7E9',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        p: 2,
+                        height: '100%',
                       }}
                     >
-                      {item?.product_name}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 2 }}>
-                      {item.short_description}
-                    </Typography>
-                    <Button
-                      to={`/products_Detail/${item.id}`}
-                      component={Link}
-                      variant="contained"
-                      sx={{
-                        textTransform: 'none',
-                        padding: '5px 15px',
-                        fontSize: '14px',
-                        backgroundColor: '#FA8232',
-                        color: '#FFFFFF',
-                      }}
-                    >
-                      View All
-                    </Button>
-                  </Card>
-                </Grid>
-              ))
-            ) : (
-              <Typography
-                sx={{
-                  fontSize: '16px',
-                  fontWeight: 400,
-                  lineHeight: '20px',
-                  textAlign: 'center',
-                  color: '#191C1F',
-                  mb: 2,
-                }}
-              >
-                Product not found
-              </Typography>
-            )}
+                      <Box sx={{
+                        width: '100%', height: 'auto', mb: 2, overflow: 'hidden',
+                        '&:hover img': {
+                          transform: 'scale(1.1)',
+                        },
+                      }}>
+                        <Link to={`/products_Detail/${item.id}`}>
+                          <img
+                            src={`${baseUrl}${item?.product_image}`}
+                            alt="Product Image"
+                            style={{
+                              width: '100%', objectFit: 'cover', height: '150px', transition: 'transform 0.3s ease',
+                            }}
+                          />
+                        </Link>
+                      </Box>
+
+                      <Box sx={{ flexGrow: 1, textAlign: 'center', mb: 1 }}>
+                        <Typography
+                          sx={{
+                            fontSize: '16px',
+                            fontWeight: 400,
+                            lineHeight: '20px',
+                            color: "#191C1F",
+                            mb: 2,
+                          }}
+                        >
+                          {item?.product_name}
+                        </Typography>
+                        <Typography variant="body2">
+                          {item?.short_description?.length > 150
+                            ? `${item.short_description?.slice(0, 150)}...`
+                            : item?.short_description}
+                        </Typography>
+                      </Box>
+
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          mb: 1,
+                        }}
+                      >
+                        <Button
+                          to={`/products_Detail/${item.id}`}
+                          component={Link}
+                          variant="contained"
+                          sx={{
+                            textTransform: 'none',
+                            padding: '5px 15px',
+                            fontSize: '14px',
+                            backgroundColor: '#FA8232',
+                            color: '#FFFFFF',
+                          }}
+                        >
+                          View
+                        </Button>
+                      </Box>
+                    </Card>
+                  </Grid>
+                ))
+              ) : (
+                <Typography variant="h6" sx={{ color: 'red', mt: 2 }}>
+                  No product available at the moment.
+                </Typography>
+              )}
+            </Grid>
           </Grid>
         </Container>
       </Grid>
