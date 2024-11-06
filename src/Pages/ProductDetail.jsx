@@ -153,32 +153,40 @@ const ProductDetail = () => {
                                     "&:hover": { backgroundColor: '#e97327' }
                                 }}
                             >
-                                View All
+                                Technical datasheet
                             </Button>
                         </Grid>
                     </Grid>
 
-                    {/* Product Data & Videos */}
-                    <Grid container spacing={3} sx={{ mt: 5 }}>
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>Product Data</Typography>
-                            <ul>
-                                <li>Resolution: 2560 x 1936</li>
-                                <li>Type: VISOR® Code Reader</li>
-                                <li>Variant: Professional</li>
-                                <li>Optics: Wide (integrated)</li>
-                            </ul>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>Product Videos</Typography>
-                            <ReactPlayer
-                                url={baseUrl + product?.video}
-                                width="100%"
-                                controls
-                                onContextMenu={(e) => e.preventDefault()}
-                            />
-                        </Grid>
-                    </Grid>
+                    {
+                        product?.video && (
+                            <>
+                                {/* Product Data & Videos */}
+                                <Grid container spacing={3} sx={{ mt: 5 }}>
+                                    <Grid item xs={12} md={6}>
+                                        <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>Product Data</Typography>
+                                        <ul>
+                                            <li>Resolution: 2560 x 1936</li>
+                                            <li>Type: VISOR® Code Reader</li>
+                                            <li>Variant: Professional</li>
+                                            <li>Optics: Wide (integrated)</li>
+                                        </ul>
+                                    </Grid>
+                                    <Grid item xs={12} md={6}>
+                                        <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>Product Videos</Typography>
+                                        <ReactPlayer
+                                            url={baseUrl + product?.video}
+                                            width="100%"
+                                            controls
+                                            onContextMenu={(e) => e.preventDefault()}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </>
+                        )
+                    }
+
+
                 </Box>
 
                 {/* Related Products Section */}

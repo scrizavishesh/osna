@@ -23,11 +23,12 @@ const SubmitOTP = () => {
         };
         try {
             const response = await userSubmitOTP(payload);
+            console.log(response, "OTP")
             if (response.status === 200) {
                 toast.success("OTP verified successfully");
                 localStorage.setItem('osna_token', `Bearer ${response?.data?.token}`);
-                window.location.reload();
                 navigate("/");
+                window.location.reload();
                 reset();
             } else {
                 toast.error('OTP verification failed');

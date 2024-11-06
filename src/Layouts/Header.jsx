@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Button, Container, Divider, IconButton, OutlinedInput, Stack, Typography } from '@mui/material';
 import { Person, PersonAdd } from '@mui/icons-material';
 import SearchIcon from '@mui/icons-material/Search';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MainSVG from '../SVG/MainSVG';
 import { getContacts, userLog_out } from '../Utils/Apis'; // Assuming you have a logoutAPI function in your Utils/Apis file
 import { toast } from 'react-hot-toast';
@@ -17,14 +17,17 @@ import Swal from "sweetalert2";
 const Header = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [activeButton, setActiveButton] = useState(null);
-
     const token = localStorage.getItem('osna_token');
+    const navigate = useNavigate();
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
     };
 
     const [contact, setContact] = useState('');
+    
+
+
 
     useEffect(() => {
         Contact();

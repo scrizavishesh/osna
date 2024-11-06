@@ -18,6 +18,7 @@ const Product = () => {
     const [cardDetails, setCardDetails] = useState([]);
     console.log(cardDetails, "pro")
     const [parentCategory, setParentCategory] = useState('');
+    const [parentCategoryData, setparentCategoryData] = useState('')
     const [navigationStack, setNavigationStack] = useState([]);
     console.log(navigationStack);
     const [LoaderState, setLoaderState] = useState(false);
@@ -124,7 +125,8 @@ const Product = () => {
             if (response?.status === 200) {
                 setLoaderState(false)
                 const newProducts = response?.data?.data;
-                setCardDetails(response?.data?.data)
+                setCardDetails(response?.data?.data?.product);
+                setparentCategoryData(response?.data?.data?.parent_category[0]);
             } else {
                 toast.error("Failed to fetch products");
             }
@@ -139,17 +141,6 @@ const Product = () => {
         // Only call postCategory which now handles stack updates based on response data
         postCategory(id);
     };
-
-
-
-
-
-
-
-
-
-
-
 
     return (
         <>
@@ -198,7 +189,7 @@ const Product = () => {
                                     }}
                                 >
                                     <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-                                        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                        <Typography variant="h6" sx={{ fontWeight: 600, color: "#0462B6 " }}>
                                             {parentCategory?.category_name} Category
                                         </Typography>
                                     </Box>
@@ -316,16 +307,18 @@ const Product = () => {
                                 }}
                             >
                                 <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-                                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                                    <Typography variant="h6" sx={{ fontWeight: 600, color: "#0462B6 " }}>
+                                        {parentCategoryData?.category_name} Category
+                                    </Typography>
+                                </Box>
+                                <Grid>
+                                    <Typography dangerouslySetInnerHTML={{ __html: parentCategoryData?.category_description }}></Typography>
+                                </Grid>
+
+                                <Box display="flex" justifyContent="center" alignItems="center" sx={{ mb: 2 }}>
+                                    <Typography variant="h6" sx={{ fontWeight: 600, color: '#FA8232' }}>
                                         PRODUCTS
                                     </Typography>
-                                    <FormControl sx={{ minWidth: 120 }}>
-                                        <InputLabel>Sort by</InputLabel>
-                                        <Select defaultValue="Most Popular" label="Sort by">
-                                            <MenuItem value="Most Popular">Most Popular</MenuItem>
-                                            <MenuItem onClick={() => setLatest(1)} value="Latest">Latest</MenuItem>
-                                        </Select>
-                                    </FormControl>
                                 </Box>
 
                                 <Grid container spacing={2} mb={4}>

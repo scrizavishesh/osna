@@ -9,6 +9,7 @@ const SearchResult = () => {
   const searchParams = new URLSearchParams(location.search);
   const search_term = searchParams.get('search_term');
   const [events, setEvents] = useState([]);
+  const baseUrl = 'https://dc.damio.in/';
 
 
   useEffect(() => {
@@ -21,6 +22,7 @@ const SearchResult = () => {
   const fetchSearchResults = async (terms) => {
     try {
       const response = await Search(terms);
+      console.log(response,)
       if (response?.status === 200) {
         setEvents(response?.data?.data?.data);
       } else {
@@ -82,7 +84,7 @@ const SearchResult = () => {
                   >
                     <Box sx={{ width: '100%', height: 'auto', mb: 2 }}>
                       <img
-                        src="./first_main.svg" // Adjust according to actual data
+                        src={baseUrl + item?.product_image} // Adjust according to actual data
                         alt="Product Image"
                         style={{ width: '100%', objectFit: 'cover', height: 'auto' }}
                       />
