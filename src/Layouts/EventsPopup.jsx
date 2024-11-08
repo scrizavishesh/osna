@@ -13,7 +13,7 @@ const EventsPopup = () => {
     const [todayEvents, setTodayEvents] = useState([]);
 
     useEffect(() => {
-        const hasSeenPopup = localStorage.getItem('hasSeenEventsPopup');
+        const hasSeenPopup = sessionStorage.getItem('hasSeenEventsPopup');
 
         if (!hasSeenPopup) { 
             getEve();
@@ -25,7 +25,7 @@ const EventsPopup = () => {
             const response = await GetEvents();
             if (response?.status === 200) {
                 toast.success("Events retrieved successfully");
-                findTodayEvents(response?.data?.data || []);
+                findUpcomingEvents(response?.data?.data || []);
             } else {
                 toast.error("Failed to fetch events");
             }
@@ -34,18 +34,21 @@ const EventsPopup = () => {
         }
     };
 
-    const findTodayEvents = (events) => {
+    const findUpcomingEvents = (events) => {
         const today = new Date().toISOString().split('T')[0];
-        const eventsToday = events.filter(event => {
-            const eventDate = new Date(event.start_date).toISOString().split('T')[0];
-            return eventDate === today;
+        
+        const upcomingEvents = events.filter(event => {
+            const startDate = new Date(event.start_date).toISOString().split('T')[0];
+            const endDate = new Date(event.end_date).toISOString().split('T')[0];
+            
+            return today >= startDate && today <= endDate;
         });
 
-        if (eventsToday.length > 0) {
-            setTodayEvents(eventsToday);
+        if (upcomingEvents.length > 0) {
+            setTodayEvents(upcomingEvents);
             setTimeout(() => {
                 setOpen(true);
-                localStorage.setItem('hasSeenEventsPopup', 'true');
+                sessionStorage.setItem('hasSeenEventsPopup', 'true');
             }, 3000);
         }
     };
@@ -60,7 +63,8 @@ const EventsPopup = () => {
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
-        arrows: true,
+        arrows: false, // Remove navigation arrows
+        customPaging: (i) => <div className="custom-slick-dot" /> // Custom dot styling
     };
 
     return (
@@ -96,7 +100,7 @@ const EventsPopup = () => {
                                     height="200"
                                     image={baseUrl + event.event_image[0].image}
                                     alt={event.event_name}
-                                    sx={{ objectFit: 'cover', mb: 2 }}
+                                    sx={{ objectFit: 'cover', width: '100%', mb: 2 }}
                                 />
                             ) : (
                                 <Slider {...sliderSettings}>
@@ -107,7 +111,7 @@ const EventsPopup = () => {
                                             height="200"
                                             image={baseUrl + imgObj.image}
                                             alt={event.event_name}
-                                            sx={{ objectFit: 'cover', mb: 2 }}
+                                            sx={{ objectFit: 'cover', width: '100%', mb: 2 }}
                                         />
                                     ))}
                                 </Slider>
@@ -127,7 +131,7 @@ const EventsPopup = () => {
                         </Box>
                     ))}
                 </DialogContent>
-                <DialogActions sx={{ justifyContent: 'center', pb: 3 }}>
+                <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
                     <Button
                         variant="contained"
                         color="warning"

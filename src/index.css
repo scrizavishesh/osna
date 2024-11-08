@@ -87,3 +87,25 @@ body {
   font-size: 10px; /* Adjust dot size if needed */
 }
 
+
+/* Change slick dots color */
+.custom-slick-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #FA8232 !important;
+  border-radius: 50%;
+}
+
+/* Center align the dots */
+.slick-dots {
+  bottom: 10px;
+}
+
+/* Optional: make dots larger when active */
+.slick-dots .slick-active div.custom-slick-dot {
+  background-color: #FA8232;
+  width: 12px;
+  height: 12px;
+}
+
+
