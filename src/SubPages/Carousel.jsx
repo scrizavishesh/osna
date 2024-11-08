@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { GetBanner } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import Loader from '../Layouts/Loader';
 
 // Custom Arrow Components
 const PreviousArrow = (props) => {
@@ -71,15 +72,18 @@ const CarouselSlider = () => {
     const baseUrl = 'https://dc.damio.in/';
 
     const [banner, setBanner] = useState([]);
+    const [LoaderState, setLoaderState] = useState(false);
 
     useEffect(() => {
         getBanner();
     }, []);
 
     const getBanner = async () => {
+        setLoaderState(true);
         try {
             const response = await GetBanner();
             if (response?.status === 200) {
+                setLoaderState(false);
                 toast.success("Banners fetched successfully");
                 setBanner(response?.data?.data);
             } else {
@@ -91,85 +95,88 @@ const CarouselSlider = () => {
     };
 
     return (
-        <Box sx={{ width: '100%', height: { xs: '50vh', md: '70vh' }, overflow: 'hidden' }}>
-            <Slider {...settings}>
-                {banner.map((item, index) => (
-                    <Box
-                        key={index}
-                        sx={{
-                            position: 'relative',
-                            width: '100%',
-                            height: { xs: '50vh', md: '70vh' },
-                            backgroundImage: `url(${baseUrl + item.image})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        {/* Responsive Content Overlay */}
+        <>
+          
+            <Box sx={{ width: '100%', height: { xs: '50vh', md: '70vh' }, overflow: 'hidden' }}>
+                <Slider {...settings}>
+                    {banner.map((item, index) => (
                         <Box
+                            key={index}
                             sx={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: { xs: '5%', md: '10%' },
-                                transform: 'translateY(-50%)',
-                                color: '#fff',
-                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                                textAlign: 'left',
-                                maxWidth: { xs: '90%', sm: '70%', md: '400px' },
-                                padding: { xs: '1rem', md: '1.5rem' },
-                                borderRadius: '8px',
+                                position: 'relative',
+                                width: '100%',
+                                height: { xs: '50vh', md: '70vh' },
+                                backgroundImage: `url(${baseUrl + item.image})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                             }}
                         >
-                            <Typography
-                                variant="h3"
+                            {/* Responsive Content Overlay */}
+                            <Box
                                 sx={{
-                                    fontWeight: 'bold',
-                                    fontSize: { xs: '1.5rem', md: '2rem' },
-                                    mb: 2,
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: { xs: '5%', md: '10%' },
+                                    transform: 'translateY(-50%)',
                                     color: '#fff',
+                                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                    textAlign: 'left',
+                                    maxWidth: { xs: '90%', sm: '70%', md: '400px' },
+                                    padding: { xs: '1rem', md: '1.5rem' },
+                                    borderRadius: '8px',
                                 }}
                             >
-                                {item.heading}
-                            </Typography>
-                            <Box sx={{ display: 'flex', gap: '1rem', mt: 2 }}>
-                                <Button
-                                    variant="contained"
-                                    to={`/about`}
-                                    component={Link}
+                                <Typography
+                                    variant="h3"
                                     sx={{
-                                        backgroundColor: '#0462B6',
+                                        fontWeight: 'bold',
+                                        fontSize: { xs: '1.5rem', md: '2rem' },
+                                        mb: 2,
                                         color: '#fff',
-                                        '&:hover': {
-                                            backgroundColor: '#087ce1',
-                                        },
                                     }}
                                 >
-                                    Learn More
-                                </Button>
-                                <Button
-                                    component={Link}
-                                    to={`/contact`}
-                                    variant="outlined"
-                                    sx={{
-                                        color: '#fff',
-                                        borderColor: '#fff',
-                                        '&:hover': {
+                                    {item.heading}
+                                </Typography>
+                                <Box sx={{ display: 'flex', gap: '1rem', mt: 2 }}>
+                                    <Button
+                                        variant="contained"
+                                        to={`/about`}
+                                        component={Link}
+                                        sx={{
+                                            backgroundColor: '#0462B6',
+                                            color: '#fff',
+                                            '&:hover': {
+                                                backgroundColor: '#087ce1',
+                                            },
+                                        }}
+                                    >
+                                        Learn More
+                                    </Button>
+                                    <Button
+                                        component={Link}
+                                        to={`/contact`}
+                                        variant="outlined"
+                                        sx={{
+                                            color: '#fff',
                                             borderColor: '#fff',
-                                            backgroundColor: 'rgba(211, 37, 37, 0.1)',
-                                        },
-                                    }}
-                                >
-                                    Contact Us
-                                </Button>
+                                            '&:hover': {
+                                                borderColor: '#fff',
+                                                backgroundColor: 'rgba(211, 37, 37, 0.1)',
+                                            },
+                                        }}
+                                    >
+                                        Contact Us
+                                    </Button>
+                                </Box>
                             </Box>
                         </Box>
-                    </Box>
-                ))}
-            </Slider>
-        </Box>
+                    ))}
+                </Slider>
+            </Box>
+        </>
     );
 };
 

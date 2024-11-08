@@ -5,16 +5,19 @@ import { Phone, Email, LocationOn } from '@mui/icons-material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { getBranches, getContacts, handleContact } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
+import Loader from '../Layouts/Loader';
 
 const ContactUs = () => {
 
     const [branches, setBranches] = useState([]);
     const [contact, setContact] = useState('');
+    const [LoaderState, setLoaderState] = useState(false);
     const [showModal, setShowModal] = useState(false); // State for the confirmation modal
     const { register, handleSubmit, reset, formState: { errors }, } = useForm();
 
 
     const onSubmit = async (data) => {
+        setLoaderState(true);
         if (!data.request_type || !data.name || !data.email || !data.phone || !data.message) {
             toast.error("All fields are required");
             return;
@@ -28,6 +31,7 @@ const ContactUs = () => {
         try {
             const response = await handleContact(formData);
             if (response.status === 201) {
+                setLoaderState(false);
                 toast.success("Contact Information Save Successfully!");
                 reset();
                 setShowModal(true);
@@ -45,9 +49,11 @@ const ContactUs = () => {
     }, []);
 
     const Contact = async () => {
+        setLoaderState(true);
         try {
             const response = await getContacts();
             if (response?.status === 200) {
+                setLoaderState(false);
                 toast.success("Get Contact");
                 setContact(response?.data?.data[0]);
             } else {
@@ -60,9 +66,11 @@ const ContactUs = () => {
 
 
     const Branches = async () => {
+        setLoaderState(true);
         try {
             const response = await getBranches();
             if (response?.status === 200) {
+                setLoaderState(false);
                 toast.success("Get Branches");
                 setBranches(response?.data?.data);
             } else {
@@ -75,6 +83,12 @@ const ContactUs = () => {
 
     return (
         <>
+
+{LoaderState && (
+                <Loader />
+            )
+            }
+
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 {/* Heading and Subheading */}
                 <Box mb={4} textAlign="center">

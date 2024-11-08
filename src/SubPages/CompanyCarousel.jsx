@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { GetLogo } from "../Utils/Apis";
 import { toast } from "react-hot-toast";
+import Loader from "../Layouts/Loader";
 
 const ResponsiveCarousel = () => {
     const settings = {
@@ -45,15 +46,18 @@ const ResponsiveCarousel = () => {
     const baseUrl = 'https://dc.damio.in/';
 
     const [banner, setBanner] = useState([]);
+    const [LoaderState, setLoaderState] = useState(false);
 
     useEffect(() => {
         getBanner();
     }, []);
 
     const getBanner = async () => {
+        setLoaderState(true);
         try {
             const response = await GetLogo();
             if (response?.status === 200) {
+                setLoaderState(false);
                 toast.success("Get client Logo");
                 setBanner(response?.data?.data);
             } else {
@@ -65,34 +69,37 @@ const ResponsiveCarousel = () => {
     };
 
     return (
-        <Box sx={{ padding: 2 }}>
-            <Slider {...settings}>
-                {banner.map((item, index) => (
-                    <Grid key={index} item>
-                        <Grid
-                            sx={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                padding: 2,
-                                backgroundColor: "transparent" // Transparent background
-                            }}
-                        >
-                            <img
-                                src={baseUrl + item?.client_logo}
-                                alt=""
-                                style={{
-                                    width: "55%", 
-                                    aspectRatio: 3/2,
-                                    mixBlendMode: "color-burn",
-                                    objectFit: "contain",
+        <>
+            
+            <Box sx={{ padding: 2 }}>
+                <Slider {...settings}>
+                    {banner.map((item, index) => (
+                        <Grid key={index} item>
+                            <Grid
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    padding: 2,
+                                    backgroundColor: "transparent" // Transparent background
                                 }}
-                            />
+                            >
+                                <img
+                                    src={baseUrl + item?.client_logo}
+                                    alt=""
+                                    style={{
+                                        width: "55%",
+                                        aspectRatio: 3 / 2,
+                                        mixBlendMode: "color-burn",
+                                        objectFit: "contain",
+                                    }}
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                ))}
-            </Slider>
-        </Box>
+                    ))}
+                </Slider>
+            </Box>
+        </>
     );
 };
 

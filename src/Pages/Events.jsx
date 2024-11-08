@@ -6,6 +6,7 @@ import moment from 'moment';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import Loader from '../Layouts/Loader';
 
 const EventsPage = () => {
     const baseUrl = 'https://dc.damio.in/';
@@ -13,16 +14,19 @@ const EventsPage = () => {
     const [pastEvents, setPastEvents] = useState([]);
     const [presentEvents, setPresentEvents] = useState([]);
     const [selectedTab, setSelectedTab] = useState(1);
+    const [LoaderState, setLoaderState] = useState(false);
 
     useEffect(() => {
         getEve();
     }, []);
 
     const getEve = async () => {
+        setLoaderState(true);
         try {
             const response = await GetEvents();
             console.log(response, "Events");
             if (response?.status === 200) {
+                setLoaderState(false);
                 toast.success("Events retrieved successfully");
                 const events = response?.data?.data;
                 setEvents(events);
@@ -47,7 +51,7 @@ const EventsPage = () => {
             if (eventEnd.isBefore(today, 'day')) {
                 past.push(event); // Event has ended
             } else {
-                present.push(event); 
+                present.push(event);
             }
         });
 
@@ -71,6 +75,7 @@ const EventsPage = () => {
         };
 
         return (
+
             <Grid container spacing={3}>
                 {events.length > 0 ? (
                     events.map((event) => (
@@ -147,31 +152,37 @@ const EventsPage = () => {
     };
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 4 }}>
-            <Box sx={{ padding: '2rem' }}>
-                <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: '2rem', fontWeight: 'bold', color: '#FA8232' }}>
-                    Events
-                </Typography>
+        <>
+            {LoaderState && (
+                <Loader />
+            )
+            }
+            <Container maxWidth="lg" sx={{ mt: 4 }}>
+                <Box sx={{ padding: '2rem' }}>
+                    <Typography variant="h4" sx={{ textAlign: 'center', marginBottom: '2rem', fontWeight: 'bold', color: '#FA8232' }}>
+                        Events
+                    </Typography>
 
-                {/* Tabs to switch between Past and Upcoming events */}
-                <Tabs
-                    value={selectedTab}
-                    onChange={handleTabChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    centered
-                >
-                    <Tab label="Past" />
-                    <Tab label="Upcoming" />
-                </Tabs>
+                    {/* Tabs to switch between Past and Upcoming events */}
+                    <Tabs
+                        value={selectedTab}
+                        onChange={handleTabChange}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        centered
+                    >
+                        <Tab label="Past" />
+                        <Tab label="Upcoming" />
+                    </Tabs>
 
-                <Box sx={{ marginTop: '2rem' }}>
-                    {/* Conditionally render events based on selected tab */}
-                    {selectedTab === 0 && renderEventCards(pastEvents)}
-                    {selectedTab === 1 && renderEventCards(presentEvents)}
+                    <Box sx={{ marginTop: '2rem' }}>
+                        {/* Conditionally render events based on selected tab */}
+                        {selectedTab === 0 && renderEventCards(pastEvents)}
+                        {selectedTab === 1 && renderEventCards(presentEvents)}
+                    </Box>
                 </Box>
-            </Box>
-        </Container>
+            </Container>
+        </>
     );
 };
 

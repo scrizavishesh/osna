@@ -6,11 +6,13 @@ import { getCategoryDetails } from '../Utils/Apis';
 import YouTube from 'react-youtube';
 import { Fancybox as NativeFancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
+import Loader from '../Layouts/Loader';
 
 const Sub_ProductDetails = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const category_name = searchParams.get('category_id');
+    const [LoaderState, setLoaderState] = useState(false);
 
     const [category, setCategory] = useState([]);
     const [description, setDescription] = useState('');
@@ -25,9 +27,11 @@ const Sub_ProductDetails = () => {
     }, [category_name]);
 
     const fetchCategory = async (terms) => {
+        setLoaderState(true);
         try {
             const response = await getCategoryDetails(terms);
             if (response?.status === 200) {
+                setLoaderState(false);
                 const data = response?.data?.data;
                 setCategory(data?.category_details);
                 setDescription(data?.category_details?.category_description);
@@ -54,6 +58,10 @@ const Sub_ProductDetails = () => {
 
     return (
         <>
+        {LoaderState && (
+                <Loader />
+            )
+            }
             <Container maxWidth="lg">
                 <Box sx={{ padding: '2rem' }}>
                     {/* First Container: Category details */}

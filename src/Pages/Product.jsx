@@ -121,7 +121,7 @@ const Product = () => {
         try {
             const response = await GetCategoryProduct(id);
             setLoaderState(true)
-            console.log(response, "product")
+            console.log(response, "products")
             if (response?.status === 200) {
                 setLoaderState(false)
                 const newProducts = response?.data?.data;
@@ -138,7 +138,6 @@ const Product = () => {
 
 
     const handleCategoryClick = (id) => {
-        // Only call postCategory which now handles stack updates based on response data
         postCategory(id);
     };
 
@@ -147,7 +146,6 @@ const Product = () => {
             {LoaderState && (
                 <Loader />
             )
-
             }
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 <Grid container spacing={4}>
@@ -322,7 +320,7 @@ const Product = () => {
                                 </Box>
 
                                 <Grid container spacing={2} mb={4}>
-                                    {cardDetails.length > 0 ? (
+                                    {cardDetails?.length > 0 || undefined ? (
                                         cardDetails.map((item, index) => (
                                             <Grid
                                                 item

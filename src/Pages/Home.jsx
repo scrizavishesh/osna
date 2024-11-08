@@ -22,11 +22,13 @@ import WorldMap from './WorldMap';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Loader from '../Layouts/Loader';
 
 
 const MyComponent = () => {
     const [cardDetails, setcardDetails] = useState([]);
-    const [pageHome, setpageHome] = useState('')
+    const [pageHome, setpageHome] = useState('');
+    const [LoaderState, setLoaderState] = useState(false);
     const baseUrl = 'https://dc.damio.in/'
 
     useEffect(() => {
@@ -35,10 +37,12 @@ const MyComponent = () => {
     }, []);
 
     const getProduct = async () => {
+        setLoaderState(true)
         try {
             const response = await GetProduct();
             console.log(response, "product")
             if (response?.status === 200) {
+                setLoaderState(false)
                 toast.success("Got Product successfully");
                 setcardDetails(response?.data?.data?.data);
             } else {
@@ -50,10 +54,11 @@ const MyComponent = () => {
     };
 
     const getHome = async () => {
+        setLoaderState(true)
         try {
             const response = await getHomePageContent();
-
             if (response?.status === 200) {
+                setLoaderState(false);
                 toast.success("Get Home Page Content");
                 setpageHome(response?.data?.data[0]);
             } else {
@@ -102,7 +107,10 @@ const MyComponent = () => {
 
     return (
         <>
-
+            {LoaderState && (
+                <Loader />
+            )
+            }
 
             <Carousel />
             <Container maxWidth="lg" sx={{ mt: 3, mb: 3 }}>
@@ -133,7 +141,7 @@ const MyComponent = () => {
                                         <Button
                                             component={Link}
                                             to="/products"
-                                            state={{id: 57}} 
+                                            state={{ id: 57 }}
                                             variant="contained"
                                             endIcon={<ArrowForwardIcon />}
                                             sx={{

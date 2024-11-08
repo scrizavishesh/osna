@@ -32,7 +32,7 @@ const WorldMap = () => {
 
     const [MapsCordinates, setMapsCordinates] = useState([]);
     const [mapKey, setmapKey] = useState('');
-    console.log(mapKey, "helo")
+    console.log(mapKey, "helo");
 
 
 

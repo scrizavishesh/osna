@@ -4,6 +4,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useForm } from 'react-hook-form';
 import { CareerAPI } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
+import Loader from '../Layouts/Loader';
 
 const Career = () => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm({
@@ -11,10 +12,12 @@ const Career = () => {
     });
 
     const [showModal, setShowModal] = useState(false); // State for the confirmation modal
+    const [LoaderState, setLoaderState] = useState(false);
 
 
 
     const onSubmit = async (data) => {
+        setLoaderState(true);
         try {
             const formData = new FormData();
             formData.append('name', data.name);
@@ -33,6 +36,7 @@ const Career = () => {
             }
             const response = await CareerAPI(formData);
             if (response.status === 201) {
+                setLoaderState(false);
                 toast.success('Profile submitted successfully!');
                 localStorage.setItem('osna_token', response?.data?.token);
                 reset();
@@ -49,6 +53,12 @@ const Career = () => {
 
     return (
         <>
+
+{LoaderState && (
+                <Loader />
+            )
+            }
+
             <Container sx={{ textAlign: 'center', mt: 5 }}>
                 <img src="/carrer.svg" alt="Career Icon" width="80" />
                 <Typography variant="h4" sx={{ mt: 2, fontWeight: 'bold', color: '#FA8232' }}>

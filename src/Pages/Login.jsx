@@ -1,16 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Container, Box, Typography, TextField, Button, Grid, Divider } from '@mui/material';
 import { useForm } from 'react-hook-form'; // Import useForm
 import { userGenerateOTP } from '../Utils/Apis';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../Layouts/Loader';
 
 const SignIn = () => {
 
     const navigate = useNavigate();
     const { register, handleSubmit, formState: { errors }, reset } = useForm(); // Initialize useForm
+    const [LoaderState, setLoaderState] = useState(false);
 
     // Function to handle form submission
     const onSubmit = async (data) => {
+        setLoaderState(true);
         const payload = {
             email: data.email,
             type: 'login'
@@ -20,6 +23,7 @@ const SignIn = () => {
             // API call (replace `YourAPI` with the actual API function or axios call)
             const response = await userGenerateOTP(payload);
             if (response.status === 200) {
+                setLoaderState(false);
                 alert('OTP has been sent to your email successfully');
                 navigate("/login", { state: { email: data.email } }); 
                 reset();
@@ -34,6 +38,10 @@ const SignIn = () => {
     };
     return (
         <>
+        {LoaderState && (
+                <Loader />
+            )
+            }
 
             {/* Main Sign In Section */}
             <Container sx={{ mt: 5, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

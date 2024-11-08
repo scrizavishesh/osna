@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     Box,
     Button,
@@ -12,14 +12,17 @@ import { useForm } from 'react-hook-form';
 import { userRegistration } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../Layouts/Loader';
 
 const SignUp = () => {
 
     const navigate = useNavigate();
+    const [LoaderState, setLoaderState] = useState(false);
     const { register, handleSubmit, formState: { errors }, reset } = useForm(); // Initialize useForm
 
     // Function to handle form submission
     const onSubmit = async (data) => {
+        setLoaderState(true);
         const payload = {
             first_name: data.first_name,
             last_name: data.last_name,
@@ -37,6 +40,7 @@ const SignUp = () => {
             // API call (replace `YourAPI` with the actual API function or axios call)
             const response = await userRegistration(payload);
             if (response.status === 201) {
+                setLoaderState(false);
                 toast.success("Register Successfully");
                 navigate("/signin");
                 reset();
@@ -51,6 +55,10 @@ const SignUp = () => {
 
     return (
         <>
+        {LoaderState && (
+                <Loader />
+            )
+            }
             <Container maxWidth="lg">
                 <Box sx={{ mb: 4, textAlign: 'center' }}>
                     <Grid sx={{

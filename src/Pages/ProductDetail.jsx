@@ -7,6 +7,7 @@ import DownloadPDF from '../Layouts/DownloadPDF';
 import ReactPlayer from 'react-player';
 import { Fancybox as NativeFancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
+import Loader from '../Layouts/Loader';
 
 const ProductDetail = () => {
     const baseUrl = 'https://dc.damio.in/';
@@ -19,6 +20,7 @@ const ProductDetail = () => {
     const [redirectToSignIn, setRedirectToSignIn] = useState(false);
     const [open, setOpen] = useState(false);
     const [PDFData, setPDFData] = useState('');
+    const [LoaderState, setLoaderState] = useState(false);
 
     const { id } = useParams();
 
@@ -30,9 +32,11 @@ const ProductDetail = () => {
     }, [id]);
 
     const fetchProductDetails = async (productId) => {
+        setLoaderState(true);
         try {
             const response = await getSingleProduct(productId);
             if (response.status === 200) {
+                setLoaderState(false);
                 const productData = response.data.data;
                 setProduct(productData);
                 const imageList = productData.product_image || [];
@@ -47,9 +51,11 @@ const ProductDetail = () => {
     };
 
     const fetchProductAccessories = async (productId) => {
+        setLoaderState(true);
         try {
             const response = await getProductAccessories(productId);
             if (response.status === 200) {
+                setLoaderState(false);
                 setAccessories(response.data.data);
             } else {
                 console.error('Failed to fetch product accessories');
@@ -82,6 +88,10 @@ const ProductDetail = () => {
 
     return (
         <>
+        {LoaderState && (
+                <Loader />
+            )
+            }
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 <Box sx={{ p: 3 }}>
                     {/* Product Image and Details */}

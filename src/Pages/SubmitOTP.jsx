@@ -4,10 +4,12 @@ import { useForm } from 'react-hook-form';
 import { userSubmitOTP } from '../Utils/Apis';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import Loader from '../Layouts/Loader';
 
 const SubmitOTP = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const [LoaderState, setLoaderState] = useState(false);
     const email = location.state?.email || ''; // Email passed from previous screen
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
@@ -16,6 +18,7 @@ const SubmitOTP = () => {
 
     // Function to handle form submission
     const onSubmit = async (data) => {
+        setLoaderState(true);
         const payload = {
             email: email,
             otp: data.otp,
@@ -25,6 +28,7 @@ const SubmitOTP = () => {
             const response = await userSubmitOTP(payload);
             console.log(response, "OTP")
             if (response.status === 200) {
+                setLoaderState(false);
                 toast.success("OTP verified successfully");
                 localStorage.setItem('osna_token', `Bearer ${response?.data?.token}`);
                 navigate("/");
@@ -62,6 +66,10 @@ const SubmitOTP = () => {
 
     return (
         <>
+        {LoaderState && (
+                <Loader />
+            )
+            }
             <Container sx={{ mt: 5, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Grid container justifyContent="center" alignItems="center" spacing={2}>
                     <Grid item xs={12} md={5} sx={{ display: 'flex', justifyContent: 'center' }}>

@@ -3,12 +3,14 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button, Card, Typography, Container, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 import { Search } from '../Utils/Apis';
+import Loader from '../Layouts/Loader';
 
 const SearchResult = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const search_term = searchParams.get('search_term');
   const [events, setEvents] = useState([]);
+  const [LoaderState, setLoaderState] = useState(false);
   const baseUrl = 'https://dc.damio.in/';
 
 
@@ -20,10 +22,11 @@ const SearchResult = () => {
 
 
   const fetchSearchResults = async (terms) => {
+    setLoaderState(true);
     try {
       const response = await Search(terms);
-      console.log(response,)
       if (response?.status === 200) {
+        setLoaderState(false);
         setEvents(response?.data?.data?.data);
       } else {
         console.error('Failed to fetch categories');
@@ -35,6 +38,10 @@ const SearchResult = () => {
 
   return (
     <>
+    {LoaderState && (
+                <Loader />
+            )
+            }
       <Grid sx={{ background: '#FAFAFA', py: 2 }}>
         <Container maxWidth="lg">
           <Grid container spacing={2} mb={5}>

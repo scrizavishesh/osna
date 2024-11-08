@@ -4,6 +4,7 @@ import { Facebook, Twitter, LinkedIn, Instagram } from '@mui/icons-material';
 import { getAboutPageContent, getCoreMembers } from '../Utils/Apis';
 import { toast } from 'react-hot-toast';
 import CountUp from 'react-countup';
+import Loader from '../Layouts/Loader';
 
 
 
@@ -12,7 +13,7 @@ const AboutUs = () => {
 
     const [AboutUs, setAboutUs] = useState('');
     const [mainImage, setmainImage] = useState('');
-    console.log(mainImage, "MAin imahe")
+    const [LoaderState, setLoaderState] = useState(false);
     const [coreMember, setcoreMember] = useState([])
 
     useEffect(() => {
@@ -21,12 +22,13 @@ const AboutUs = () => {
     }, [])
 
     const getAbout = async () => {
+        setLoaderState(true);
         try {
             const response = await getAboutPageContent();
             if (response?.status === 200) {
+                setLoaderState(false)
                 toast.success("Get About Page Content");
                 setAboutUs(response?.data?.data[0]);
-
                 // Get the image URL from the response
                 const image = response?.data?.data[0]?.section_one_image;
 
@@ -46,9 +48,11 @@ const AboutUs = () => {
 
 
     const getTeam = async () => {
+        setLoaderState(true)
         try {
             const response = await getCoreMembers();
             if (response?.status === 200) {
+                setLoaderState(false)
                 toast.success("");
                 setcoreMember(response?.data?.data);
             } else {
@@ -60,6 +64,11 @@ const AboutUs = () => {
     };
     return (
         <>
+
+            {LoaderState && (
+                <Loader />
+            )
+            }
 
             <Container maxWidth="lg" sx={{ mt: 2 }}>
                 <Box>
