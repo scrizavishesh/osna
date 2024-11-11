@@ -315,9 +315,7 @@ const MyComponent = () => {
                     </Grid>
                 </Box>
             </Container>
-
-
-
+            
             <Container maxWidth="lg" sx={{ mt: 4, mb: 2 }}>
                 <Grid
                     container

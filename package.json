@@ -29,6 +29,7 @@
     "react-hook-form": "^7.53.0",
     "react-hot-toast": "^2.4.1",
     "react-intersection-observer": "^9.13.1",
+    "react-joyride": "^2.9.2",
     "react-loader-spinner": "^6.1.6",
     "react-map-gl": "^7.1.7",
     "react-photo-view": "^1.2.6",
