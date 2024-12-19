@@ -161,26 +161,6 @@ const Product = () => {
     return (
         <>
 
-            {/* Joyride Component */}
-            <Joyride
-                steps={tourState.steps}
-                run={tourState.run}
-                stepIndex={tourState.stepIndex}
-                continuous
-                showSkipButton
-                showProgress
-                scrollToFirstStep
-                styles={{
-                    options: {
-                        zIndex: 10000,
-                    },
-                }}
-                callback={(data) => {
-                    if (data.status === 'finished' || data.status === 'skipped') {
-                        setTourState({ ...tourState, run: false });
-                    }
-                }}
-            />
             {LoaderState && (
                 <Loader />
             )
@@ -209,9 +189,6 @@ const Product = () => {
                         ) : (
                             <Typography>No categories available.</Typography>
                         )}
-                        <Button  className="joyride-back-btn" variant="contained" onClick={handleBack} disabled={navigationStack.length < 1} sx={{ mt: 2 }}>
-                            Change Category
-                        </Button>
                     </Grid>
                     {!hide ? (
                         <>

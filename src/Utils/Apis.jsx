@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const API_URL = "https://dc.damio.in/api";
+export const API_URL = "https://admin.osna.co.in/api";
 
 var bearerToken = localStorage.getItem("osna_token")
 
