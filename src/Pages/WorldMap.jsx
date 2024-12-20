@@ -32,14 +32,12 @@ const WorldMap = () => {
 
     const [MapsCordinates, setMapsCordinates] = useState([]);
     const [mapKey, setmapKey] = useState('');
-    console.log(mapKey, "helo");
 
 
 
     const getEve = async () => {
         try {
             const response = await Map();
-            console.log(response, "AMps")
             if (response?.status === 200) {
                 setmapKey(response?.data?.data?.map_api_key);
                 setMapsCordinates(response?.data?.data?.map_co_ordinates);

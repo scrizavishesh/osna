@@ -26,7 +26,6 @@ const SubmitOTP = () => {
         };
         try {
             const response = await userSubmitOTP(payload);
-            console.log(response, "OTP")
             if (response.status === 200) {
                 setLoaderState(false);
                 toast.success("OTP verified successfully");
@@ -40,7 +39,8 @@ const SubmitOTP = () => {
         } catch (error) {
             console.error('API Error:', error);
             toast.error('Error during OTP submission');
-            alert(error?.response?.data?.message)
+            alert(error?.response?.data?.message);
+            setLoaderState(false);
         }
     };
 

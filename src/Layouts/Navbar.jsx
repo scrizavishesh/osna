@@ -40,7 +40,6 @@ const Navbar = () => {
     const CategoryByNames = async () => {
         try {
             const response = await getCategoryNames();
-            console.log(response, "names")
             if (response?.status === 200) {
                 setCategoryNames(response?.data?.data?.category_list);
             } else {

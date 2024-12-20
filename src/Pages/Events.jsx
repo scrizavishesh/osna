@@ -24,7 +24,6 @@ const EventsPage = () => {
         setLoaderState(true);
         try {
             const response = await GetEvents();
-            console.log(response, "Events");
             if (response?.status === 200) {
                 setLoaderState(false);
                 toast.success("Events retrieved successfully");

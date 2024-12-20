@@ -14,8 +14,7 @@ const TawkTo = () => {
 
   const getChat = async () => {
     try {
-        const response = await chatBot();
-        console.log(response, "chat")
+        const response = await chatBot();// Add this line to debug
         if (response?.status === 200) {
             toast.success("Got Product successfully");
             setchatURL(response?.data?.data?.chat_url);
@@ -23,9 +22,11 @@ const TawkTo = () => {
             toast.error("Failed to fetch categories");
         }
     } catch (err) {
+        console.error(err);
         toast.error(err?.message);
     }
 };
+
 
 
   useEffect(() => {

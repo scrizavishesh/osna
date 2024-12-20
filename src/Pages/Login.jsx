@@ -32,8 +32,10 @@ const SignIn = () => {
             }
         } catch (error) {
             console.error('API Error:', error);
+            setLoaderState(false);
             alert(error?.response?.data?.message);
             navigate("/signup"); 
+            
         }
     };
     return (

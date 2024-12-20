@@ -41,6 +41,7 @@ const Sub_ProductDetails = () => {
             }
         } catch (err) {
             console.error(err?.message);
+            setLoaderState(false);
         }
     };
 

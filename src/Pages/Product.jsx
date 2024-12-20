@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Grid, Container, Typography, RadioGroup, FormControlLabel, Radio, Card, Box, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import React from 'react';
@@ -6,7 +7,6 @@ import { GetCategoryProduct, GetPostCategory, GetPreCategory } from '../Utils/Ap
 import { toast } from 'react-hot-toast';
 import { useInView } from 'react-intersection-observer';
 import Loader from '../Layouts/Loader';
-import Joyride, { STATUS } from 'react-joyride';
 
 const Product = () => {
     const location = useLocation();
@@ -17,11 +17,9 @@ const Product = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [cardDetails, setCardDetails] = useState([]);
-    console.log(cardDetails, "pro")
     const [parentCategory, setParentCategory] = useState('');
     const [parentCategoryData, setparentCategoryData] = useState('')
     const [navigationStack, setNavigationStack] = useState([]);
-    console.log(navigationStack);
     const [LoaderState, setLoaderState] = useState(false);
     const [currentCategoryId, setCurrentCategoryId] = useState(null);
     const navigate = useNavigate();
@@ -63,7 +61,6 @@ const Product = () => {
         setLoaderState(true)
         try {
             const response = await GetPostCategory(id);
-            console.log(response, "hello")
 
             if (response?.status === 200) {
                 const subCategoryList = response.data.data.sub_category_list;
@@ -95,6 +92,10 @@ const Product = () => {
             toast.error(err?.message);
         }
     };
+
+
+
+
     const handleBack = () => {
         if (navigationStack.length > 1) {
             setHide(false)
@@ -118,7 +119,6 @@ const Product = () => {
         try {
             const response = await GetCategoryProduct(id);
             setLoaderState(true)
-            console.log(response, "products")
             if (response?.status === 200) {
                 setLoaderState(false)
                 const newProducts = response?.data?.data;
@@ -137,45 +137,23 @@ const Product = () => {
     const handleCategoryClick = (id) => {
         postCategory(id);
     };
-    
-        // Joyride configuration state
-        const [tourState, setTourState] = useState({
-            run: true,
-            steps: [
-                {
-                    target: ".joyride-category",
-                    content: "This is where you select categories.",
-                },
-                {
-                    target: ".joyride-products",
-                    content: "Here is the list of products based on your selection.",
-                },
-                {
-                    target: ".joyride-back-btn",
-                    content: "Use this button to go back to the previous category.",
-                }
-            ],
-            stepIndex: 0,
-        });
 
     return (
         <>
-
             {LoaderState && (
                 <Loader />
             )
             }
             <Container maxWidth="lg" sx={{ mt: 4 }}>
-
                 <Grid container spacing={4}>
                     <Grid item xs={12} md={3}>
-                        <Typography className="joyride-category" variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+                        <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
                             CATEGORY
                         </Typography>
                         {loading ? (
                             <Typography>Loading categories...</Typography>
                         ) : category.length > 0 ? (
-                            <RadioGroup className="category-list" name="category">
+                            <RadioGroup name="category">
                                 {category.map((cat) => (
                                     <FormControlLabel
                                         onClick={() => handleCategoryClick(cat.id)} // Use handleCategoryClick instead of postCategory directly
@@ -189,10 +167,13 @@ const Product = () => {
                         ) : (
                             <Typography>No categories available.</Typography>
                         )}
+                        <Button variant="contained" onClick={handleBack} disabled={navigationStack.length < 1} sx={{ mt: 2 }}>
+                            Change Category
+                        </Button>
                     </Grid>
                     {!hide ? (
                         <>
-                            <Grid item xs={12} md={9} className="joyride-products">
+                            <Grid item xs={12} md={9}>
                                 <Box
                                     className="custom-scrollbar"
                                     sx={{
@@ -222,7 +203,6 @@ const Product = () => {
                                                     justifyContent="center"
                                                 >
                                                     <Card
-                                                        className="product-card"
                                                         sx={{
                                                             width: '100%',
                                                             border: '1px solid #E4E7E9',
@@ -425,6 +405,8 @@ const Product = () => {
                                         </Typography>
                                     )}
                                 </Grid>
+
+                                {/* Lazy Loading Trigger */}
                                 <div ref={ref} />
                                 {isLoading && <p>Loading more products...</p>}
                                 {!hasMore && <p>No more products available.</p>}

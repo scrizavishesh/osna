@@ -40,7 +40,6 @@ const MyComponent = () => {
         setLoaderState(true)
         try {
             const response = await GetProduct();
-            console.log(response, "product")
             if (response?.status === 200) {
                 setLoaderState(false)
                 toast.success("Got Product successfully");

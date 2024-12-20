@@ -50,6 +50,7 @@ const SignUp = () => {
         } catch (error) {
             console.error('API Error:', error);
             alert('Error during signup');
+            setLoaderState(false);
         }
     };
 

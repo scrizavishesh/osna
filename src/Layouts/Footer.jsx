@@ -49,7 +49,6 @@ const Footer = () => {
     const Contact = async () => {
         try {
             const response = await getContacts();
-            console.log(response, 'Hello')
             if (response?.status === 200) {
                 toast.success("Get Contact");
                 setContact(response?.data?.data[0]);
@@ -157,8 +156,9 @@ const Footer = () => {
                         >
                             Top Category
                         </Typography>
-                        {categoryNames?.slice(0, 5)?.map((cat) => (
+                        {categoryNames?.slice(0, 5)?.map((cat, index) => (
                             <Typography
+                                key={index}
                                 component={Link}
                                 to={`/categories?category_name=${encodeURIComponent(cat.category_name)}`}
 
@@ -211,6 +211,7 @@ const Footer = () => {
                         </Typography>
                         {pages.map((link, index) => (
                             <Typography
+                                key={index}
                                 component={Link}
                                 to={link.path}
                                 sx={{
